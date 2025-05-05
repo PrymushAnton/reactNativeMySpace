@@ -14,6 +14,7 @@ function Input(props: IInputProps) {
 				{iconLeft && <View style={{ marginRight: 2 }}>{iconLeft}</View>}
 				<TextInput
 					style={styles.input}
+					autoFocus={false}
 					placeholderTextColor={"rgba(255, 255, 255, 0.5)"}
 					{...otherProps}
 				/>

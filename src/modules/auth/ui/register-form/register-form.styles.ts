@@ -8,10 +8,15 @@ export const styles = StyleSheet.create({
     },
 
     form: {
-        minHeight: 300,
-        alignItems: "center",
-        justifyContent: "center",
+        width: "100%",
+        minHeight: 250,
         gap: 20,
+        flex: 1
+    },
+
+    formContent: {
+        alignItems: "center",
+        justifyContent: "center"
     },
 
     inputContainer: {
@@ -22,7 +27,6 @@ export const styles = StyleSheet.create({
     },
 
     buttonBlock: {
-        alignSelf: "center",
-        alignItems: "center"
+        alignSelf: "center"
     },
 })

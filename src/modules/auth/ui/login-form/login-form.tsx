@@ -1,27 +1,52 @@
 import { Button } from "../../../../shared/ui/button";
-import { Text, TouchableWithoutFeedback, View } from "react-native";
+import { Text, View } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
 import { ILogin } from "../../types";
 import { Controller, useForm } from "react-hook-form";
 import { styles } from "./login-form.styles";
+import { useAuthContext } from "../../context";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 
 export function LoginForm() {
-
-    const [isEmail, setIsEmail] = useState<boolean>(true)
-
-	const { handleSubmit, control, setValue } = useForm<ILogin>({
-		defaultValues: { email: "", password: "" },
+	const schema = yup.object().shape({
+		email: yup
+			.string()
+			.email("Некоректна пошта")
+			.required("Це поле обов'язкове")
+			.trim("Видаліть пробіли на початку і в кінці"),
+		password: yup
+			.string()
+			.required("Це поле обов'язкове")
+			.trim("Видаліть пробіли на початку і в кінці")
 	});
 
-    useEffect(() => {
-        setValue("password", "")
-        isEmail ? setValue("email", "") : setValue("phoneNumber", "")
-    }, [isEmail])
+	const { handleSubmit, control, setValue, setError } = useForm<ILogin>({
+		defaultValues: { email: "", password: "" },
+		resolver: yupResolver(schema),
+	});
+
+	const [globalError, setGlobalError] = useState<string>("")
+	const { login } = useAuthContext();
 
 	function onSubmit(data: ILogin) {
-		console.log(data);
+		async function request(){
+			const response = await login(
+				data.email,
+				data.password
+			);
+			if (typeof(response) === "string") {
+				setGlobalError(response)
+			} else {
+				response.forEach((obj) => {
+					setError(obj.path as keyof ILogin, {message: obj.message});
+				})
+			}
+		}
+		request()		
 	}
 
 	return (
@@ -30,84 +55,77 @@ export function LoginForm() {
 				style={{
 					fontSize: 36,
 					textAlign: "center",
-                    color: "white"
+					color: "white",
 				}}
 			>
 				Авторизація
 			</Text>
 
 			<View style={styles.form}>
-
-                <View style={styles.inputContainer}>
-                    <Controller
-                        
-                        control={control}
-                        name={isEmail ? "email" : "phoneNumber"}
-                        rules={{
-                            required: {
-                                value: true,
-                                message: "Це поле обов'язкове",
-                            },
-                        }}
-                        render={({ field, fieldState }) => {
-                            return (
-                                <Input
-                                    label={isEmail ? "Пошта" : "Номер телефона"}
-                                    onChange={field.onChange}
-                                    onChangeText={field.onChange}
-                                    value={field.value}
-                                    autoCorrect={false}
-                                    errorMessage={fieldState.error?.message}
-                                    iconLeft={
-                                        isEmail ? (
-                                            <ICONS.EmailIcon width={30} height={30} />
-                                        ) : (
-                                            <ICONS.PhoneNumberIcon width={30} height={30} />
-                                        )
-                                        
-                                    }
-                                />
-                            );
-                        }}
-                    />
-                    <Text style={{color: "white"}}>Авторизуватись за&nbsp;
-                        <TouchableWithoutFeedback onPress={() => {setIsEmail(!isEmail)}}>
-                            <Text style={{textDecorationLine: "underline", color: "white"}}>
-                                {isEmail ? "номером телефону" : "поштою"}
-                            </Text>
-                        </TouchableWithoutFeedback>
-                    </Text>
-                </View>
-				
-
-                <Controller
+				<Controller
 					control={control}
 					name="email"
-					rules={{
-						required: {
-							value: true,
-							message: "Це обов'язкове поле",
-						},
-					}}
 					render={({ field, fieldState }) => {
 						return (
-                            <Input.Password
-                                label="Пароль"
-                                onChange={field.onChange}
+							<Input
+								label="Пошта"
+								onChange={field.onChange}
 								onChangeText={field.onChange}
 								value={field.value}
 								autoCorrect={false}
 								errorMessage={fieldState.error?.message}
-                            />
+								iconLeft={
+									<ICONS.EmailIcon width={30} height={30} />
+								}
+							/>
 						);
 					}}
-				></Controller>
-				
+				/>
+
+				<Controller
+					control={control}
+					name="password"
+					render={({ field, fieldState }) => {
+						return (
+							<Input.Password
+								label="Пароль"
+								onChange={field.onChange}
+								onChangeText={field.onChange}
+								value={field.value}
+								autoCorrect={false}
+								errorMessage={fieldState.error?.message}
+							/>
+						);
+					}}
+				/>
 			</View>
-            
-            <View style={styles.buttonBlock}>
-			    <Button text="Авторизуватись" onPress={handleSubmit(onSubmit)}/>
-            </View>
+
+			{
+				!(globalError === "")
+				&& <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+					<ICONS.ErrorIcon width={30} height={30}/>
+					<Text style={{display:"flex", color: "red"}}>{globalError}</Text>
+				</View>
+			}
+
+			<View style={styles.buttonBlock}>
+				<Button
+					text="Авторизуватись"
+					onPress={handleSubmit(onSubmit)}
+				/>
+				<View style={{alignItems: "center", justifyContent: "center"}}>
+					<Text style={{ color: "white" }}>Ще не маєте акаунту?</Text>
+					<Link
+						href={"/register"}
+						style={{
+							color: "white",
+							textDecorationLine: "underline",
+						}}
+					>
+						Зареєструватись
+					</Link>
+				</View>
+			</View>
 		</View>
 	);
 }

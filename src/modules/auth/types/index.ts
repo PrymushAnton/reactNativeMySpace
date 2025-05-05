@@ -1,2 +1,2 @@
-export {RegisterFull, IRegisterStepOne, IRegisterStepTwo} from "./register"
+export {IRegistration} from "./register"
 export {ILogin} from "./login"
