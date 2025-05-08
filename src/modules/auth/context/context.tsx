@@ -20,6 +20,7 @@ const initialValue: IAuthContext = {
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
+	registerEmail: async (emailCode: number) => {return ""},
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -37,9 +38,36 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	// 	console.log(user);
 	// }, [user]);
 
+	async function registerEmail(emailCode: number) {
+		try {
+			const response = await fetch("http://192.168.1.10:3001/user/reg", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					emailCode: emailCode
+				}),
+			});
+
+			const result: Response<string> = await response.json();
+			if (result.status === "error") {
+				return result.message;
+			}
+			if (result.status === "error-validation") {
+				return result.data;
+			}
+			getData(result.data);
+			await AsyncStorage.setItem("token", result.data);
+			router.navigate("/profile/");
+			return "";
+		} catch (error) {
+			console.error(error);
+			return "";
+		}
+	}
+
 	async function getData(token: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/me", {
+			const response = await fetch("http://192.168.1.10:3001/user/me", {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const result: Response<IUser> = await response.json();
@@ -57,7 +85,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/auth", {
+			const response = await fetch("http://192.168.1.10:3001/user/auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email: email, password: password }),
@@ -89,7 +117,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		confirmPassword: string
 	) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/reg", {
+			const response = await fetch("http://192.168.1.10:3001/user/reg", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -109,7 +137,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			}
 			getData(result.data);
 			await AsyncStorage.setItem("token", result.data);
-			router.navigate("/profile/");
+			router.navigate("/registerEmail/");
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -150,6 +178,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				register: register,
 				isAuthenticated: isAuthenticated,
 				logout: logout,
+				registerEmail: registerEmail
 			}}
 		>
 			{props.children}
