@@ -10,17 +10,24 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+
+// регитсрация хахешировать пароь создать пользователя в бд создать токен отправить токен в обхекте success
+
+// добавить в функцию registerEmail параметры: username, password
+// отправить на бэк пост запрос с этими данными
 
 export function RegisterEmailForm() {
+
+	const params = useLocalSearchParams<{username: string, email: string, password: string}>()
+
 	const schema = yup.object().shape({
-		email: yup.string().required(),
 		code: yup.string().required(),
 	});
 
 	const { handleSubmit, control, setValue, setError } = useForm<IEmailCode>({
 		resolver: yupResolver(schema),
 		defaultValues: {
-			email: "",
 			code: "",
 		},
 	});
@@ -29,8 +36,9 @@ export function RegisterEmailForm() {
 	const { registerEmail } = useAuthContext();
 
 	function onSubmit(data: IEmailCode) {
+		console.log(data)
 		async function request() {
-			const response = await registerEmail(data.email, Number(data.code));
+			const response = await registerEmail(params.email, Number(data.code));
 			if (typeof response === "string") {
 				setGlobalError(response);
 				// } else {
@@ -58,22 +66,24 @@ export function RegisterEmailForm() {
 
 			<View style={styles.form}>
 				<Controller
-					control={control}
-					name="code"
-					render={({ field, fieldState }) => (
-						<Input
-							label="Код з пошти"
-							keyboardType="numeric"
-							onChange={(text) => field.onChange(text)}
-							// value={field.value.toString()}
-							autoCorrect={false}
-							errorMessage={fieldState.error?.message}
-							iconLeft={
-								<ICONS.EmailIcon width={30} height={30} />
-							}
-						/>
-					)}
-				/>
+						control={control}
+						name="code"
+						render={({ field, fieldState }) => {
+							return (
+								<Input
+									iconLeft={
+										<ICONS.EmailIcon width={30} height={30} />
+									}
+									onChange={field.onChange}
+									onChangeText={field.onChange}
+									value={field.value}
+									label="Код з пошти"
+									autoCorrect={false}
+									errorMessage={fieldState.error?.message}
+								/>
+							);
+						}}
+					/>
 			</View>
 
 			{!(globalError === "") && (
