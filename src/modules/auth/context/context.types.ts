@@ -21,7 +21,7 @@ export interface IAuthContext {
 	) => Promise<IReturnError[] | string>;
 	isAuthenticated: () => boolean;
 	logout: () => void;
-	registerEmail: (emailCode: string) => Promise<string | IReturnError[]>;
+	registerEmail: (email: string, code: number) => Promise<string | IReturnError[]>;
 }
 
 export interface IAuthContextProviderProps {

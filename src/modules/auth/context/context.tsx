@@ -8,6 +8,7 @@ import {
 import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import { ISuccess } from "../../../shared/types/response";
 
 const initialValue: IAuthContext = {
 	user: null,
@@ -38,26 +39,25 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	// 	console.log(user);
 	// }, [user]);
 
-	async function registerEmail(email: string) {
+	async function registerEmail(email: string, code: number) {
 		try {
-			const response = await fetch("http://192.168.1.10:3001/user/send-email-code", {
+			const response = await fetch("http://192.168.1.10:3001/user/verify-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					email: email
+					email: email,  // email, который мы отправили при регистрации
+					code: code,    // код, введенный пользователем
 				}),
 			});
-
-			const result: Response<string> = await response.json();
+	
+			const result = await response.json();
 			if (result.status === "error") {
 				return result.message;
 			}
-			if (result.status === "error-validation") {
-				return result.data;
-			}
-			getData(result.data);
-			await AsyncStorage.setItem("token", result.data);
-			router.navigate("/profile/");
+	
+			// Если код правильный, переходим на следующую страницу
+			router.navigate("/profile/");  // Здесь продолжается процесс регистрации
+	
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -127,7 +127,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 					confirmPassword: confirmPassword,
 				}),
 			});
-
+	
 			const result: Response<string> = await response.json();
 			if (result.status === "error") {
 				return result.message;
@@ -135,8 +135,18 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			if (result.status === "error-validation") {
 				return result.data;
 			}
-			getData(result.data);
+	
+			// Сохраняем token сразу после регистрации
 			await AsyncStorage.setItem("token", result.data);
+			await getData(result.data);
+	
+			// Отправляем email для получения кода
+			await fetch("http://192.168.1.10:3001/user/send-email-code", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ email }), // передаем email для отправки кода
+			});
+	
 			router.navigate("/registerEmail/");
 			return "";
 		} catch (error) {

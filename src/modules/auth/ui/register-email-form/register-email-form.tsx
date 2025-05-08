@@ -15,7 +15,8 @@ export function RegisterEmailForm() {
 	const schema = yup.object().shape({
 		email: yup
             .string()
-            .required()
+            .required(),
+		code: yup.number().required()
 	});
 
 	const { handleSubmit, control, setValue, setError } = useForm<IEmailCode>({
@@ -28,7 +29,7 @@ export function RegisterEmailForm() {
 
 	function onSubmit(data: IEmailCode) {
 		async function request() {
-			const response = await registerEmail(data.email);
+			const response = await registerEmail(data.email, data.code);
 			if (typeof response === "string") {
 				setGlobalError(response);
 			// } else {
