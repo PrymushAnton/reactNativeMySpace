@@ -20,7 +20,7 @@ const initialValue: IAuthContext = {
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
-	registerEmail: async (emailCode: number) => {return ""},
+	registerEmail: async (email: string) => {return ""},
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -38,13 +38,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	// 	console.log(user);
 	// }, [user]);
 
-	async function registerEmail(emailCode: number) {
+	async function registerEmail(email: string) {
 		try {
-			const response = await fetch("http://192.168.1.10:3001/user/reg", {
+			const response = await fetch("http://192.168.1.10:3001/user/send-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					emailCode: emailCode
+					email: email
 				}),
 			});
 

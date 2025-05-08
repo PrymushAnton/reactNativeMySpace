@@ -1,3 +1,3 @@
 export interface IEmailCode{
-	emailCode: number
+	email: string
 }

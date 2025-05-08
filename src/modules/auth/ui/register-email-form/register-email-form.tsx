@@ -13,13 +13,13 @@ import { useEffect, useState } from "react";
 
 export function RegisterEmailForm() {
 	const schema = yup.object().shape({
-		emailCode: yup
-            .number()
+		email: yup
+            .string()
             .required()
 	});
 
 	const { handleSubmit, control, setValue, setError } = useForm<IEmailCode>({
-		defaultValues: { emailCode: 0 },
+		defaultValues: { email: "" },
 		resolver: yupResolver(schema),
 	});
 
@@ -28,7 +28,7 @@ export function RegisterEmailForm() {
 
 	function onSubmit(data: IEmailCode) {
 		async function request() {
-			const response = await registerEmail(data.emailCode);
+			const response = await registerEmail(data.email);
 			if (typeof response === "string") {
 				setGlobalError(response);
 			// } else {
@@ -57,7 +57,7 @@ export function RegisterEmailForm() {
 			<View style={styles.form}>
 				<Controller
 					control={control}
-					name="emailCode"
+					name="email"
 					render={({ field, fieldState }) => {
 						return (
 							<Input
