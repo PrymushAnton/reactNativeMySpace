@@ -8,7 +8,6 @@ import {
 import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { ISuccess } from "../../../shared/types/response";
 
 const initialValue: IAuthContext = {
 	user: null,
@@ -21,7 +20,7 @@ const initialValue: IAuthContext = {
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
-	registerEmail: async (email: string) => {return ""},
+	registerEmail: async (email: string, code: number) => { return ""; },
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -32,12 +31,8 @@ export function useAuthContext() {
 
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
-
+	const [userEmail, setUserEmail] = useState<string>("");
 	const router = useRouter();
-
-	// useEffect(() => {
-	// 	console.log(user);
-	// }, [user]);
 
 	async function registerEmail(email: string, code: number) {
 		try {
@@ -45,8 +40,8 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					email: email,  // email, который мы отправили при регистрации
-					code: code,    // код, введенный пользователем
+					email: userEmail, // Используем email из контекста
+					code: code,
 				}),
 			});
 	
@@ -55,9 +50,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.message;
 			}
 	
-			// Если код правильный, переходим на следующую страницу
-			router.navigate("/profile/");  // Здесь продолжается процесс регистрации
-	
+			router.navigate("/profile/");
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -88,7 +81,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			const response = await fetch("http://192.168.1.10:3001/user/auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email: email, password: password }),
+				body: JSON.stringify({ email, password }),
 			});
 			const result: Response<string> = await response.json();
 			if (result.status === "error") {
@@ -97,16 +90,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			if (result.status === "error-validation") {
 				return result.data;
 			}
-			getData(result.data);
-
 			await AsyncStorage.setItem("token", result.data);
+			await getData(result.data);
 			router.navigate("/profile/");
 			return "";
-
 		} catch (error) {
 			console.error(error);
 			return "";
-
 		}
 	}
 
@@ -121,13 +111,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					username: username,
-					email: email,
-					password: password,
-					confirmPassword: confirmPassword,
+					username,
+					email,
+					password,
+					confirmPassword,
 				}),
 			});
-	
+
 			const result: Response<string> = await response.json();
 			if (result.status === "error") {
 				return result.message;
@@ -135,18 +125,17 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			if (result.status === "error-validation") {
 				return result.data;
 			}
-	
-			// Сохраняем token сразу после регистрации
+
 			await AsyncStorage.setItem("token", result.data);
 			await getData(result.data);
-	
-			// Отправляем email для получения кода
+
+			setUserEmail(email); // сохраняем email
 			await fetch("http://192.168.1.10:3001/user/send-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email }), // передаем email для отправки кода
+				body: JSON.stringify({ email }),
 			});
-	
+
 			router.navigate("/registerEmail/");
 			return "";
 		} catch (error) {
@@ -156,10 +145,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	}
 
 	function isAuthenticated() {
-		if (!user) {
-			return false;
-		}
-		return true;
+		return !!user;
 	}
 
 	async function logout() {
@@ -170,9 +156,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getToken() {
 		const token = await AsyncStorage.getItem("token");
-		if (!token) {
-			return;
-		}
+		if (!token) return;
 		getData(token);
 	}
 
@@ -183,12 +167,12 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	return (
 		<authContext.Provider
 			value={{
-				user: user,
-				login: login,
-				register: register,
-				isAuthenticated: isAuthenticated,
-				logout: logout,
-				registerEmail: registerEmail
+				user,
+				login,
+				register,
+				isAuthenticated,
+				logout,
+				registerEmail,
 			}}
 		>
 			{props.children}

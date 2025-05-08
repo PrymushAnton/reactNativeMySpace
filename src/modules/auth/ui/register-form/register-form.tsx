@@ -203,7 +203,6 @@ export function RegisterForm() {
 							Увійти
 						</Link>
 					</Text>
-					<Link href={"/registerEmail"} style={{ color: "white", padding: 15 }}><Text>Email code page test delete this link pls</Text></Link>
 				</View>
 			</View>
 		</KeyboardAvoidingView>

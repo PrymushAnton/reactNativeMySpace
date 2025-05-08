@@ -13,15 +13,16 @@ import { useEffect, useState } from "react";
 
 export function RegisterEmailForm() {
 	const schema = yup.object().shape({
-		email: yup
-            .string()
-            .required(),
-		code: yup.number().required()
+		email: yup.string().required(),
+		code: yup.string().required(),
 	});
 
 	const { handleSubmit, control, setValue, setError } = useForm<IEmailCode>({
-		defaultValues: { email: "" },
 		resolver: yupResolver(schema),
+		defaultValues: {
+			email: "",
+			code: "",
+		},
 	});
 
 	const [globalError, setGlobalError] = useState<string>("");
@@ -29,15 +30,15 @@ export function RegisterEmailForm() {
 
 	function onSubmit(data: IEmailCode) {
 		async function request() {
-			const response = await registerEmail(data.email, data.code);
+			const response = await registerEmail(data.email, Number(data.code));
 			if (typeof response === "string") {
 				setGlobalError(response);
-			// } else {
-			// 	response.forEach((obj) => {
-			// 		setError(obj.path as keyof IEmailCode, {
-			// 			message: obj.message,
-			// 		});
-			// 	});
+				// } else {
+				// 	response.forEach((obj) => {
+				// 		setError(obj.path as keyof IEmailCode, {
+				// 			message: obj.message,
+				// 		});
+				// 	});
 			}
 		}
 		request();
@@ -58,21 +59,20 @@ export function RegisterEmailForm() {
 			<View style={styles.form}>
 				<Controller
 					control={control}
-					name="email"
-					render={({ field, fieldState }) => {
-						return (
-							<Input
-								label="Код з пошти"
-								onChange={field.onChange}
-								onChangeText={field.onChange}
-								autoCorrect={false}
-								errorMessage={fieldState.error?.message}
-								iconLeft={
-									<ICONS.EmailIcon width={30} height={30} />
-								}
-							/>
-						);
-					}}
+					name="code"
+					render={({ field, fieldState }) => (
+						<Input
+							label="Код з пошти"
+							keyboardType="numeric"
+							onChange={(text) => field.onChange(text)}
+							// value={field.value.toString()}
+							autoCorrect={false}
+							errorMessage={fieldState.error?.message}
+							iconLeft={
+								<ICONS.EmailIcon width={30} height={30} />
+							}
+						/>
+					)}
 				/>
 			</View>
 
@@ -97,8 +97,6 @@ export function RegisterEmailForm() {
 					onPress={handleSubmit(onSubmit)}
 				/>
 			</View>
-
-            <Link href={"/register"} style={{ color: "white", padding: 15 }}><Text>return to regsister</Text></Link>
 		</View>
 	);
 }
