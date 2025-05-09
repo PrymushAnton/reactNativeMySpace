@@ -6,6 +6,7 @@ export interface IError {
 export interface ISuccess<T> {
     status: 'success'
     data: T
+    token?: string;
 }
 
 export interface IReturnError{

@@ -20,6 +20,7 @@ const initialValue: IAuthContext = {
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
+	registerEmail: async (email: string, username: string, password: string, code: number) => { return ""; },
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -30,16 +31,41 @@ export function useAuthContext() {
 
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
-
 	const router = useRouter();
+	
+	async function registerEmail(email: string, username: string, password: string, code: number) {
+		try {
+			
+			const response = await fetch("http://192.168.1.10:3001/user/verify-email-code", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					username: username,
+					email: email, 
+					password: password,
+					code: code,
+				}),
+			});
+	
+			const result = await response.json();
+			if (result.status === "error") {
+				return result.message;
+			}
+			
+			await AsyncStorage.setItem("token", result.data);
+			await getData(result.data);
 
-	// useEffect(() => {
-	// 	console.log(user);
-	// }, [user]);
+			router.navigate("/profile/");
+			return "";
+		} catch (error) {
+			console.error(error);
+			return "";
+		}
+	}
 
 	async function getData(token: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/me", {
+			const response = await fetch("http://192.168.1.10:3001/user/me", {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const result: Response<IUser> = await response.json();
@@ -57,10 +83,10 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/auth", {
+			const response = await fetch("http://192.168.1.10:3001/user/auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email: email, password: password }),
+				body: JSON.stringify({ email, password }),
 			});
 			const result: Response<string> = await response.json();
 			if (result.status === "error") {
@@ -69,16 +95,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			if (result.status === "error-validation") {
 				return result.data;
 			}
-			getData(result.data);
-
 			await AsyncStorage.setItem("token", result.data);
+			await getData(result.data);
 			router.navigate("/profile/");
 			return "";
-
 		} catch (error) {
 			console.error(error);
 			return "";
-
 		}
 	}
 
@@ -89,14 +112,14 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		confirmPassword: string
 	) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/reg", {
+			const response = await fetch("http://192.168.1.10:3001/user/reg", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					username: username,
-					email: email,
-					password: password,
-					confirmPassword: confirmPassword,
+					username,
+					email,
+					password,
+					confirmPassword,
 				}),
 			});
 
@@ -107,9 +130,14 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			if (result.status === "error-validation") {
 				return result.data;
 			}
-			getData(result.data);
-			await AsyncStorage.setItem("token", result.data);
-			router.navigate("/profile/");
+
+			await fetch("http://192.168.1.10:3001/user/send-email-code", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ email }),
+			});
+
+			router.navigate({pathname: "/registerEmail/", params: {username: username, email: email, password: password}});
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -118,10 +146,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	}
 
 	function isAuthenticated() {
-		if (!user) {
-			return false;
-		}
-		return true;
+		return !!user;
 	}
 
 	async function logout() {
@@ -132,9 +157,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getToken() {
 		const token = await AsyncStorage.getItem("token");
-		if (!token) {
-			return;
-		}
+		if (!token) return;
 		getData(token);
 	}
 
@@ -145,11 +168,12 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	return (
 		<authContext.Provider
 			value={{
-				user: user,
-				login: login,
-				register: register,
-				isAuthenticated: isAuthenticated,
-				logout: logout,
+				user,
+				login,
+				register,
+				isAuthenticated,
+				logout,
+				registerEmail,
 			}}
 		>
 			{props.children}
