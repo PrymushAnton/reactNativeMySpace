@@ -20,7 +20,7 @@ const initialValue: IAuthContext = {
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
-	registerEmail: async (email: string, code: number) => { return ""; },
+	registerEmail: async (email: string, username: string, password: string, code: number) => { return ""; },
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -33,17 +33,17 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
 	const [userEmail, setUserEmail] = useState<string>("");
 	const router = useRouter();
-
-	async function registerEmail(email: string, code: number) {
+	
+	async function registerEmail(email: string, username: string, password: string, code: number) {
 		try {
-			const params = useLocalSearchParams<{username: string, email: string, password: string}>()
+			
 			const response = await fetch("http://192.168.1.10:3001/user/verify-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					username: params.username,
-					email: params.email, // Используем email из контекста
-					password: params.password,
+					username: username,
+					email: email, // Используем email из контекста
+					password: password,
 					code: code,
 				}),
 			});
@@ -53,6 +53,9 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.message;
 			}
 			
+			await AsyncStorage.setItem("token", result.data);
+			await getData(result.data);
+
 			router.navigate("/profile/");
 			return "";
 		} catch (error) {
@@ -129,8 +132,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			await AsyncStorage.setItem("token", result.data);
-			await getData(result.data);
+			
 
 			setUserEmail(email); // сохраняем email
 			await fetch("http://192.168.1.10:3001/user/send-email-code", {
