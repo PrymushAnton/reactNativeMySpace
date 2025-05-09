@@ -1,13 +1,13 @@
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { IPostProps } from "../../types/types";
-// import { DotsIcon } from "../../../../shared/ui/icons/dots-icon";
-// import { WritingIcon } from "../../../../shared/ui/icons/writing-icon";
-// import { LikeIcon } from "../../../../shared/ui/icons/like-icon";
-// import { SeenIcon } from "../../../../shared/ui/icons/seen-icon";
+
 import { ICONS } from "../../../../shared/ui/icons";
+import { useState } from "react";
 
 export function Post(props: IPostProps) {
 	const { name, avatar, text, hashtags, photo, likes, views } = props;
+
+	const [isLiked, setIsLiked] = useState<boolean>(false)
 
 	return (
 		<View style={styles.post}>
@@ -18,8 +18,7 @@ export function Post(props: IPostProps) {
 				</View>
 
 				<View style={styles.actions}>
-					{/* <DotsIcon/> */}
-					<View>{/* <WritingIcon></WritingIcon> */}</View>
+					<ICONS.DotsIcon/>
 				</View>
 			</View>
 
@@ -48,14 +47,22 @@ export function Post(props: IPostProps) {
 				) : undefined}
 
 				<View style={styles.reactions}>
-					<TouchableOpacity style={styles.reaction}>
-						{/* <ICONS.LikeIcon></ICONS.LikeIcon> */}
-						<Text style={styles.reactionText}>👍{likes} Вподобань</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.reaction}>
-						{/* <SeenIcon></SeenIcon> */}
-						<Text style={styles.reactionText}>👁{views} Переглядів</Text>
-					</TouchableOpacity>
+
+					<View style={styles.postActions}>
+						<TouchableOpacity style={styles.reaction} onPress={() => {setIsLiked(!isLiked)}}>
+							{
+								isLiked
+								? <ICONS.PressedLikeIcon/>
+								: <ICONS.LikeIcon/>
+							}
+						</TouchableOpacity>
+						<Text style={styles.reactionText}>{likes} Вподобань</Text>
+					</View>
+
+					<View style={styles.postActions}>
+						<ICONS.ViewsIcon/>
+						<Text style={styles.reactionText}>{views} Переглядів</Text>
+					</View>
 				</View>
 			</View>
 		</View>
@@ -139,8 +146,9 @@ const styles = StyleSheet.create({
 
 	reactions: {
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "flex-start",
 		marginTop: 8,
+		gap: 24
 	},
 
 	reaction: {
@@ -153,4 +161,8 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 		color: "#070A1C",
 	},
+	postActions: {
+		flexDirection: "row",
+		gap: 5
+	}
 });

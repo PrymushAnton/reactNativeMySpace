@@ -38,6 +38,9 @@ export function LoginForm() {
 				data.email,
 				data.password
 			);
+			setValue("email", "")
+			setValue("password", "")
+
 			if (typeof(response) === "string") {
 				setGlobalError(response)
 			} else {
@@ -46,7 +49,7 @@ export function LoginForm() {
 				})
 			}
 		}
-		request()		
+		request()
 	}
 
 	return (
@@ -119,8 +122,9 @@ export function LoginForm() {
 						href={"/register"}
 						style={{
 							color: "white",
-							textDecorationLine: "underline",
+							textDecorationLine: "underline"
 						}}
+						replace={true}
 					>
 						Зареєструватись
 					</Link>

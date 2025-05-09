@@ -1,31 +1,31 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { LogoutIcon } from "../ui/icons/logout-icon";
-import { PlusIcon } from "../ui/icons/plus-icon";
-import { SettingsIcon } from "../ui/icons/settings-icon";
-import { LogoIcon } from "../ui/icons/logo-icon";
+import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { ICONS } from "../ui/icons";
+import { useAuthContext } from "../../modules/auth/context";
 
 export function Header() {
+	const {logout} = useAuthContext()
+
 	return (
-		<View style={styles.header}>
+		<Animated.View style={styles.header}>
 			<TouchableOpacity>
-				
-				{/* <LogoIcon /> */}
+				<ICONS.LogoIcon />
 			</TouchableOpacity>
 			<View style={styles.icons}>
+
 				<TouchableOpacity>
-					
-					{/* <PlusIcon /> */}
+					<ICONS.PlusIcon />
 				</TouchableOpacity>
+
 				<TouchableOpacity>
-					
-					{/* <SettingsIcon /> */}
+					<ICONS.SettingsIcon />
 				</TouchableOpacity>
-				<TouchableOpacity>
-					
-					{/* <LogoutIcon /> */}
+				
+				<TouchableOpacity onPress={logout}>
+					<ICONS.LogoutIcon />
 				</TouchableOpacity>
+
 			</View>
-		</View>
+		</Animated.View>
 	);
 }
 
@@ -33,8 +33,14 @@ const styles = StyleSheet.create({
 	header: {
 		flex: 1,
 		justifyContent: "space-between",
+		flexDirection: "row",
+		alignItems: "center",
+		paddingHorizontal: 16,
+		paddingVertical: 8
 	},
 	icons: {
 		justifyContent: "space-between",
+		flexDirection: "row",
+		gap: 10
 	},
 });

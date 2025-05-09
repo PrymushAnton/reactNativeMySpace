@@ -1,10 +1,7 @@
 import {
-	Keyboard,
 	View,
 	Text,
-	KeyboardAvoidingView,
-	ScrollView,
-	TouchableWithoutFeedback,
+	KeyboardAvoidingView
 } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
@@ -199,6 +196,7 @@ export function RegisterForm() {
 								color: "white",
 								textDecorationLine: "underline",
 							}}
+							replace={true}
 						>
 							Увійти
 						</Link>
