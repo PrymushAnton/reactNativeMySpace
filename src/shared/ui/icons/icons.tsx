@@ -7,6 +7,7 @@ import { PasswordIcon } from "./password-icon";
 import { PhoneNumberIcon } from "./phone-number-icon";
 import { UserIcon } from "./user-icon";
 import { ErrorIcon } from "./error-icon";
+import { LikeIcon } from "./like-icon";
 
 export const ICONS = {
     DateIcon,
@@ -17,5 +18,6 @@ export const ICONS = {
     PasswordIcon,
     PhoneNumberIcon,
     UserIcon,
-    ErrorIcon
+    ErrorIcon,
+    LikeIcon,
 }
