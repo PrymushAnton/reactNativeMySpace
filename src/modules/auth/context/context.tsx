@@ -7,7 +7,7 @@ import {
 } from "./context.types";
 import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 const initialValue: IAuthContext = {
 	user: null,
@@ -31,7 +31,6 @@ export function useAuthContext() {
 
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
-	const [userEmail, setUserEmail] = useState<string>("");
 	const router = useRouter();
 	
 	async function registerEmail(email: string, username: string, password: string, code: number) {
@@ -42,7 +41,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					username: username,
-					email: email, // Используем email из контекста
+					email: email, 
 					password: password,
 					code: code,
 				}),
@@ -132,16 +131,11 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			
-
-			setUserEmail(email); // сохраняем email
 			await fetch("http://192.168.1.10:3001/user/send-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),
 			});
-
-			
 
 			router.navigate({pathname: "/registerEmail/", params: {username: username, email: email, password: password}});
 			return "";

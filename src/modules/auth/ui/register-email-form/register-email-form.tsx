@@ -8,15 +8,8 @@ import { styles } from "./register-email-form.styles";
 import { useAuthContext } from "../../context";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-
-
-// регитсрация хахешировать пароь создать пользователя в бд создать токен отправить токен в обхекте success
-
-// добавить в функцию registerEmail параметры: username, password
-// отправить на бэк пост запрос с этими данными
 
 export function RegisterEmailForm() {
 
@@ -41,12 +34,6 @@ export function RegisterEmailForm() {
 			const response = await registerEmail(params.email, params.username, params.password, Number(data.code));
 			if (typeof response === "string") {
 				setGlobalError(response);
-				// } else {
-				// 	response.forEach((obj) => {
-				// 		setError(obj.path as keyof IEmailCode, {
-				// 			message: obj.message,
-				// 		});
-				// 	});
 			}
 		}
 		request();
