@@ -14,14 +14,12 @@ export interface IAuthContext {
 	user: IUser | null;
 	login: (email: string, password: string) => Promise<IReturnError[] | string>;
 	register: (
-		username: string,
 		email: string,
 		password: string,
-		confirmPassword: string,
 	) => Promise<IReturnError[] | string>;
 	isAuthenticated: () => boolean;
 	logout: () => void;
-	registerEmail: (email: string, username: string, password: string, code: number) => Promise<string | IReturnError[]>;
+	registerEmail: (email: string, password: string, code: number) => Promise<string | IReturnError[]>;
 }
 
 export interface IAuthContextProviderProps {

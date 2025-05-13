@@ -13,7 +13,7 @@ import { useLocalSearchParams } from "expo-router";
 
 export function RegisterEmailForm() {
 
-	const params = useLocalSearchParams<{username: string, email: string, password: string}>()
+	const params = useLocalSearchParams<{email: string, password: string}>()
 
 	const schema = yup.object().shape({
 		code: yup.string().required(),
@@ -31,7 +31,7 @@ export function RegisterEmailForm() {
 
 	function onSubmit(data: IEmailCode) {
 		async function request() {
-			const response = await registerEmail(params.email, params.username, params.password, Number(data.code));
+			const response = await registerEmail(params.email, params.password, Number(data.code));
 			if (typeof response === "string") {
 				setGlobalError(response);
 			}
