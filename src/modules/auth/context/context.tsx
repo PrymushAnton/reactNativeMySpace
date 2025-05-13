@@ -52,7 +52,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await AsyncStorage.setItem("token", result.data);
 			await getData(result.data);
 
-			router.replace("/profile/");
+			router.replace("/main/");
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -106,7 +106,6 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		email: string,
 		password: string,
 	) {
-		console.log(123124124124)
 
 		try {
 			const response = await fetch("http://192.168.1.10:3001/user/reg", {

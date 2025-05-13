@@ -1,5 +1,5 @@
 import { Button } from "../../../../shared/ui/button";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
 import { IEmailCode } from "../../types";
@@ -10,10 +10,10 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
+import { COLORS } from "../../../../shared/constants";
 
 export function RegisterEmailForm() {
-
-	const params = useLocalSearchParams<{email: string, password: string}>()
+	const params = useLocalSearchParams<{ email: string; password: string }>();
 
 	const schema = yup.object().shape({
 		code: yup.string().required(),
@@ -31,7 +31,11 @@ export function RegisterEmailForm() {
 
 	function onSubmit(data: IEmailCode) {
 		async function request() {
-			const response = await registerEmail(params.email, params.password, Number(data.code));
+			const response = await registerEmail(
+				params.email,
+				params.password,
+				Number(data.code)
+			);
 			if (typeof response === "string") {
 				setGlobalError(response);
 			}
@@ -41,58 +45,70 @@ export function RegisterEmailForm() {
 
 	return (
 		<View style={styles.container}>
-			<Text
-				style={{
-					fontSize: 36,
-					textAlign: "center",
-					color: "white",
-				}}
-			>
-				Реєстрація
-			</Text>
-
 			<View style={styles.form}>
-				<Controller
-						control={control}
-						name="code"
-						render={({ field, fieldState }) => {
-							return (
-								<Input
-									iconLeft={
-										<ICONS.EmailIcon width={30} height={30} />
-									}
-									onChange={field.onChange}
-									onChangeText={field.onChange}
-									value={field.value}
-									label="Код з пошти"
-									autoCorrect={false}
-									errorMessage={fieldState.error?.message}
-								/>
-							);
-						}}
-					/>
-			</View>
-
-			{!(globalError === "") && (
-				<View
+				<Text
 					style={{
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
+						fontSize: 24,
+						textAlign: "center",
+						color: "#070A1C",
 					}}
 				>
-					<ICONS.ErrorIcon width={30} height={30} />
-					<Text style={{ display: "flex", color: "red" }}>
-						{globalError}
-					</Text>
-				</View>
-			)}
+					Підтвердження пошти
+				</Text>
 
-			<View style={styles.buttonBlock}>
-				<Button
-					text="Зареєструватись"
-					onPress={handleSubmit(onSubmit)}
+				<Text
+					style={{
+						fontSize: 15,
+						textAlign: "center",
+						color: "#070A1C",
+					}}
+				>
+					Ми надіслали 6-значний код на вашу пошту (you@example.com).
+					Введіть його нижче, щоб підтвердити акаунт
+				</Text>
+
+				<Controller
+					control={control}
+					name="code"
+					render={({ field, fieldState }) => (
+						<Input.Code
+							label="Код підтвердження"
+							errorMessage={fieldState.error?.message}
+							onChangeText={field.onChange}
+						/>
+					)}
 				/>
+
+				{!(globalError === "") && (
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<ICONS.ErrorIcon width={30} height={30} />
+						<Text style={{ display: "flex", color: "red" }}>
+							{globalError}
+						</Text>
+					</View>
+				)}
+
+				<View style={styles.buttonBlock}>
+					<TouchableOpacity onPress={handleSubmit(onSubmit)}>
+						<Text style={{ color: COLORS.WHITE }}>Підтвердити</Text>
+					</TouchableOpacity>
+				</View>
+
+				<View>
+					<TouchableOpacity
+						onPress={() => {
+							console.log("назад");
+						}}
+					>
+						<Text style={{ color: COLORS.BLACK }}>Назад</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</View>
 	);
