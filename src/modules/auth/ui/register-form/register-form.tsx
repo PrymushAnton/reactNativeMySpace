@@ -20,12 +20,6 @@ import { navigate } from "expo-router/build/global-state/routing";
 
 export function RegisterForm() {
 	const schema = yup.object().shape({
-		username: yup
-			.string()
-			.required("Це поле обов'язкове")
-			.min(3, "Довжина повинна бути 3 або більше")
-			.max(32, "Довжина повинна бути менше або 32")
-			.trim("Видаліть пробіли на початку і в кінці"),
 		email: yup
 			.string()
 			.email("Некоректна пошта")
@@ -64,20 +58,16 @@ export function RegisterForm() {
 	const { handleSubmit, control, formState, setValue, setError } =
 		useForm<IRegistration>({
 			defaultValues: {
-				username: "",
 				email: "",
 				password: "",
-				confirmPassword: "",
 			},
 			resolver: yupResolver(schema),
 		});
 	function onSubmit(data: IRegistration) {
 		async function request() {
 			const response = await register(
-				data.username,
 				data.email,
 				data.password,
-				data.confirmPassword
 			);
 			if (typeof response === "string") {
 				setGlobalError(response);
@@ -96,6 +86,7 @@ export function RegisterForm() {
 		<View style={styles.registerForm}>
 			<View style={styles.header}>
 				<ICONS.LogoIcon width={145} height={18} />
+
 			</View>
 			<View style={styles.form}>
 				<View style={styles.loginRegisterNav}>
