@@ -14,7 +14,8 @@ export function Providers({ children }: { children: ReactNode }) {
 		<SafeAreaProvider>
 			<AuthContextProvider>
 				<StatusBar style="auto" />
-				<SafeAreaView style={{ flex: 1, backgroundColor: "#E9E5EE" }}>
+				{/* #E9E5EE */}
+				<SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
 					{children}
 				</SafeAreaView>
 			</AuthContextProvider>

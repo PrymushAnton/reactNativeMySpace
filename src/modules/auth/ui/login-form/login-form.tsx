@@ -8,7 +8,7 @@ import { useAuthContext } from "../../context";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
-import { navigate } from "expo-router/build/global-state/routing";
+import { useRouter } from "expo-router";
 
 export function LoginForm() {
 	const schema = yup.object().shape({
@@ -30,6 +30,7 @@ export function LoginForm() {
 
 	const [globalError, setGlobalError] = useState<string>("");
 	const { login } = useAuthContext();
+	const {replace} = useRouter();
 
 	function onSubmit(data: ILogin) {
 		async function request() {
@@ -55,10 +56,11 @@ export function LoginForm() {
 			<View style={styles.header}>
 				<ICONS.LogoIcon width={145} height={18} />
 			</View>
+
 			<View style={styles.form}>
 				<View style={styles.loginRegisterNav}>
 					<TouchableOpacity onPress={()=>(
-						navigate("/register")
+						replace("/register")
 					)}>
 						<Text
 							style={{

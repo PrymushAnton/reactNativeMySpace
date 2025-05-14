@@ -16,7 +16,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { navigate } from "expo-router/build/global-state/routing";
+
 
 export function RegisterForm() {
 	const schema = yup.object().shape({
@@ -51,7 +51,7 @@ export function RegisterForm() {
 			.oneOf([yup.ref("password")], "Паролі не співпадають"),
 	});
 
-	const router = useRouter();
+	const {replace} = useRouter();
 	const { register } = useAuthContext();
 	const [globalError, setGlobalError] = useState<string>("");
 
@@ -88,6 +88,8 @@ export function RegisterForm() {
 				<ICONS.LogoIcon width={145} height={18} />
 
 			</View>
+
+
 			<View style={styles.form}>
 				<View style={styles.loginRegisterNav}>
 					<TouchableOpacity>
@@ -103,8 +105,9 @@ export function RegisterForm() {
 							Реєстрація
 						</Text>
 					</TouchableOpacity>
+
 					<TouchableOpacity onPress={()=>(
-						navigate("/login")
+						replace("/login")
 					)}>
 						<Text
 							style={{

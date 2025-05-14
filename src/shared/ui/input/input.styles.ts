@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
 	input: {
 		flex: 1,
 		height: "100%",
-		color: "white",
+		color: "#070A1C",
 	},
 	label: {
 		fontWeight: 500,

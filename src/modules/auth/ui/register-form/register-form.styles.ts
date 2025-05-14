@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	registerForm: {
-		backgroundColor: "#E9E5EE",
+		backgroundColor: "#E9E5EE"
 	},
 	header: {
 		backgroundColor: "#FFFFFF",
@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
 		gap: 24,
 		top: 50,
 		flexDirection: "column",
-		marginHorizontal: 16,
+		marginHorizontal: 16		
 	},
 
 	loginRegisterNav: {
