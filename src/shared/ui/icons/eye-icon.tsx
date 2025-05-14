@@ -13,7 +13,7 @@ export function EyeIcon(props: SvgProps) {
     >
       <Path
         d="M11 4.5a3 3 0 100 6 3 3 0 000-6zm0 8a5 5 0 110-10 5 5 0 010 10zM11 0C6 0 1.73 3.11 0 7.5 1.73 11.89 6 15 11 15s9.27-3.11 11-7.5C20.27 3.11 16 0 11 0z"
-        fill="#fff"
+        fill="#81818D"
       />
     </Svg>
   )

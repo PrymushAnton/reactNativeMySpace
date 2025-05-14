@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants";
 
 export const styles = StyleSheet.create({
 	inputBox: {
@@ -7,10 +6,13 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		paddingHorizontal: 15,
-		borderRadius: 25,
-		backgroundColor: COLORS.GREY,
-		maxWidth: 330,
-		width: "100%",
+		borderRadius: 10,
+		backgroundColor: "#FFFFFF",
+		borderColor:"#CDCED2",
+		borderWidth: 1,
+		maxWidth: "auto",
+		width: "100%"
+
 	},
 
 	inputEmailCodeBox: {
@@ -82,4 +84,6 @@ export const styles = StyleSheet.create({
 		color: "red",
 		fontSize: 16,
 	},
+
 });
+

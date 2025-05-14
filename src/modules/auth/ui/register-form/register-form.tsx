@@ -1,7 +1,8 @@
 import {
 	View,
 	Text,
-	KeyboardAvoidingView
+	KeyboardAvoidingView,
+	TouchableOpacity,
 } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
@@ -15,6 +16,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
 import { useState } from "react";
+import { navigate } from "expo-router/build/global-state/routing";
 
 export function RegisterForm() {
 	const schema = yup.object().shape({
@@ -51,8 +53,7 @@ export function RegisterForm() {
 
 	const router = useRouter();
 	const { register } = useAuthContext();
-	const [globalError, setGlobalError] = useState<string>("")
-	
+	const [globalError, setGlobalError] = useState<string>("");
 
 	const { handleSubmit, control, formState, setValue, setError } =
 		useForm<IRegistration>({
@@ -63,114 +64,146 @@ export function RegisterForm() {
 			resolver: yupResolver(schema),
 		});
 	function onSubmit(data: IRegistration) {
-		async function request(){
+		async function request() {
 			const response = await register(
 				data.email,
 				data.password,
 			);
-			if (typeof(response) === "string") {
-				setGlobalError(response)
+			if (typeof response === "string") {
+				setGlobalError(response);
 			} else {
 				response.forEach((obj) => {
-					setError(obj.path as keyof IRegistration, {message: obj.message});
-				})
+					setError(obj.path as keyof IRegistration, {
+						message: obj.message,
+					});
+				});
 			}
 		}
-		request()		
+		request();
 	}
 
 	return (
-		<KeyboardAvoidingView behavior="padding" style={styles.container}>
-			<Text
-				style={{
-					fontSize: 36,
-					textAlign: "center",
-					color: "white",
-				}}
-			>
-				Реєстрація
-			</Text>
-			<View
-				style={styles.formContent}
-			>
-				<Controller
-					control={control}
-					name="email"
-					render={({ field, fieldState }) => {
-						return (
-							<Input
-								iconLeft={
-									<ICONS.EmailIcon width={30} height={30} />
-								}
-								onChange={field.onChange}
-								onChangeText={field.onChange}
-								value={field.value}
-								label="Пошта"
-								autoCorrect={false}
-								errorMessage={fieldState.error?.message}
-							/>
-						);
-					}}
-				/>
+		<View style={styles.registerForm}>
+			<View style={styles.header}>
+				<ICONS.LogoIcon width={145} height={18} />
 
-				<Controller
-					control={control}
-					name="password"
-					render={({ field, fieldState }) => {
-						return (
-							<Input.Password
-								onChange={field.onChange}
-								onChangeText={field.onChange}
-								value={field.value}
-								label="Пароль"
-								autoCorrect={false}
-								errorMessage={fieldState.error?.message}
-							/>
-						);
-					}}
-				/>
-				<Controller
-					control={control}
-					name="confirmPassword"
-					render={({ field, fieldState }) => {
-						return (
-							<Input.Password
-								onChange={field.onChange}
-								onChangeText={field.onChange}
-								value={field.value}
-								label="Повторіть пароль"
-								autoCorrect={false}
-								errorMessage={fieldState.error?.message}
-							/>
-						);
-					}}
-				/>
-				{
-					!(globalError === "")
-					&& <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-						<ICONS.ErrorIcon width={30} height={30}/>
-						<Text style={{display:"flex", color: "red"}}>{globalError}</Text>
-					</View>
-				}
 			</View>
-			<View style={styles.buttonBlock}>
-				<Button text="Продовжити" onPress={handleSubmit(onSubmit)} />
-				<View style={{alignItems: "center", justifyContent: "center"}}>
-					<Text style={{ color: "white" }}>
-						Вже маєте акаунт?{" "}
-						<Link
-							href={"/login"}
+			<View style={styles.form}>
+				<View style={styles.loginRegisterNav}>
+					<TouchableOpacity>
+						<Text
 							style={{
-								color: "white",
-								textDecorationLine: "underline",
+								fontWeight: 700,
+								color: "#070A1C",
+								fontSize: 24,
+								borderBottomColor: "#543C52",
+								borderBottomWidth: 2,
 							}}
-							replace={true}
 						>
-							Увійти
-						</Link>
-					</Text>
+							Реєстрація
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={()=>(
+						navigate("/login")
+					)}>
+						<Text
+							style={{
+								fontWeight: 500,
+								color: "#81818D",
+								fontSize: 24,
+							}}
+						>
+							Авторизація
+						</Text>
+					</TouchableOpacity>
 				</View>
+				<Text style={styles.greetingText}>Приєднуйся до World IT</Text>
+				<View>
+					<Text style={styles.inputText}>Електрона пошта</Text>
+					<Controller
+						control={control}
+						name="email"
+						render={({ field, fieldState }) => {
+							return (
+								<Input
+									iconLeft={
+										<ICONS.EmailIcon
+											width={30}
+											height={30}
+										/>
+									}
+									placeholder="you@example.com"
+									onChange={field.onChange}
+									onChangeText={field.onChange}
+									value={field.value}
+									autoCorrect={false}
+									errorMessage={fieldState.error?.message}
+								/>
+							);
+						}}
+					/>
+				</View>
+
+				<View>
+					<Text style={styles.inputText}>Пароль</Text>
+					<Controller
+						control={control}
+						name="password"
+						render={({ field, fieldState }) => {
+							return (
+								<Input.Password
+									placeholder="Введи пароль"
+									onChange={field.onChange}
+									onChangeText={field.onChange}
+									value={field.value}
+									autoCorrect={false}
+									errorMessage={fieldState.error?.message}
+								/>
+							);
+						}}
+					/>
+				</View>
+				<View>
+					<Text style={styles.inputText}>Повторіть пароль</Text>
+					<Controller
+						control={control}
+						name="confirmPassword"
+						render={({ field, fieldState }) => {
+							return (
+								<Input.Password
+									placeholder="Повтори пароль"
+									onChange={field.onChange}
+									onChangeText={field.onChange}
+									value={field.value}
+									autoCorrect={false}
+									errorMessage={fieldState.error?.message}
+								/>
+							);
+						}}
+					/>
+				</View>
+
+				{!(globalError === "") && (
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<ICONS.ErrorIcon width={30} height={30} />
+						<Text style={{ display: "flex", color: "red" }}>
+							{globalError}
+						</Text>
+					</View>
+				)}
+				<TouchableOpacity
+					onPress={handleSubmit(onSubmit)}
+					style={styles.submitButt}
+				>
+					<Text style={{ color: "#FFFFFF" }}>Увійти</Text>
+				</TouchableOpacity>
 			</View>
-		</KeyboardAvoidingView>
+		</View>
 	);
 }

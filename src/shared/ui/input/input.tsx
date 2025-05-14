@@ -15,7 +15,7 @@ function Input(props: IInputProps) {
 				<TextInput
 					style={styles.input}
 					autoFocus={false}
-					placeholderTextColor={"rgba(255, 255, 255, 0.5)"}
+					placeholderTextColor={"#81818D"}
 					{...otherProps}
 				/>
 				{iconRight && (
@@ -24,7 +24,7 @@ function Input(props: IInputProps) {
 			</View>
 			{errorMessage && (
 				<View style={styles.errorBox}>
-					<ICONS.ErrorIcon width={16} height={16} />
+					<ICONS.ErrorIcon width={16} height={16}/>
 					<Text style={styles.errorMessage}>{errorMessage}</Text>
 				</View>
 			)}
@@ -46,7 +46,7 @@ function Password(props: Omit<IInputProps, "iconLeft" | "iconRight">) {
 				<TextInput
 					secureTextEntry={isHidden}
 					style={styles.input}
-					placeholderTextColor={"white"}
+					placeholderTextColor={"#81818D"}
 					{...otherProps}
 				/>
 				<View style={{ marginLeft: "auto" }}>
