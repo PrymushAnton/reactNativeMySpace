@@ -13,14 +13,12 @@ const initialValue: IAuthContext = {
 	user: null,
 	login: async (email: string, password: string): Promise<IReturnError[] | string> => "",
 	register: async (
-		username: string,
 		email: string,
 		password: string,
-		confirmPassword: string
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
-	registerEmail: async (email: string, username: string, password: string, code: number) => { return ""; },
+	registerEmail: async (email: string, password: string, code: number) => { return ""; },
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -33,14 +31,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
 	const router = useRouter();
 	
-	async function registerEmail(email: string, username: string, password: string, code: number) {
+	async function registerEmail(email: string, password: string, code: number) {
 		try {
 			
-			const response = await fetch("http://192.168.3.11:3001/user/verify-email-code", {
+			const response = await fetch("http://192.168.1.10:3001/user/verify-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					username: username,
 					email: email, 
 					password: password,
 					code: code,
@@ -55,7 +52,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await AsyncStorage.setItem("token", result.data);
 			await getData(result.data);
 
-			router.replace("/profile/");
+			router.replace("/main/");
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -65,7 +62,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getData(token: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/me", {
+			const response = await fetch("http://192.168.1.10:3001/user/me", {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const result: Response<IUser> = await response.json();
@@ -83,7 +80,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/auth", {
+			const response = await fetch("http://192.168.1.10:3001/user/auth", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password }),
@@ -106,22 +103,17 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	}
 
 	async function register(
-		username: string,
 		email: string,
 		password: string,
-		confirmPassword: string
 	) {
-		console.log(123124124124)
 
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/reg", {
+			const response = await fetch("http://192.168.1.10:3001/user/reg", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					username,
 					email,
 					password,
-					confirmPassword,
 				}),
 			});
 
@@ -133,13 +125,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			await fetch("http://192.168.3.11:3001/user/send-email-code", {
+			await fetch("http://192.168.1.10:3001/user/send-email-code", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),
 			});
 
-			router.replace({pathname: "/registerEmail/", params: {username: username, email: email, password: password}});
+			router.replace({pathname: "/registerEmail/", params: {email: email, password: password}});
 			return "";
 		} catch (error) {
 			console.error(error);
