@@ -4,7 +4,7 @@ import { Providers } from "./Providers";
 export default function RootLayout() {
 	return (
 		<Providers>
-			<Stack screenOptions={{headerShown: false, contentStyle: {backgroundColor: "#141414"}}}>
+			<Stack screenOptions={{headerShown: false, contentStyle: {backgroundColor: "#E9E5EE"}}}>
 				
 			</Stack>
 			

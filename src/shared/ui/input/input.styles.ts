@@ -1,16 +1,16 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../../constants";
 
 export const styles = StyleSheet.create({
 	inputBox: {
 		height: 60,
 		flexDirection: "row",
 		alignItems: "center",
-		// justifyContent: "flex-start",
 		paddingHorizontal: 15,
-		borderRadius: 25,
-		backgroundColor: COLORS.GREY,
-		maxWidth: 330,
+		borderRadius: 10,
+		backgroundColor: "#FFFFFF",
+		borderColor:"#CDCED2",
+		borderWidth: 1,
+		maxWidth: "auto",
 		width: "100%"
 	},
 	input: {
@@ -34,4 +34,5 @@ export const styles = StyleSheet.create({
 		color: "red",
 		fontSize: 16,
 	},
+	
 });

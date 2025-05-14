@@ -1,32 +1,48 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-    container: {
-        flex: 1, 
-        justifyContent: "center", 
-        gap: 30
-    },
+	registerForm: {
+		backgroundColor: "#E9E5EE",
+	},
+	header: {
+		backgroundColor: "#FFFFFF",
+		alignItems: "center",
+		paddingVertical: 8,
+		paddingHorizontal: 16,
+	},
 
-    form: {
-        width: "100%",
-        minHeight: 250,
-        gap: 20,
-        flex: 1
-    },
+	form: {
+		paddingVertical: 44,
+		paddingHorizontal: 16,
+		borderRadius: 20,
+		backgroundColor: "#FFFFFF",
+		gap: 24,
+		top: 50,
+		flexDirection: "column",
+		marginHorizontal: 16,
+	},
 
-    formContent: {
-        alignItems: "center",
-        justifyContent: "center"
-    },
-
-    inputContainer: {
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-        width: "100%"
-    },
-
-    buttonBlock: {
-        alignSelf: "center"
-    },
-})
+	loginRegisterNav: {
+		flexDirection: "row",
+		justifyContent: "space-around",
+	},
+	greetingText: {
+		color: "#070A1C",
+		alignSelf: "center",
+		fontSize: 24,
+		fontWeight: 500,
+	},
+	submitButt: {
+		backgroundColor: "#543C52",
+		paddingVertical: 16,
+		paddingHorizontal: 24,
+		gap: 8,
+		borderRadius: 1234,
+		alignItems: "center",
+	},
+	inputText: {
+		color: "#070A1C",
+		fontWeight: 400,
+		fontSize: 16,
+	},
+});
