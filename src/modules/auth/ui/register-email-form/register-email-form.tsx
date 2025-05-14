@@ -45,27 +45,34 @@ export function RegisterEmailForm() {
 
 	return (
 		<View style={styles.container}>
+			<View style={styles.logoContainer}>
+				<ICONS.LogoIcon/>
+			</View>
 			<View style={styles.form}>
 				<Text
 					style={{
 						fontSize: 24,
 						textAlign: "center",
 						color: "#070A1C",
+						fontFamily: 'GTWalsheimPro-Regular',
 					}}
 				>
 					Підтвердження пошти
 				</Text>
-
-				<Text
-					style={{
-						fontSize: 15,
-						textAlign: "center",
-						color: "#070A1C",
-					}}
-				>
-					Ми надіслали 6-значний код на вашу пошту (you@example.com).
-					Введіть його нижче, щоб підтвердити акаунт
-				</Text>
+				<View style={styles.textEmailContainer}>
+					<Text
+						style={{
+							fontSize: 14,
+							textAlign: "center",
+							color: "#070A1C",
+							fontFamily: "GTWalsheimPro-Regular"
+						}}
+					>
+						Ми надіслали 6-значний код на вашу пошту
+						({params.email}). Введіть його нижче, щоб підтвердити
+						акаунт
+					</Text>
+				</View>
 
 				<Controller
 					control={control}
@@ -93,21 +100,24 @@ export function RegisterEmailForm() {
 						</Text>
 					</View>
 				)}
+				<View style={styles.buttonsBlock}>
+					<View style={styles.buttonRegister}>
+						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
+							<Text style={{ color: COLORS.WHITE, fontFamily: "GTWalsheimPro-Regular" }}>
+								Підтвердити
+							</Text>
+						</TouchableOpacity>
+					</View>
 
-				<View style={styles.buttonBlock}>
-					<TouchableOpacity onPress={handleSubmit(onSubmit)}>
-						<Text style={{ color: COLORS.WHITE }}>Підтвердити</Text>
-					</TouchableOpacity>
-				</View>
-
-				<View>
-					<TouchableOpacity
-						onPress={() => {
-							console.log("назад");
-						}}
-					>
-						<Text style={{ color: COLORS.BLACK }}>Назад</Text>
-					</TouchableOpacity>
+					<View>
+						<TouchableOpacity
+							onPress={() => {
+								console.log("back");
+							}}
+						>
+							<Text style={{ color: COLORS.BLACK, fontFamily: "GTWalsheimPro-Regular" }}>Назад</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
 		</View>

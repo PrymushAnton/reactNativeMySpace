@@ -28,6 +28,7 @@ export const styles = StyleSheet.create({
 		fontWeight: 500,
 		fontSize: 24,
 		color: "#070A1C",
+		fontFamily: "GTWalsheimPro-Regular"
 	},
 	underlineContainer: {
 		position: "absolute",
