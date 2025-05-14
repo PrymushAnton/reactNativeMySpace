@@ -74,6 +74,8 @@ export const styles = StyleSheet.create({
 	errorBox: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "center",
+		paddingTop: 30,
 		gap: 2,
 	},
 	errorMessage: {

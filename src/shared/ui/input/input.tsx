@@ -135,7 +135,7 @@ function Code(props: Omit<IInputProps, "iconLeft" | "iconRight">) {
 			</View>
 			{errorMessage && (
 				<View style={styles.errorBox}>
-					<ICONS.ErrorIcon width={16} height={16} />
+					<ICONS.ErrorIcon width={30} height={30} />
 					<Text style={styles.errorMessage}>{errorMessage}</Text>
 				</View>
 			)}

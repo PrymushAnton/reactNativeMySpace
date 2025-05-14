@@ -16,7 +16,7 @@ export function RegisterEmailForm() {
 	const params = useLocalSearchParams<{ email: string; password: string }>();
 
 	const schema = yup.object().shape({
-		code: yup.string().required(),
+		code: yup.string().required("Це поле обов'язкове"),
 	});
 
 	const { handleSubmit, control, setValue, setError } = useForm<IEmailCode>({
@@ -101,14 +101,14 @@ export function RegisterEmailForm() {
 					</View>
 				)}
 				<View style={styles.buttonsBlock}>
-					<View style={styles.buttonRegister}>
-						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
-							<Text style={{ color: COLORS.WHITE, fontFamily: "GTWalsheimPro-Regular" }}>
+					<TouchableOpacity onPress={handleSubmit(onSubmit)}>
+						<View style={styles.buttonRegister}>
+							<Text style={{ color: COLORS.WHITE, fontFamily: "GTWalsheimPro-Regular", fontSize: 16, }}>
 								Підтвердити
 							</Text>
-						</TouchableOpacity>
-					</View>
-
+						</View>
+					</TouchableOpacity>
+					
 					<View>
 						<TouchableOpacity
 							onPress={() => {

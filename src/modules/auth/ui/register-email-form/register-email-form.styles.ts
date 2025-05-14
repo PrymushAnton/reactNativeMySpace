@@ -10,7 +10,8 @@ export const styles = StyleSheet.create({
 	},
 	form: {
 		width: 343,
-		height: 421,
+		minHeight: 421,
+		paddingVertical: 40,
 		alignItems: "center",
 		justifyContent: "center",
 		gap: 36,
