@@ -7,7 +7,7 @@ import { useState } from "react";
 export function Post(props: IPostProps) {
 	const { name, avatar, text, hashtags, photo, likes, views } = props;
 
-	const [isLiked, setIsLiked] = useState<boolean>(false)
+	const [isLiked, setIsLiked] = useState<boolean>(false);
 
 	return (
 		<View style={styles.post}>
@@ -18,7 +18,7 @@ export function Post(props: IPostProps) {
 				</View>
 
 				<View style={styles.actions}>
-					<ICONS.DotsIcon/>
+					<ICONS.DotsIcon />
 				</View>
 			</View>
 
@@ -47,21 +47,29 @@ export function Post(props: IPostProps) {
 				) : undefined}
 
 				<View style={styles.reactions}>
-
 					<View style={styles.postActions}>
-						<TouchableOpacity style={styles.reaction} onPress={() => {setIsLiked(!isLiked)}}>
-							{
-								isLiked
-								? <ICONS.PressedLikeIcon/>
-								: <ICONS.LikeIcon/>
-							}
+						<TouchableOpacity
+							style={styles.reaction}
+							onPress={() => {
+								setIsLiked(!isLiked);
+							}}
+						>
+							{isLiked ? (
+								<ICONS.PressedLikeIcon />
+							) : (
+								<ICONS.LikeIcon />
+							)}
 						</TouchableOpacity>
-						<Text style={styles.reactionText}>{likes} Вподобань</Text>
+						<Text style={styles.reactionText}>
+							{likes} Вподобань
+						</Text>
 					</View>
 
 					<View style={styles.postActions}>
-						<ICONS.ViewsIcon/>
-						<Text style={styles.reactionText}>{views} Переглядів</Text>
+						<ICONS.ViewsIcon />
+						<Text style={styles.reactionText}>
+							{views} Переглядів
+						</Text>
 					</View>
 				</View>
 			</View>
@@ -102,6 +110,7 @@ const styles = StyleSheet.create({
 	name: {
 		fontWeight: "bold",
 		color: "#070A1C",
+		fontFamily: 'GTWalsheimPro-Regular',
 	},
 
 	actions: {
@@ -117,6 +126,7 @@ const styles = StyleSheet.create({
 	text: {
 		color: "#070A1C",
 		fontSize: 14,
+		fontFamily: 'GTWalsheimPro-Regular',
 	},
 
 	hashtags: {
@@ -133,9 +143,9 @@ const styles = StyleSheet.create({
 	photoGrid: {
 		flexDirection: "row",
 		flexWrap: "wrap",
-		gap: 6,	
+		gap: 6,
 		marginTop: 8,
-		justifyContent: "space-between"
+		justifyContent: "space-between",
 	},
 
 	photo: {
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "flex-start",
 		marginTop: 8,
-		gap: 24
+		gap: 24,
 	},
 
 	reaction: {
@@ -160,9 +170,10 @@ const styles = StyleSheet.create({
 	reactionText: {
 		fontSize: 14,
 		color: "#070A1C",
+		fontFamily: 'GTWalsheimPro-Regular',
 	},
 	postActions: {
 		flexDirection: "row",
-		gap: 5
-	}
+		gap: 5,
+	},
 });

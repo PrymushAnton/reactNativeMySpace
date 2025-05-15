@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	ReactNode,
+} from "react";
 import {
 	IUser,
 	IAuthContext,
@@ -11,14 +17,19 @@ import { useRouter } from "expo-router";
 
 const initialValue: IAuthContext = {
 	user: null,
-	login: async (email: string, password: string): Promise<IReturnError[] | string> => "",
+	login: async (
+		email: string,
+		password: string
+	): Promise<IReturnError[] | string> => "",
 	register: async (
 		email: string,
-		password: string,
+		password: string
 	): Promise<IReturnError[] | string> => "",
 	isAuthenticated: () => false,
 	logout: () => {},
-	registerEmail: async (email: string, password: string, code: number) => { return ""; },
+	registerEmail: async (email: string, password: string, code: number) => {
+		return "";
+	},
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -30,25 +41,31 @@ export function useAuthContext() {
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
 	const router = useRouter();
-	
-	async function registerEmail(email: string, password: string, code: number) {
+
+	async function registerEmail(
+		email: string,
+		password: string,
+		code: number
+	) {
 		try {
-			
-			const response = await fetch("http://192.168.3.11:3001/user/verify-email-code", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					email: email, 
-					password: password,
-					code: code,
-				}),
-			});
-	
+			const response = await fetch(
+				"http://192.168.3.11:3001/user/verify-email-code",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						email: email,
+						password: password,
+						code: code,
+					}),
+				}
+			);
+
 			const result = await response.json();
 			if (result.status === "error") {
 				return result.message;
 			}
-			
+
 			await AsyncStorage.setItem("token", result.data);
 			await getData(result.data);
 
@@ -102,11 +119,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		}
 	}
 
-	async function register(
-		email: string,
-		password: string,
-	) {
-
+	async function register(email: string, password: string) {
 		try {
 			const response = await fetch("http://192.168.3.11:3001/user/reg", {
 				method: "POST",
@@ -131,7 +144,10 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				body: JSON.stringify({ email }),
 			});
 
-			router.replace({pathname: "/registerEmail/", params: {email: email, password: password}});
+			router.replace({
+				pathname: "/registerEmail/",
+				params: { email: email, password: password },
+			});
 			return "";
 		} catch (error) {
 			console.error(error);
@@ -174,3 +190,32 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		</authContext.Provider>
 	);
 }
+
+// modal context
+
+type ModalContextType = {
+	isVisible: boolean;
+	openModal: () => void;
+	closeModal: () => void;
+};
+
+const ModalContext = createContext<ModalContextType | undefined>(undefined);
+
+export const useModal = () => {
+	const context = useContext(ModalContext);
+	if (!context) throw new Error("useModal must be used inside ModalProvider");
+	return context;
+};
+
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+	const [isVisible, setIsVisible] = useState(false);
+
+	const openModal = () => setIsVisible(true);
+	const closeModal = () => setIsVisible(false);
+
+	return (
+		<ModalContext.Provider value={{ isVisible, openModal, closeModal }}>
+			{children}
+		</ModalContext.Provider>
+	);
+};

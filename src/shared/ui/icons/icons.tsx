@@ -19,6 +19,7 @@ import { LikeIcon } from "./like-icon";
 import { ViewsIcon } from "./views-icon";
 import { DotsIcon } from "./dots-icon";
 import { PressedLikeIcon } from "./pressed-like-icon";
+import { CloseIcon } from "./close-icon"
 
 export const ICONS = {
     DateIcon,
@@ -41,5 +42,7 @@ export const ICONS = {
     LikeIcon,
     ViewsIcon,
     DotsIcon,
-    PressedLikeIcon
+    PressedLikeIcon,
+    CloseIcon,
+    
 }

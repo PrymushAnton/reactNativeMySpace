@@ -1,4 +1,3 @@
-import { Button } from "../../../../shared/ui/button";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
