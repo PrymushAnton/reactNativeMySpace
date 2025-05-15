@@ -20,6 +20,7 @@ import { ViewsIcon } from "./views-icon";
 import { DotsIcon } from "./dots-icon";
 import { PressedLikeIcon } from "./pressed-like-icon";
 import { CloseIcon } from "./close-icon"
+import { SendPostIcon } from "./send-post-icon"
 
 export const ICONS = {
     DateIcon,
@@ -44,5 +45,6 @@ export const ICONS = {
     DotsIcon,
     PressedLikeIcon,
     CloseIcon,
+    SendPostIcon,
     
 }

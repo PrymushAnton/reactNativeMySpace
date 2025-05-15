@@ -13,6 +13,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IUserPost } from "../../../../modules/auth/types";
 import { Input } from "../../../../shared/ui/input";
 import MultiSelect from "react-native-multiple-select";
+import { TextInput } from "react-native";
+import { COLORS } from "../../../../shared/constants";
 
 const defaultTags = [
 	{ id: "1", name: "Відпочинок" },
@@ -34,6 +36,16 @@ export function MainPage() {
 
 	const onSelectedItemsChange = (selected: string[]) => {
 		setSelectedItems(selected);
+	};
+
+	const [customTag, setCustomTag] = useState("");
+	const [customTags, setCustomTags] = useState<string[]>([]);
+
+	const handleAddTag = () => {
+		if (customTag.trim()) {
+			setCustomTags((prev) => [...prev, customTag.trim()]);
+			setCustomTag("");
+		}
 	};
 
 	const schema = yup.object().shape({
@@ -145,19 +157,15 @@ export function MainPage() {
 										borderRadius: 8,
 										paddingHorizontal: 12,
 										paddingVertical: 10,
+										overflow: "hidden",
 									}}
 									styleDropdownMenu={{
 										borderWidth: 1,
 										borderRadius: 10,
 										borderColor: "#ccc",
 										alignItems: "center",
-										justifyContent: "center"
-									}}
-									styleInputGroup={{
-										// paddingBottom: 10,
-									}}
-									styleMainWrapper={{
-										// marginTop: 10,
+										justifyContent: "center",
+										overflow: "hidden",
 									}}
 									styleListContainer={{
 										borderWidth: 1,
@@ -166,11 +174,150 @@ export function MainPage() {
 										backgroundColor: "#fff",
 										marginTop: 5,
 										maxHeight: 250,
+										overflow: "hidden",
 									}}
 									altFontFamily="GTWalsheimPro-Regular"
 									fontFamily="GTWalsheimPro-Regular"
 									itemFontFamily="GTWalsheimPro-Regular"
 								/>
+							</View>
+							<View style={{ marginBottom: 16 }}>
+								<View
+									style={{
+										position: "relative",
+										borderWidth: 1,
+										borderColor: "#CDCED2",
+										borderRadius: 10,
+										paddingRight: 80,
+										paddingLeft: 12,
+									}}
+								>
+									<TextInput
+										placeholder="Введіть свій тег"
+										value={customTag}
+										onChangeText={setCustomTag}
+										style={{
+											fontFamily: "GTWalsheimPro-Regular",
+											fontSize: 16,
+											paddingRight: 10,
+											height: 42,
+										}}
+									/>
+									<TouchableOpacity
+										onPress={handleAddTag}
+										style={{
+											position: "absolute",
+											right: 10,
+											top: 7,
+											backgroundColor: "#543C52",
+											paddingVertical: 6,
+											paddingHorizontal: 12,
+											borderRadius: 6,
+										}}
+									>
+										<Text
+											style={{
+												color: "#fff",
+												fontFamily:
+													"GTWalsheimPro-Regular",
+											}}
+										>
+											Додати
+										</Text>
+									</TouchableOpacity>
+								</View>
+
+								{/* Вывод добавленных тегов */}
+								<View
+									style={{
+										flexDirection: "row",
+										flexWrap: "wrap",
+										gap: 8,
+										marginTop: 10,
+									}}
+								>
+									{customTags.map((tag, index) => (
+										<View
+											key={index}
+											style={{
+												borderWidth: 1,
+												borderColor: "#CDCED2",
+												backgroundColor: "#F3F4F6",
+												borderRadius: 20,
+												paddingHorizontal: 12,
+												paddingVertical: 6,
+												flexDirection: "row",
+												alignItems: "center",
+											}}
+										>
+											<Text
+												style={{
+													fontFamily:
+														"GTWalsheimPro-Regular",
+													color: "#070A1C",
+													fontSize: 14,
+												}}
+											>
+												{tag}
+											</Text>
+											<TouchableOpacity
+												onPress={() =>
+													setCustomTags((prev) =>
+														prev.filter(
+															(_, i) =>
+																i !== index
+														)
+													)
+												}
+												style={{ marginLeft: 6 }}
+											>
+												<Text
+													style={{
+														color: "#F43F5E",
+														fontSize: 16,
+													}}
+												>
+													×
+												</Text>
+											</TouchableOpacity>
+										</View>
+									))}
+								</View>
+							</View>
+							<TouchableOpacity></TouchableOpacity>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "flex-end",
+									gap: 10,
+								}}
+							>
+								<TouchableOpacity>
+									<ICONS.PlusIcon />
+								</TouchableOpacity>
+
+								<TouchableOpacity>
+									<ICONS.SettingsIcon />
+								</TouchableOpacity>
+
+								<TouchableOpacity onPress={() => closeModal()}>
+									<View style={styles.sendPostModalButton}>
+										<Text
+											style={{
+												fontFamily:
+													"GTWalsheimPro-Regular",
+												fontSize: 14,
+												color: COLORS.WHITE,
+											}}
+										>
+											Публікація
+										</Text>
+										<ICONS.SendPostIcon
+											width={16}
+											height={18}
+										/>
+									</View>
+								</TouchableOpacity>
 							</View>
 						</View>
 					</View>
