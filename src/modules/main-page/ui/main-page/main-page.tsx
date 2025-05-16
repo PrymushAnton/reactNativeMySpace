@@ -4,7 +4,6 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { Post } from "../post/Post";
 import { useModal } from "../../../../modules/auth/context";
 import { ICONS } from "../../../../shared/ui/icons";
-import { useState } from "react";
 import { ModalTool } from "../../../../shared/modal";
 import { styles } from "./main-page.styles";
 import { useForm, Controller } from "react-hook-form";
@@ -12,41 +11,12 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IUserPost } from "../../../../modules/auth/types";
 import { Input } from "../../../../shared/ui/input";
-import MultiSelect from "react-native-multiple-select";
-import { TextInput } from "react-native";
 import { COLORS } from "../../../../shared/constants";
-
-const defaultTags = [
-	{ id: "1", name: "Відпочинок" },
-	{ id: "2", name: "Натхнення" },
-	{ id: "3", name: "Життя" },
-	{ id: "4", name: "Природа" },
-	{ id: "5", name: "Читання" },
-	{ id: "6", name: "Спокій" },
-	{ id: "7", name: "Гармонія" },
-	{ id: "8", name: "Музика" },
-	{ id: "9", name: "Фільми" },
-	{ id: "10", name: "Подорожі" },
-];
+import { TagsMultiSelect } from "../tags-multi-select";
+import { TagsCustomInput } from "../tags-custom-input";
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
-
-	const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-	const onSelectedItemsChange = (selected: string[]) => {
-		setSelectedItems(selected);
-	};
-
-	const [customTag, setCustomTag] = useState("");
-	const [customTags, setCustomTags] = useState<string[]>([]);
-
-	const handleAddTag = () => {
-		if (customTag.trim()) {
-			setCustomTags((prev) => [...prev, customTag.trim()]);
-			setCustomTag("");
-		}
-	};
 
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
@@ -84,246 +54,93 @@ export function MainPage() {
 					</Text>
 					<View style={styles.mainModalInputsFrame}>
 						<View style={styles.themeModalInputFrame}>
+							<Text
+								style={{
+									fontFamily: "GTWalsheimPro-Regular",
+									fontSize: 16,
+								}}
+							>
+								Тема публікації
+							</Text>
+							<Controller
+								control={control}
+								name="name"
+								render={({ field, fieldState }) => {
+									return (
+										<Input
+											placeholder="Напишіть тему публікації"
+											onChange={field.onChange}
+											onChangeText={field.onChange}
+											value={field.value}
+											autoCorrect={false}
+											errorMessage={
+												fieldState.error?.message
+											}
+										/>
+									);
+								}}
+							/>
+							<Controller
+								control={control}
+								name="description"
+								render={({ field, fieldState }) => {
+									return (
+										<Input
+											height={140}
+											placeholder="Напишіть опис до публікації"
+											onChange={field.onChange}
+											onChangeText={field.onChange}
+											value={field.value}
+											autoCorrect={false}
+											errorMessage={
+												fieldState.error?.message
+											}
+										/>
+									);
+								}}
+							/>
+						</View>
+						<View>
 							<View>
+								<TagsMultiSelect></TagsMultiSelect>
+							</View>
+							<View>
+								<TagsCustomInput></TagsCustomInput>
+							</View>
+						</View>
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "flex-end",
+							gap: 10,
+						}}
+					>
+						<TouchableOpacity>
+							<ICONS.PlusIcon />
+						</TouchableOpacity>
+						<TouchableOpacity>
+							<ICONS.SettingsIcon />
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => closeModal()}>
+							<View style={styles.sendPostModalButton}>
 								<Text
 									style={{
 										fontFamily: "GTWalsheimPro-Regular",
-										fontSize: 16,
+										fontSize: 14,
+										color: COLORS.WHITE,
 									}}
 								>
-									Тема публікації
+									Публікація
 								</Text>
-								<Controller
-									control={control}
-									name="name"
-									render={({ field, fieldState }) => {
-										return (
-											<Input
-												placeholder="Напишіть тему публікації"
-												onChange={field.onChange}
-												onChangeText={field.onChange}
-												value={field.value}
-												autoCorrect={false}
-												errorMessage={
-													fieldState.error?.message
-												}
-											/>
-										);
-									}}
-								/>
+								<ICONS.SendPostIcon width={16} height={18} />
 							</View>
-							<View>
-								<Controller
-									control={control}
-									name="description"
-									render={({ field, fieldState }) => {
-										return (
-											<Input
-												height={140}
-												placeholder="Напишіть опис до публікації"
-												onChange={field.onChange}
-												onChangeText={field.onChange}
-												value={field.value}
-												autoCorrect={false}
-												errorMessage={
-													fieldState.error?.message
-												}
-											/>
-										);
-									}}
-								/>
-							</View>
-							<View>
-								<MultiSelect
-									items={defaultTags}
-									uniqueKey="id"
-									onSelectedItemsChange={
-										onSelectedItemsChange
-									}
-									selectedItems={selectedItems}
-									selectText="Оберіть теги"
-									searchInputPlaceholderText="Пошук"
-									tagRemoveIconColor="#F43F5E"
-									tagBorderColor="#CDCED2"
-									tagTextColor="#070A1C"
-									selectedItemTextColor="#CDCED2"
-									selectedItemIconColor="#CDCED2"
-									itemTextColor="#070A1C"
-									displayKey="name"
-									searchInputStyle={{ color: "#CCC" }}
-									submitButtonColor="#543C52"
-									submitButtonText="Підтвердити"
-									styleDropdownMenuSubsection={{
-										borderRadius: 8,
-										paddingHorizontal: 12,
-										paddingVertical: 10,
-										overflow: "hidden",
-									}}
-									styleDropdownMenu={{
-										borderWidth: 1,
-										borderRadius: 10,
-										borderColor: "#ccc",
-										alignItems: "center",
-										justifyContent: "center",
-										overflow: "hidden",
-									}}
-									styleListContainer={{
-										borderWidth: 1,
-										borderColor: "#CDCED2",
-										borderRadius: 10,
-										backgroundColor: "#fff",
-										marginTop: 5,
-										maxHeight: 250,
-										overflow: "hidden",
-									}}
-									altFontFamily="GTWalsheimPro-Regular"
-									fontFamily="GTWalsheimPro-Regular"
-									itemFontFamily="GTWalsheimPro-Regular"
-								/>
-							</View>
-							<View style={{ marginBottom: 16 }}>
-								<View
-									style={{
-										position: "relative",
-										borderWidth: 1,
-										borderColor: "#CDCED2",
-										borderRadius: 10,
-										paddingRight: 80,
-										paddingLeft: 12,
-									}}
-								>
-									<TextInput
-										placeholder="Введіть свій тег"
-										value={customTag}
-										onChangeText={setCustomTag}
-										style={{
-											fontFamily: "GTWalsheimPro-Regular",
-											fontSize: 16,
-											paddingRight: 10,
-											height: 42,
-										}}
-									/>
-									<TouchableOpacity
-										onPress={handleAddTag}
-										style={{
-											position: "absolute",
-											right: 10,
-											top: 7,
-											backgroundColor: "#543C52",
-											paddingVertical: 6,
-											paddingHorizontal: 12,
-											borderRadius: 6,
-										}}
-									>
-										<Text
-											style={{
-												color: "#fff",
-												fontFamily:
-													"GTWalsheimPro-Regular",
-											}}
-										>
-											Додати
-										</Text>
-									</TouchableOpacity>
-								</View>
-
-								{/* Вывод добавленных тегов */}
-								<View
-									style={{
-										flexDirection: "row",
-										flexWrap: "wrap",
-										gap: 8,
-										marginTop: 10,
-									}}
-								>
-									{customTags.map((tag, index) => (
-										<View
-											key={index}
-											style={{
-												borderWidth: 1,
-												borderColor: "#CDCED2",
-												backgroundColor: "#F3F4F6",
-												borderRadius: 20,
-												paddingHorizontal: 12,
-												paddingVertical: 6,
-												flexDirection: "row",
-												alignItems: "center",
-											}}
-										>
-											<Text
-												style={{
-													fontFamily:
-														"GTWalsheimPro-Regular",
-													color: "#070A1C",
-													fontSize: 14,
-												}}
-											>
-												{tag}
-											</Text>
-											<TouchableOpacity
-												onPress={() =>
-													setCustomTags((prev) =>
-														prev.filter(
-															(_, i) =>
-																i !== index
-														)
-													)
-												}
-												style={{ marginLeft: 6 }}
-											>
-												<Text
-													style={{
-														color: "#F43F5E",
-														fontSize: 16,
-													}}
-												>
-													×
-												</Text>
-											</TouchableOpacity>
-										</View>
-									))}
-								</View>
-							</View>
-							<TouchableOpacity></TouchableOpacity>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "flex-end",
-									gap: 10,
-								}}
-							>
-								<TouchableOpacity>
-									<ICONS.PlusIcon />
-								</TouchableOpacity>
-
-								<TouchableOpacity>
-									<ICONS.SettingsIcon />
-								</TouchableOpacity>
-
-								<TouchableOpacity onPress={() => closeModal()}>
-									<View style={styles.sendPostModalButton}>
-										<Text
-											style={{
-												fontFamily:
-													"GTWalsheimPro-Regular",
-												fontSize: 14,
-												color: COLORS.WHITE,
-											}}
-										>
-											Публікація
-										</Text>
-										<ICONS.SendPostIcon
-											width={16}
-											height={18}
-										/>
-									</View>
-								</TouchableOpacity>
-							</View>
-						</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</ModalTool>
 			<View>
+				{/* это всё должно браться из бд:) */}
 				<Post
 					name="anton"
 					avatar="..../shared/ui/icons/person.png"
