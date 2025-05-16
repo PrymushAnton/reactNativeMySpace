@@ -19,32 +19,36 @@ import { LikeIcon } from "./like-icon";
 import { ViewsIcon } from "./views-icon";
 import { DotsIcon } from "./dots-icon";
 import { PressedLikeIcon } from "./pressed-like-icon";
-import { CloseIcon } from "./close-icon"
-import { SendPostIcon } from "./send-post-icon"
+import { CloseIcon } from "./close-icon";
+import { SendPostIcon } from "./send-post-icon";
+import { PencilIcon } from "./pencil-icon";
+import { TrashCanIcon } from "./trash-can-icon";
 
 export const ICONS = {
-    DateIcon,
-    EmailIcon,
-    EyeCrossedIcon,
-    EyeIcon,
-    NicknameIcon,
-    PasswordIcon,
-    PhoneNumberIcon,
-    UserIcon,
-    ErrorIcon,
-    LogoIcon,
-    PlusIcon,
-    SettingsIcon,
-    LogoutIcon,
-    HouseIcon,
-    ImageIcon,
-    FriendsIcon,
-    ChatIcon,
-    LikeIcon,
-    ViewsIcon,
-    DotsIcon,
-    PressedLikeIcon,
-    CloseIcon,
-    SendPostIcon,
+	DateIcon,
+	EmailIcon,
+	EyeCrossedIcon,
+	EyeIcon,
+	NicknameIcon,
+	PasswordIcon,
+	PhoneNumberIcon,
+	UserIcon,
+	ErrorIcon,
+	LogoIcon,
+	PlusIcon,
+	SettingsIcon,
+	LogoutIcon,
+	HouseIcon,
+	ImageIcon,
+	FriendsIcon,
+	ChatIcon,
+	LikeIcon,
+	ViewsIcon,
+	DotsIcon,
+	PressedLikeIcon,
+	CloseIcon,
+	SendPostIcon,
+	PencilIcon,
+	TrashCanIcon,
     
-}
+};

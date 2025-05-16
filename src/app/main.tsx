@@ -1,7 +1,7 @@
 import { ScrollView, View } from "react-native";
 import { MainPage } from "../modules/main-page/ui/main-page/main-page";
 import { ICONS } from "../shared/ui/icons";
-import { Post } from "../modules/main-page/ui/post/Post";
+import { Post } from "../modules/main-page/ui/post/post";
 import { Header } from "../shared/Header/Header";
 import { Footer } from "../shared/Footer/Footer";
 

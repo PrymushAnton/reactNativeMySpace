@@ -1,7 +1,7 @@
 import { Header } from "../../../../shared/Header/Header";
 import { Footer } from "../../../../shared/Footer/Footer";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { Post } from "../post/Post";
+import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
+import { PublicatedPost } from "../post";
 import { useModal } from "../../../../modules/auth/context";
 import { ICONS } from "../../../../shared/ui/icons";
 import { ModalTool } from "../../../../shared/modal";
@@ -14,9 +14,18 @@ import { Input } from "../../../../shared/ui/input";
 import { COLORS } from "../../../../shared/constants";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { TagsCustomInput } from "../tags-custom-input";
+import { pickImage } from "../../../../shared/tools";
+import { useState } from "react";
+import {
+	ImagePickerOptions,
+	launchImageLibraryAsync,
+	requestMediaLibraryPermissionsAsync,
+} from "expo-image-picker";
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
+
+	const [image, setImage] = useState<string>("");
 
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
@@ -33,6 +42,23 @@ export function MainPage() {
 			},
 			resolver: yupResolver(schema),
 		});
+
+	async function onSearch() {
+		const result = await requestMediaLibraryPermissionsAsync();
+
+		if (result.status === "granted") {
+			const images = await launchImageLibraryAsync({
+				mediaTypes: "images",
+				allowsMultipleSelection: true,
+				selectionLimit: 10,
+				base64: true,
+			});
+
+			if (images.assets) {
+				setImage(images.assets[0].uri);
+			}
+		}
+	}
 
 	return (
 		<View>
@@ -109,6 +135,17 @@ export function MainPage() {
 							</View>
 						</View>
 					</View>
+					<View>
+						<Image
+							source={image ? { uri: image } : 0}
+							style={{
+								width: 100,
+								height: 100,
+								borderRadius: 25,
+							}}
+							resizeMode="cover"
+						/>
+					</View>
 					<View
 						style={{
 							flexDirection: "row",
@@ -116,7 +153,7 @@ export function MainPage() {
 							gap: 10,
 						}}
 					>
-						<TouchableOpacity>
+						<TouchableOpacity onPress={() => onSearch()}>
 							<ICONS.PlusIcon />
 						</TouchableOpacity>
 						<TouchableOpacity>
@@ -141,7 +178,7 @@ export function MainPage() {
 			</ModalTool>
 			<View>
 				{/* это всё должно браться из бд:) */}
-				<Post
+				<PublicatedPost
 					name="anton"
 					avatar="..../shared/ui/icons/person.png"
 					text="Інколи найкращі ідеї народжуються в тиші  Природа, книга і спокій — усе, що потрібно, аби перезавантажитись"
@@ -149,8 +186,8 @@ export function MainPage() {
 					photo={[]}
 					likes={140}
 					views={10}
-				></Post>
-				<Post
+				></PublicatedPost>
+				<PublicatedPost
 					name="rinat"
 					avatar="..../shared/ui/icons/person.png"
 					text="Природа, книга і спокій — усе, що потрібно, аби перезавантажитись Інколи найкращі ідеї народжуються в тиші  "
@@ -158,8 +195,8 @@ export function MainPage() {
 					photo={[]}
 					likes={5}
 					views={8}
-				></Post>
-				<Post
+				></PublicatedPost>
+				<PublicatedPost
 					name="ilia"
 					avatar="..../shared/ui/icons/person.png"
 					text="буває такий настрій: просто лежиш і існуєш  чай в одній руці, телефон в іншій, думки десь у космосі  і знаєте шо? норм"
@@ -167,8 +204,8 @@ export function MainPage() {
 					photo={[]}
 					likes={4}
 					views={10}
-				></Post>
-				<Post
+				></PublicatedPost>
+				<PublicatedPost
 					name="oleksandr"
 					avatar="..../shared/ui/icons/person.png"
 					text="чай в одній руці, телефон в іншій, думки десь у космосі  і знаєте шо? норм буває такий настрій: просто лежиш і існуєш "
@@ -176,7 +213,7 @@ export function MainPage() {
 					photo={[]}
 					likes={9}
 					views={15}
-				></Post>
+				></PublicatedPost>
 			</View>
 			<Footer />
 		</View>
