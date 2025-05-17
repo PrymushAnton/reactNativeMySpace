@@ -14,23 +14,24 @@ import { Input } from "../../../../shared/ui/input";
 import { COLORS } from "../../../../shared/constants";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { TagsCustomInput } from "../tags-custom-input";
-import { pickImage } from "../../../../shared/tools";
-import { useState } from "react";
 import {
-	ImagePickerOptions,
 	launchImageLibraryAsync,
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
+import { useState } from "react";
+import { ScrollView } from "react-native-virtualized-view";
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
 
-	const [image, setImage] = useState<string>("");
+	const [images, setImages] = useState<string[]>([]);
 
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
 		description: yup.string().required("Це поле обов'язкове"),
-		image: yup.string().required("Це поле обов'язкове"),
+		image: yup.string().required("Додайте хоча б одне зображення"),
+		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
+		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
 	});
 
 	const { handleSubmit, control, formState, setValue, setError } =
@@ -39,23 +40,37 @@ export function MainPage() {
 				name: "",
 				description: "",
 				image: "",
+				defaultTags: [],
+				customTags: [],
 			},
 			resolver: yupResolver(schema),
 		});
+
+	async function closingModal() {
+		closeModal();
+		setValue("name", "");
+		setValue("description", "");
+		setImages([]);
+		setValue("image", "");
+		setValue("defaultTags", []);
+		setValue("customTags", []);
+	}
 
 	async function onSearch() {
 		const result = await requestMediaLibraryPermissionsAsync();
 
 		if (result.status === "granted") {
-			const images = await launchImageLibraryAsync({
+			const selected = await launchImageLibraryAsync({
 				mediaTypes: "images",
 				allowsMultipleSelection: true,
-				selectionLimit: 10,
-				base64: true,
+				selectionLimit: 9,
+				base64: false,
 			});
 
-			if (images.assets) {
-				setImage(images.assets[0].uri);
+			if (selected.assets) {
+				const uris = selected.assets.map((asset) => asset.uri);
+				setImages(uris);
+				setValue("image", uris.join(","));
 			}
 		}
 	}
@@ -63,10 +78,10 @@ export function MainPage() {
 	return (
 		<View>
 			<Header />
-			<ModalTool isVisible={isVisible} onClose={() => closeModal()}>
-				<View style={styles.mainModalWindow}>
+			<ModalTool isVisible={isVisible} onClose={closingModal}>
+				<ScrollView style={styles.mainModalWindow}>
 					<View style={styles.closeModalButton}>
-						<TouchableOpacity onPress={() => closeModal()}>
+						<TouchableOpacity onPress={closingModal}>
 							<ICONS.CloseIcon width={15} height={15} />
 						</TouchableOpacity>
 					</View>
@@ -127,39 +142,81 @@ export function MainPage() {
 							/>
 						</View>
 						<View>
-							<View>
-								<TagsMultiSelect></TagsMultiSelect>
-							</View>
-							<View>
-								<TagsCustomInput></TagsCustomInput>
-							</View>
+							<Controller
+								control={control}
+								name="defaultTags"
+								render={({ field }) => (
+									<TagsMultiSelect
+										selectedTags={field.value}
+										onChange={field.onChange}
+									/>
+								)}
+							/>
+
+							<Controller
+								control={control}
+								name="customTags"
+								render={({ field }) => (
+									<TagsCustomInput
+										value={field.value}
+										onChange={field.onChange}
+									/>
+								)}
+							/>
 						</View>
 					</View>
-					<View>
-						<Image
-							source={image ? { uri: image } : 0}
+
+					{images.length > 0 && (
+						<View
 							style={{
-								width: 100,
-								height: 100,
-								borderRadius: 25,
+								flexDirection: "row",
+								flexWrap: "wrap",
+								gap: 16,
+								marginBottom: 15,
 							}}
-							resizeMode="cover"
-						/>
-					</View>
+						>
+							{images.map((uri, index) => (
+								<Image
+									key={index}
+									source={{ uri }}
+									style={{
+										width: 343,
+										height: 225,
+										borderRadius: 15,
+									}}
+									resizeMode="cover"
+								/>
+							))}
+						</View>
+					)}
+
 					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "flex-end",
-							gap: 10,
-						}}
+						style={
+							images && images.length >= 2
+								? {
+										flexDirection: "row",
+										justifyContent: "flex-end",
+										gap: 10,
+										width: 343,
+										height: 40,
+										marginBottom: 40,
+								  }
+								: {
+										flexDirection: "row",
+										justifyContent: "flex-end",
+										gap: 10,
+										width: 343,
+										height: 40,
+								  }
+						}
 					>
-						<TouchableOpacity onPress={() => onSearch()}>
+						<TouchableOpacity onPress={onSearch}>
 							<ICONS.PlusIcon />
 						</TouchableOpacity>
 						<TouchableOpacity>
 							<ICONS.SettingsIcon />
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => closeModal()}>
+						<TouchableOpacity onPress={closingModal}>
 							<View style={styles.sendPostModalButton}>
 								<Text
 									style={{
@@ -174,7 +231,7 @@ export function MainPage() {
 							</View>
 						</TouchableOpacity>
 					</View>
-				</View>
+				</ScrollView>
 			</ModalTool>
 			<View>
 				{/* это всё должно браться из бд:) */}

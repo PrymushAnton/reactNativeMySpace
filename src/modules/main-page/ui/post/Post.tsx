@@ -21,7 +21,7 @@ export function PublicatedPost(props: IPostProps) {
 					<Image style={styles.avatar} source={{ uri: avatar }} />
 					<Text style={styles.name}>{name}</Text>
 				</View>
-				<TouchableOpacity onPress={openModal}>
+				<TouchableOpacity>
 					<View style={styles.actions}>
 						<ICONS.DotsIcon />
 					</View>

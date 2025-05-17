@@ -16,20 +16,19 @@ const defaultTags = [
 	{ id: "10", name: "Подорожі" },
 ];
 
-export function TagsMultiSelect() {
-	const [selectedItems, setSelectedItems] = useState<string[]>([]);
+type Props = {
+	selectedTags: string[];
+	onChange: (value: string[]) => void;
+};
 
-	const onSelectedItemsChange = (selected: string[]) => {
-		setSelectedItems(selected);
-	};
-
+export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 	return (
 		<View>
 			<MultiSelect
 				items={defaultTags}
 				uniqueKey="id"
-				onSelectedItemsChange={onSelectedItemsChange}
-				selectedItems={selectedItems}
+				onSelectedItemsChange={onChange}
+				selectedItems={selectedTags}
 				selectText="Оберіть теги"
 				searchInputPlaceholderText="Пошук"
 				tagRemoveIconColor="#F43F5E"
@@ -39,10 +38,10 @@ export function TagsMultiSelect() {
 				selectedItemIconColor="#CDCED2"
 				itemTextColor="#070A1C"
 				displayKey="name"
-				searchInputStyle={{color: "#CCC"}}
+				searchInputStyle={{ color: "#CCC" }}
 				submitButtonColor="#543C52"
 				submitButtonText="Підтвердити"
-				styleTextDropdown={{paddingLeft: 16}}
+				styleTextDropdown={{ paddingLeft: 16 }}
 				styleDropdownMenuSubsection={styles.styleDropdownMenuSubsection}
 				styleDropdownMenu={styles.styleDropdownMenu}
 				styleSelectorContainer={styles.styleSelectorContainer}

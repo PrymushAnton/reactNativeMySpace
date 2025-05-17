@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import Modal from "react-native-modal";
 
 type ModalToolProps = {
