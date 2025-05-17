@@ -8,6 +8,8 @@ import {
 	TextInput,
 } from "react-native";
 import { styles } from "./tags-custom-input.styles";
+import { ICONS } from "../../../../shared/ui/icons";
+import { COLORS } from "../../../../shared/constants";
 
 export function TagsCustomInput() {
 	const [customTag, setCustomTag] = useState("");
@@ -61,11 +63,11 @@ export function TagsCustomInput() {
 									prev.filter((_, i) => i !== index)
 								)
 							}
-							style={{ marginLeft: 6 }}
+							style={{ marginLeft: 13 }}
 						>
-							<Text style={{ color: "#F43F5E", fontSize: 16 }}>
-								×
-							</Text>
+							<View style={styles.closeIconView}>
+								<ICONS.CloseIcon color={"#FFFFFF"} width={10} height={10}/>
+							</View>
 						</TouchableOpacity>
 					</View>
 				))}
