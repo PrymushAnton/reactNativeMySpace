@@ -19,11 +19,14 @@ import {
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import { useState } from "react";
+import { usePost } from "../../hooks/usePost";
+
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
 
 	const [images, setImages] = useState<string[]>([]);
+	const [globalError, setGlobalError] = useState<string>("");
 
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
@@ -44,6 +47,8 @@ export function MainPage() {
 			},
 			resolver: yupResolver(schema),
 		});
+
+	const { createPost, updatePost, deletePost, getAllPosts, getPostsByUserId, getAllTags, } = usePost()
 
 	async function closingModal() {
 		closeModal();
@@ -72,6 +77,14 @@ export function MainPage() {
 				setValue("image", uris.join(","));
 			}
 		}
+	}
+
+	function onSubmit(data: IUserPost) {
+		async function request() {
+			const response = await createPost(data);
+			console.log(response)
+		}
+		request()
 	}
 
 	return (
@@ -179,8 +192,8 @@ export function MainPage() {
 									key={index}
 									source={{ uri }}
 									style={{
-										width: 343,
-										height: 225,
+										width: 100,
+										height: 100,
 										borderRadius: 15,
 									}}
 									resizeMode="cover"
@@ -215,7 +228,7 @@ export function MainPage() {
 						<TouchableOpacity>
 							<ICONS.SettingsIcon />
 						</TouchableOpacity>
-						<TouchableOpacity onPress={closingModal}>
+						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
 							<View style={styles.sendPostModalButton}>
 								<Text
 									style={{

@@ -14,7 +14,7 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-	const BASE_URL = "http://192.168.3.11:3001";
+	const BASE_URL = "http://192.168.1.10:3001";
 
 	async function getToken() {
 		return await AsyncStorage.getItem("token");
@@ -41,12 +41,12 @@ export function usePost() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+					"Authorization": `Bearer ${token}`,
 				},
 				body: JSON.stringify(payload),
 			});
-
-			return await res.json();
+            const results = await res.json();
+			return results
 		} catch (error) {
 			console.error(error);
 			return "";
