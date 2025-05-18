@@ -32,6 +32,7 @@ export function MainPage() {
 		image: yup.string().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
+		link: yup.string().required()
 	});
 
 	const { handleSubmit, control, formState, setValue, setError } =
@@ -185,6 +186,34 @@ export function MainPage() {
 						</View>
 					</View>
 
+					<View style={styles.themeModalInputFrame}>
+							<Text
+								style={{
+									fontFamily: "GTWalsheimPro-Regular",
+									fontSize: 16,
+								}}
+							>
+								Посилання
+							</Text>
+							<Controller
+								control={control}
+								name="link"
+								render={({ field, fieldState }) => {
+									return (
+										<Input
+											placeholder="Напишіть посилання"
+											onChange={field.onChange}
+											onChangeText={field.onChange}
+											value={field.value}
+											autoCorrect={false}
+											errorMessage={
+												fieldState.error?.message
+											}
+										/>
+									);
+								}}
+							/>
+					</View>
 					{images.length > 0 && (
 						<View
 							style={{
@@ -219,6 +248,7 @@ export function MainPage() {
 										width: 343,
 										height: 40,
 										marginBottom: 40,
+										
 								  }
 								: {
 										flexDirection: "row",
@@ -226,6 +256,7 @@ export function MainPage() {
 										gap: 10,
 										width: 343,
 										height: 40,
+										marginTop: 20
 								  }
 						}
 					>
