@@ -9,4 +9,5 @@ export interface IInputProps extends TextInputProps{
     errorMessage?: string;
     label?: string
     height?: DimensionValue
+    isTextArea?: boolean
 }

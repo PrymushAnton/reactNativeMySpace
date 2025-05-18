@@ -7,9 +7,8 @@ import { useModal } from "../../modules/auth/context"
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export function Header(props: NativeStackHeaderProps) {
+export function Header() {
 	const {logout} = useAuthContext()
-	const [visible, setVisible] = useState(false);
 	const { openModal } = useModal();
 
 	return (

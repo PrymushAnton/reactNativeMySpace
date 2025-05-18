@@ -7,12 +7,11 @@ export default function RootLayout() {
 		<Providers>
 			<Stack
 				screenOptions={{
-					headerShown: true,
+					headerShown: false,
 					contentStyle: { backgroundColor: "#E9E5EE" },
-					header: (props) => <Header {...props} />,
+					// header: (props) => <Header {...props} />,
 				}}
 			>
-				<Stack.Screen name="main"/>
 			</Stack>
 		</Providers>
 	);
