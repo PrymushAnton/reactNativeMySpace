@@ -1,17 +1,19 @@
-import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { ICONS } from "../ui/icons";
 import { useAuthContext } from "../../modules/auth/context";
 import { ModalTool } from "../../shared/modal";
 import { useState } from "react";
 import { useModal } from "../../modules/auth/context"
+import { NativeStackHeaderProps } from "@react-navigation/native-stack";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export function Header() {
+export function Header(props: NativeStackHeaderProps) {
 	const {logout} = useAuthContext()
 	const [visible, setVisible] = useState(false);
 	const { openModal } = useModal();
 
 	return (
-		<Animated.View style={styles.header}>
+		<View style={styles.header}>
 			<TouchableOpacity>
 				<ICONS.LogoIcon />
 			</TouchableOpacity>
@@ -30,18 +32,21 @@ export function Header() {
 				</TouchableOpacity>
 
 			</View>
-		</Animated.View>
+		</View>
+
+		
 	);
 }
 
 const styles = StyleSheet.create({
 	header: {
-		flex: 1,
+		height: 56,
 		justifyContent: "space-between",
 		flexDirection: "row",
 		alignItems: "center",
 		paddingHorizontal: 16,
-		paddingVertical: 8
+		paddingVertical: 8,
+		backgroundColor: "#fff"
 	},
 	icons: {
 		justifyContent: "space-between",

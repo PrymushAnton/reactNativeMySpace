@@ -1,1 +1,1 @@
-export {PublicatedPost} from "./post"
+export {PublicatedPost} from "./Post"
