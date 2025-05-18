@@ -5,7 +5,7 @@ import { ICONS } from "../icons";
 import { useEffect, useRef, useState } from "react";
 
 function Input(props: IInputProps) {
-	const { label, iconLeft, iconRight, errorMessage, height = 42, ...otherProps } = props;
+	const { label, iconLeft, iconRight, errorMessage, height = 42, isTextArea = false, ...otherProps } = props;
 
 	return (
 		<View>
@@ -13,7 +13,7 @@ function Input(props: IInputProps) {
 			<View style={[styles.inputBox, { height }]}>
 				{iconLeft && <View style={{ marginRight: 2 }}>{iconLeft}</View>}
 				<TextInput
-					style={[styles.input, { height: "100%" }]}
+					style={[styles.input, { height: "100%", textAlignVertical: isTextArea ? "top" : "center" }]}
 					autoFocus={false}
 					placeholderTextColor={"#81818D"}
 					{...otherProps}
@@ -32,17 +32,20 @@ function Input(props: IInputProps) {
 	);
 }
 
-function Password(props: Omit<IInputProps, "iconLeft" | "iconRight">) {
-	const { label, errorMessage, ...otherProps } = props;
+function Password(props: Omit<IInputProps, "iconLeft" | "iconRight"> & {showLeftIcon: boolean}) {
+	const { label, errorMessage, showLeftIcon, ...otherProps } = props;
 	const [isHidden, setIsHidden] = useState(true);
 
 	return (
 		<View>
 			{label && <Text style={styles.label}>{label}</Text>}
 			<View style={styles.inputBox}>
-				<View style={{ marginRight: 2 }}>
-					<ICONS.PasswordIcon width={30} height={30} />
-				</View>
+				{
+					showLeftIcon && <View style={{ marginRight: 2 }}>
+						<ICONS.PasswordIcon width={30} height={30} />
+					</View>
+				}
+				
 				<TextInput
 					secureTextEntry={isHidden}
 					style={styles.input}
@@ -143,7 +146,10 @@ function Code(props: Omit<IInputProps, "iconLeft" | "iconRight">) {
 	);
 }
 
+
+
 Input.Password = Password;
 Input.Code = Code;
+
 
 export { Input };

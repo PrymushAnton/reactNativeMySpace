@@ -50,6 +50,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				fontFamily="GTWalsheimPro-Regular"
 				itemFontFamily="GTWalsheimPro-Regular"
 				selectedItemFontFamily="GTWalsheimPro-Regular"
+				styleTextDropdownSelected={{paddingLeft: 16}}
 			/>
 		</View>
 	);

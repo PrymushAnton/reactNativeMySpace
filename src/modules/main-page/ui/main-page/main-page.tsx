@@ -1,6 +1,4 @@
-import { Header } from "../../../../shared/Header/Header";
-import { Footer } from "../../../../shared/Footer/Footer";
-import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
 import { PublicatedPost } from "../post";
 import { useModal } from "../../../../modules/auth/context";
 import { ICONS } from "../../../../shared/ui/icons";
@@ -20,7 +18,7 @@ import {
 } from "expo-image-picker";
 import { useState } from "react";
 import { usePost } from "../../hooks/usePost";
-
+import { ScrollView } from "react-native-virtualized-view";
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
@@ -48,7 +46,14 @@ export function MainPage() {
 			resolver: yupResolver(schema),
 		});
 
-	const { createPost, updatePost, deletePost, getAllPosts, getPostsByUserId, getAllTags, } = usePost()
+	const {
+		createPost,
+		updatePost,
+		deletePost,
+		getAllPosts,
+		getPostsByUserId,
+		getAllTags,
+	} = usePost();
 
 	async function closingModal() {
 		closeModal();
@@ -82,14 +87,14 @@ export function MainPage() {
 	function onSubmit(data: IUserPost) {
 		async function request() {
 			const response = await createPost(data);
-			console.log(response)
+			console.log(response);
+			closingModal();
 		}
-		request()
+		request();
 	}
 
 	return (
 		<View>
-			{/* <Header /> */}
 			<ModalTool isVisible={isVisible} onClose={closingModal}>
 				<ScrollView style={styles.mainModalWindow}>
 					<View style={styles.closeModalButton}>
@@ -145,6 +150,8 @@ export function MainPage() {
 											onChangeText={field.onChange}
 											value={field.value}
 											autoCorrect={false}
+											multiline={true}
+											isTextArea={true}
 											errorMessage={
 												fieldState.error?.message
 											}
@@ -246,8 +253,7 @@ export function MainPage() {
 				</ScrollView>
 			</ModalTool>
 
-			<ScrollView>
-				{/* это всё должно браться из бд:) */}
+			<View>
 				<PublicatedPost
 					name="anton"
 					avatar="..../shared/ui/icons/person.png"
@@ -284,8 +290,7 @@ export function MainPage() {
 					likes={9}
 					views={15}
 				></PublicatedPost>
-			</ScrollView>
-			<Footer />
+			</View>
 		</View>
 	);
 }

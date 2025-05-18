@@ -1,9 +1,4 @@
-import {
-	View,
-	Text,
-	KeyboardAvoidingView,
-	TouchableOpacity,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
 import { Button } from "../../../../shared/ui/button";
@@ -16,7 +11,6 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link } from "expo-router";
 import { useState } from "react";
-
 
 export function RegisterForm() {
 	const schema = yup.object().shape({
@@ -51,7 +45,7 @@ export function RegisterForm() {
 			.oneOf([yup.ref("password")], "Паролі не співпадають"),
 	});
 
-	const {replace} = useRouter();
+	const { replace } = useRouter();
 	const { register } = useAuthContext();
 	const [globalError, setGlobalError] = useState<string>("");
 
@@ -65,10 +59,7 @@ export function RegisterForm() {
 		});
 	function onSubmit(data: IRegistration) {
 		async function request() {
-			const response = await register(
-				data.email,
-				data.password,
-			);
+			const response = await register(data.email, data.password);
 			if (typeof response === "string") {
 				setGlobalError(response);
 			} else {
@@ -84,12 +75,6 @@ export function RegisterForm() {
 
 	return (
 		<View style={styles.registerForm}>
-			<View style={styles.header}>
-				<ICONS.LogoIcon width={145} height={18} />
-
-			</View>
-
-
 			<View style={styles.form}>
 				<View style={styles.loginRegisterNav}>
 					<TouchableOpacity>
@@ -106,9 +91,7 @@ export function RegisterForm() {
 						</Text>
 					</TouchableOpacity>
 
-					<TouchableOpacity onPress={()=>(
-						replace("/login")
-					)}>
+					<TouchableOpacity onPress={() => replace("/login")}>
 						<Text
 							style={{
 								fontWeight: 500,
@@ -129,12 +112,12 @@ export function RegisterForm() {
 						render={({ field, fieldState }) => {
 							return (
 								<Input
-									iconLeft={
-										<ICONS.EmailIcon
-											width={30}
-											height={30}
-										/>
-									}
+									// iconLeft={
+									// 	<ICONS.EmailIcon
+									// 		width={30}
+									// 		height={30}
+									// 	/>
+									// }
 									placeholder="you@example.com"
 									onChange={field.onChange}
 									onChangeText={field.onChange}
@@ -155,6 +138,7 @@ export function RegisterForm() {
 						render={({ field, fieldState }) => {
 							return (
 								<Input.Password
+									showLeftIcon={false}
 									placeholder="Введи пароль"
 									onChange={field.onChange}
 									onChangeText={field.onChange}
@@ -174,6 +158,7 @@ export function RegisterForm() {
 						render={({ field, fieldState }) => {
 							return (
 								<Input.Password
+									showLeftIcon={false}
 									placeholder="Повтори пароль"
 									onChange={field.onChange}
 									onChangeText={field.onChange}

@@ -8,12 +8,12 @@ import { useAuthContext } from "../../context";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { COLORS } from "../../../../shared/constants";
 
 export function RegisterEmailForm() {
 	const params = useLocalSearchParams<{ email: string; password: string }>();
-
+	const router = useRouter();
 	const schema = yup.object().shape({
 		code: yup.string().required("Це поле обов'язкове"),
 	});
@@ -44,9 +44,6 @@ export function RegisterEmailForm() {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.logoContainer}>
-				<ICONS.LogoIcon/>
-			</View>
 			<View style={styles.form}>
 				<Text
 					style={{
@@ -111,7 +108,7 @@ export function RegisterEmailForm() {
 					<View>
 						<TouchableOpacity
 							onPress={() => {
-								console.log("back");
+								router.replace("/register")
 							}}
 						>
 							<Text style={{ color: COLORS.BLACK, fontFamily: "GTWalsheimPro-Regular" }}>Назад</Text>

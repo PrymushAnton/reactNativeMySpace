@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
 	inputBox: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingHorizontal: 16,
+		paddingHorizontal: 10,
 		borderRadius: 10,
 		backgroundColor: "#FFFFFF",
 		borderColor:"#CDCED2",
@@ -67,7 +67,8 @@ export const styles = StyleSheet.create({
 		height: "100%",
 		color: "#070A1C",
 		fontFamily: "GTWalsheimPro-Regular",
-		textAlignVertical: "top"
+		// textAlignVertical: "top"
+		
 	},
 	label: {
 		fontWeight: 500,
@@ -77,13 +78,11 @@ export const styles = StyleSheet.create({
 	errorBox: {
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "center",
-		paddingTop: 30,
 		gap: 2,
 	},
 	errorMessage: {
 		color: "red",
-		fontSize: 16,
+		fontSize: 14,
 	},
 
 });

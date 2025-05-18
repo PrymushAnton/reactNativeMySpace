@@ -53,10 +53,6 @@ export function LoginForm() {
 
 	return (
 		<View style={styles.loginForm}>
-			<View style={styles.header}>
-				<ICONS.LogoIcon width={145} height={18} />
-			</View>
-
 			<View style={styles.form}>
 				<View style={styles.loginRegisterNav}>
 					<TouchableOpacity onPress={()=>(
@@ -95,12 +91,12 @@ export function LoginForm() {
 						render={({ field, fieldState }) => {
 							return (
 								<Input
-									iconLeft={
-										<ICONS.EmailIcon
-											width={30}
-											height={30}
-										/>
-									}
+									// iconLeft={
+									// 	<ICONS.EmailIcon
+									// 		width={30}
+									// 		height={30}
+									// 	/>
+									// }
 									placeholder="you@example.com"
 									onChange={field.onChange}
 									onChangeText={field.onChange}
@@ -121,6 +117,7 @@ export function LoginForm() {
 						render={({ field, fieldState }) => {
 							return (
 								<Input.Password
+									showLeftIcon={false}
 									placeholder="Введи пароль"
 									onChange={field.onChange}
 									onChangeText={field.onChange}
