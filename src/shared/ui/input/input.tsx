@@ -5,15 +5,15 @@ import { ICONS } from "../icons";
 import { useEffect, useRef, useState } from "react";
 
 function Input(props: IInputProps) {
-	const { label, iconLeft, iconRight, errorMessage, ...otherProps } = props;
+	const { label, iconLeft, iconRight, errorMessage, height = 42, ...otherProps } = props;
 
 	return (
 		<View>
 			{label && <Text style={styles.label}>{label}</Text>}
-			<View style={styles.inputBox}>
+			<View style={[styles.inputBox, { height }]}>
 				{iconLeft && <View style={{ marginRight: 2 }}>{iconLeft}</View>}
 				<TextInput
-					style={styles.input}
+					style={[styles.input, { height: "100%" }]}
 					autoFocus={false}
 					placeholderTextColor={"#81818D"}
 					{...otherProps}
@@ -24,7 +24,7 @@ function Input(props: IInputProps) {
 			</View>
 			{errorMessage && (
 				<View style={styles.errorBox}>
-					<ICONS.ErrorIcon width={16} height={16}/>
+					<ICONS.ErrorIcon width={16} height={16} />
 					<Text style={styles.errorMessage}>{errorMessage}</Text>
 				</View>
 			)}

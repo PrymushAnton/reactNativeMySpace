@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { TextInputProps } from "react-native";
+import { TextInputProps, DimensionValue } from "react-native";
 
 
 
@@ -8,4 +8,5 @@ export interface IInputProps extends TextInputProps{
     iconRight?: ReactNode,
     errorMessage?: string;
     label?: string
+    height?: DimensionValue
 }

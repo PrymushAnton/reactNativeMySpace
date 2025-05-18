@@ -1,9 +1,14 @@
 import { View, StyleSheet, TouchableOpacity, Animated } from "react-native";
 import { ICONS } from "../ui/icons";
 import { useAuthContext } from "../../modules/auth/context";
+import { ModalTool } from "../../shared/modal";
+import { useState } from "react";
+import { useModal } from "../../modules/auth/context"
 
 export function Header() {
 	const {logout} = useAuthContext()
+	const [visible, setVisible] = useState(false);
+	const { openModal } = useModal();
 
 	return (
 		<Animated.View style={styles.header}>
@@ -12,7 +17,7 @@ export function Header() {
 			</TouchableOpacity>
 			<View style={styles.icons}>
 
-				<TouchableOpacity>
+				<TouchableOpacity onPress={openModal}>
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 

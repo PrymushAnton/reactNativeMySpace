@@ -2,10 +2,9 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	inputBox: {
-		height: 60,
 		flexDirection: "row",
 		alignItems: "center",
-		paddingHorizontal: 15,
+		paddingHorizontal: 16,
 		borderRadius: 10,
 		backgroundColor: "#FFFFFF",
 		borderColor:"#CDCED2",
@@ -67,6 +66,8 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		height: "100%",
 		color: "#070A1C",
+		fontFamily: "GTWalsheimPro-Regular",
+		textAlignVertical: "top"
 	},
 	label: {
 		fontWeight: 500,
