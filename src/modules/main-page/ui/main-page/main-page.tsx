@@ -1,6 +1,6 @@
 import { Header } from "../../../../shared/Header/Header";
 import { Footer } from "../../../../shared/Footer/Footer";
-import { View, StyleSheet, TouchableOpacity, Text, Image } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Image, FlatList, ScrollView } from "react-native";
 import { PublicatedPost } from "../post";
 import { useModal } from "../../../../modules/auth/context";
 import { ICONS } from "../../../../shared/ui/icons";
@@ -19,8 +19,8 @@ import {
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import { useState } from "react";
-import { ScrollView } from "react-native-virtualized-view";
 import { usePost } from "../../hooks/usePost";
+
 
 export function MainPage() {
 	const { isVisible, closeModal } = useModal();
@@ -89,7 +89,7 @@ export function MainPage() {
 
 	return (
 		<View>
-			<Header />
+			{/* <Header /> */}
 			<ModalTool isVisible={isVisible} onClose={closingModal}>
 				<ScrollView style={styles.mainModalWindow}>
 					<View style={styles.closeModalButton}>
@@ -245,7 +245,8 @@ export function MainPage() {
 					</View>
 				</ScrollView>
 			</ModalTool>
-			<View>
+
+			<ScrollView>
 				{/* это всё должно браться из бд:) */}
 				<PublicatedPost
 					name="anton"
@@ -283,7 +284,7 @@ export function MainPage() {
 					likes={9}
 					views={15}
 				></PublicatedPost>
-			</View>
+			</ScrollView>
 			<Footer />
 		</View>
 	);
