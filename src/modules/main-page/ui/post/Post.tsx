@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
-import { IPostProps } from "../../types/types";
+import { IPostProps } from "../../types/post-info";
 import { styles } from "./post.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { useState } from "react";
