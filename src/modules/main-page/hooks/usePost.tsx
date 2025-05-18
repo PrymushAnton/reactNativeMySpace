@@ -7,6 +7,7 @@ interface PostPayload {
 	existingTags: string[];
 	newTags: string[];
 	images: string[];
+	link: string
 }
 
 interface UpdatePayload extends PostPayload {
@@ -27,6 +28,7 @@ export function usePost() {
 			existingTags: post.defaultTags,
 			newTags: post.customTags,
 			images: post.image ? [post.image] : [],
+			link: post.link
 		};
 	}
 
