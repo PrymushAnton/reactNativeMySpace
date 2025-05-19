@@ -39,4 +39,8 @@ export const styles = StyleSheet.create({
         backgroundColor: "#543C52",
         flexDirection: "row",
 	},
+
+	imageIconViewStyles: {
+		
+	}
 });

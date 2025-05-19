@@ -32,7 +32,7 @@ export function MainPage() {
 		image: yup.string().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
-		link: yup.string().required()
+		link: yup.string().default('')
 	});
 
 	const { handleSubmit, control, formState, setValue, setError } =
@@ -43,6 +43,7 @@ export function MainPage() {
 				image: "",
 				defaultTags: [],
 				customTags: [],
+				link: ""
 			},
 			resolver: yupResolver(schema),
 		});
@@ -64,6 +65,7 @@ export function MainPage() {
 		setValue("image", "");
 		setValue("defaultTags", []);
 		setValue("customTags", []);
+		setValue("link", "");
 	}
 
 	async function onSearch() {
@@ -221,6 +223,7 @@ export function MainPage() {
 								flexWrap: "wrap",
 								gap: 16,
 								marginBottom: 15,
+								marginTop: 15
 							}}
 						>
 							{images.map((uri, index) => (
@@ -261,10 +264,10 @@ export function MainPage() {
 						}
 					>
 						<TouchableOpacity onPress={onSearch}>
-							<ICONS.PlusIcon />
+							<ICONS.ImageWithStylesIcon/>
 						</TouchableOpacity>
 						<TouchableOpacity>
-							<ICONS.SettingsIcon />
+							<ICONS.EmojiWithStylesIcon/>
 						</TouchableOpacity>
 						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
 							<View style={styles.sendPostModalButton}>
