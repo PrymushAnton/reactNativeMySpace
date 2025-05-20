@@ -13,6 +13,7 @@ export function PublicatedPost(props: IPostProps) {
 
 	const { isVisible, closeModal } = useModal();
 	const { openModal } = useModal();
+	const [isSettingsVisible, setSettingsVisible] = useState(false);
 
 	return (
 		<View style={styles.post}>
@@ -21,29 +22,48 @@ export function PublicatedPost(props: IPostProps) {
 					<Image style={styles.avatar} source={{ uri: avatar }} />
 					<Text style={styles.name}>{name}</Text>
 				</View>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => setSettingsVisible(true)}>
 					<View style={styles.actions}>
 						<ICONS.DotsIcon />
 					</View>
 				</TouchableOpacity>
 			</View>
-			{/* <ModalTool isVisible={isVisible} onClose={() => closeModal()}>
-				<View style={styles.mainSmallModalPostSettings}>
-					<View style={styles.threeDotsSmallModal}>
-						<ICONS.DotsIcon />
-					</View>
-					<View style={styles.mainEditPostButton}>
-						<ICONS.PencilIcon width={15} height={15}/>
-						<Text style={{fontSize: 16, fontFamily: "GTWalsheimPro-Regular"}}>Редагувати альбом</Text>
-					</View>
-					<View style={{flex: 1, height: 1, backgroundColor: '#CDCED2'}} />
-					
-					<View style={styles.mainDeletePostButton}>
-						<ICONS.TrashCanIcon width={15} height={15}/>
-						<Text style={{fontSize: 16, fontFamily: "GTWalsheimPro-Regular"}}>Редагувати альбом</Text>
+			<ModalTool
+				isVisible={isSettingsVisible}
+				onClose={() => setSettingsVisible(false)}
+			>
+				<View style={{alignItems: "center", justifyContent: "center"}}>
+					<View style={styles.mainSmallModalPostSettings}>
+						<View style={styles.headerRow}>
+							<View style={{ flex: 1 }} />
+							<View style={styles.threeDotsSmallModal}>
+								<ICONS.DotsIcon />
+							</View>
+						</View>
+
+						<TouchableOpacity style={styles.mainEditPostButton}>
+							<ICONS.PencilIcon width={15} height={15} />
+							<Text style={styles.actionText}>
+								Редагувати допис
+							</Text>
+						</TouchableOpacity>
+
+						<View style={styles.separator} />
+
+						<TouchableOpacity style={styles.mainDeletePostButton}>
+							<ICONS.TrashCanIcon
+								width={15}
+								height={15}
+								color={"#543C52"}
+							/>
+							<Text style={styles.actionText}>
+								Видалити публікацію
+							</Text>
+						</TouchableOpacity>
 					</View>
 				</View>
-			</ModalTool> */}
+			</ModalTool>
+
 			<View style={styles.content}>
 				<Text style={styles.text}>{text}</Text>
 				<View style={styles.hashtags}>
@@ -98,4 +118,3 @@ export function PublicatedPost(props: IPostProps) {
 		</View>
 	);
 }
-

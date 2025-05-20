@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
 	name: {
 		fontWeight: "bold",
 		color: "#070A1C",
-		fontFamily: 'GTWalsheimPro-Regular',
+		fontFamily: "GTWalsheimPro-Regular",
 	},
 
 	actions: {
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
 	text: {
 		color: "#070A1C",
 		fontSize: 14,
-		fontFamily: 'GTWalsheimPro-Regular',
+		fontFamily: "GTWalsheimPro-Regular",
 	},
 
 	hashtags: {
@@ -93,7 +93,7 @@ export const styles = StyleSheet.create({
 	reactionText: {
 		fontSize: 14,
 		color: "#070A1C",
-		fontFamily: 'GTWalsheimPro-Regular',
+		fontFamily: "GTWalsheimPro-Regular",
 	},
 	postActions: {
 		flexDirection: "row",
@@ -102,30 +102,47 @@ export const styles = StyleSheet.create({
 	// стили модалки
 	mainSmallModalPostSettings: {
 		width: 343,
-		height: 140,
-		borderRadius: 10,
+		borderRadius: 16,
 		backgroundColor: "#E9E5EE",
-		alignItems: "center",
-		justifyContent: "flex-start",
-		padding: 16,
+		paddingHorizontal: 20,
+		paddingTop: 16,
+		paddingBottom: 16,
 		gap: 16,
 	},
-	threeDotsSmallModal: {
-		width: 311,
-		height: 20,
-		justifyContent: "flex-end"
-	},
-	mainEditPostButton: {
-		width: 172,
-		height: 20,
-		gap: 10,
-		flexDirection: "row",
 
-	},
-	mainDeletePostButton: {
-		width: 159,
-		height: 20,
-		gap: 10,
+	headerRow: {
 		flexDirection: "row",
-	}
+		justifyContent: "space-between",
+		alignItems: "center",
+	},
+
+	threeDotsSmallModal: {
+		width: 20,
+		height: 20,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+
+	mainEditPostButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 10,
+	},
+
+	mainDeletePostButton: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 10,
+	},
+
+	separator: {
+		height: 1,
+		backgroundColor: "#CDCED2",
+		width: "100%",
+	},
+
+	actionText: {
+		fontSize: 16,
+		fontFamily: "GTWalsheimPro-Regular",
+	},
 });

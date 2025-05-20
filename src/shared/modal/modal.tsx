@@ -8,6 +8,9 @@ type ModalToolProps = {
 	onClose: () => void;
 };
 
+// чтобы юзать, нужно создавать новое состояние для isVisible в каждом файле, иначе будут вызываться сразу несколько модалок
+// потом решу(возможно)
+
 export function ModalTool({ children, isVisible, onClose }: ModalToolProps) {
 	return (
 		<Modal
