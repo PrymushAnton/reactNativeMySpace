@@ -34,13 +34,22 @@ export const styles = StyleSheet.create({
 		height: 40,
 		borderRadius: 30,
 		alignItems: "center",
-        justifyContent: "center",
+		justifyContent: "center",
 		gap: 8,
-        backgroundColor: "#543C52",
-        flexDirection: "row",
+		backgroundColor: "#543C52",
+		flexDirection: "row",
 	},
-
 	imageIconViewStyles: {
-		
-	}
+
+	},
+	imageDeleteButton: {
+		position: "absolute",
+		backgroundColor: "#FFFFFF",
+		borderRadius: 30,
+		width: 40,
+		height: 40,
+		alignItems: "center",
+		justifyContent: "center",
+		margin: 5
+	},
 });

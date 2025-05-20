@@ -32,7 +32,7 @@ export function MainPage() {
 		image: yup.string().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
-		link: yup.string().default('')
+		link: yup.string().default(""),
 	});
 
 	const { handleSubmit, control, formState, setValue, setError } =
@@ -43,7 +43,7 @@ export function MainPage() {
 				image: "",
 				defaultTags: [],
 				customTags: [],
-				link: ""
+				link: "",
 			},
 			resolver: yupResolver(schema),
 		});
@@ -66,6 +66,12 @@ export function MainPage() {
 		setValue("defaultTags", []);
 		setValue("customTags", []);
 		setValue("link", "");
+	}
+
+	function removeImage(index: number) {
+		const updatedImages = images.filter((_, i) => i !== index);
+		setImages(updatedImages);
+		setValue("image", updatedImages.join(","));
 	}
 
 	async function onSearch() {
@@ -189,32 +195,30 @@ export function MainPage() {
 					</View>
 
 					<View style={styles.themeModalInputFrame}>
-							<Text
-								style={{
-									fontFamily: "GTWalsheimPro-Regular",
-									fontSize: 16,
-								}}
-							>
-								Посилання
-							</Text>
-							<Controller
-								control={control}
-								name="link"
-								render={({ field, fieldState }) => {
-									return (
-										<Input
-											placeholder="Напишіть посилання"
-											onChange={field.onChange}
-											onChangeText={field.onChange}
-											value={field.value}
-											autoCorrect={false}
-											errorMessage={
-												fieldState.error?.message
-											}
-										/>
-									);
-								}}
-							/>
+						<Text
+							style={{
+								fontFamily: "GTWalsheimPro-Regular",
+								fontSize: 16,
+							}}
+						>
+							Посилання
+						</Text>
+						<Controller
+							control={control}
+							name="link"
+							render={({ field, fieldState }) => {
+								return (
+									<Input
+										placeholder="Напишіть посилання"
+										onChange={field.onChange}
+										onChangeText={field.onChange}
+										value={field.value}
+										autoCorrect={false}
+										errorMessage={fieldState.error?.message}
+									/>
+								);
+							}}
+						/>
 					</View>
 					{images.length > 0 && (
 						<View
@@ -223,20 +227,30 @@ export function MainPage() {
 								flexWrap: "wrap",
 								gap: 16,
 								marginBottom: 15,
-								marginTop: 15
+								marginTop: 15,
 							}}
 						>
 							{images.map((uri, index) => (
-								<Image
+								<View
 									key={index}
-									source={{ uri }}
-									style={{
-										width: 100,
-										height: 100,
-										borderRadius: 15,
-									}}
-									resizeMode="cover"
-								/>
+									style={{ position: "relative", alignItems: "flex-end" }}
+								>
+									<Image
+										source={{ uri }}
+										style={{
+											width: 100,
+											height: 100,
+											borderRadius: 15,
+										}}
+										resizeMode="cover"
+									/>
+									<TouchableOpacity
+										onPress={() => removeImage(index)}
+										style={styles.imageDeleteButton}
+									>
+										<ICONS.TrashCanIcon width={20} height={20} color={"#543C52"}/>
+									</TouchableOpacity>
+								</View>
 							))}
 						</View>
 					)}
@@ -251,7 +265,6 @@ export function MainPage() {
 										width: 343,
 										height: 40,
 										marginBottom: 40,
-										
 								  }
 								: {
 										flexDirection: "row",
@@ -259,15 +272,15 @@ export function MainPage() {
 										gap: 10,
 										width: 343,
 										height: 40,
-										marginTop: 20
+										marginTop: 20,
 								  }
 						}
 					>
 						<TouchableOpacity onPress={onSearch}>
-							<ICONS.ImageWithStylesIcon/>
+							<ICONS.ImageWithStylesIcon />
 						</TouchableOpacity>
 						<TouchableOpacity>
-							<ICONS.EmojiWithStylesIcon/>
+							<ICONS.EmojiWithStylesIcon />
 						</TouchableOpacity>
 						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
 							<View style={styles.sendPostModalButton}>
