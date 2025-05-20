@@ -5,6 +5,8 @@ import { ICONS } from "../../../../shared/ui/icons";
 import { useRef, useState } from "react";
 import { ModalTool } from "../../../../shared/modal";
 import { useModal } from "../../../../modules/auth/context";
+import { usePost } from "../../hooks/usePost";
+import { IUserPost } from "../../types/post";
 
 export function PublicatedPost(props: IPostProps) {
 	const { name, avatar, text, hashtags, photo, likes, views } = props;
@@ -15,11 +17,27 @@ export function PublicatedPost(props: IPostProps) {
 	const { openModal } = useModal();
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
 
+	const {
+		createPost,
+		updatePost,
+		deletePost,
+		getAllPosts,
+		getPostsByUserId,
+		getAllTags,
+	} = usePost();
+
 	const [modalPosition, setModalPosition] = useState<{
 		top: number;
 		left: number;
 	} | null>(null);
 	const dotsRef = useRef<View>(null);
+
+	// function deletingPost(data: IUserPost) {
+	// 	async function request() {
+	// 		const response = await deletePost(id);
+	// 	}
+	// 	request();
+	// }
 
 	return (
 		<View style={styles.post}>
@@ -35,7 +53,7 @@ export function PublicatedPost(props: IPostProps) {
 							setModalPosition({
 								top: y - 20,
 								left: x - 330 + 20,
-							}); 
+							});
 							setSettingsVisible(true);
 						});
 					}}

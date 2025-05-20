@@ -16,7 +16,7 @@ import {
 	launchImageLibraryAsync,
 	requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePost } from "../../hooks/usePost";
 import { ScrollView } from "react-native-virtualized-view";
 
@@ -25,6 +25,42 @@ export function MainPage() {
 
 	const [images, setImages] = useState<string[]>([]);
 	const [globalError, setGlobalError] = useState<string>("");
+
+	const [posts, setPosts] = useState<IUserPost[]>([]);
+
+	const {
+		createPost,
+		updatePost,
+		deletePost,
+		getAllPosts,
+		getPostsByUserId,
+		getAllTags,
+	} = usePost();
+
+	// Функция-адаптер для преобразования поста с API в IUserPost
+	function adaptPost(post: any): IUserPost {
+		return {
+			id: post.id,
+			name: post.title ?? "",
+			description: post.text ?? "",
+			defaultTags: Array.isArray(post.tags) ? post.tags : [],
+			customTags: [], 
+			image: Array.isArray(post.images) ? post.images.join(",") : "",
+			avatar: post.avatar ?? "",
+			likes: post.likes ?? 0,
+			views: post.views ?? 0,
+			link: post.link ?? "",
+			userId: post.userId,
+		};
+	}
+
+	useEffect(() => {
+		async function fetchPosts() {
+			const allPosts = await getAllPosts();
+			setPosts(allPosts.data.map(adaptPost));
+		}
+		fetchPosts();
+	}, []);
 
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
@@ -47,15 +83,6 @@ export function MainPage() {
 			},
 			resolver: yupResolver(schema),
 		});
-
-	const {
-		createPost,
-		updatePost,
-		deletePost,
-		getAllPosts,
-		getPostsByUserId,
-		getAllTags,
-	} = usePost();
 
 	async function closingModal() {
 		closeModal();
@@ -96,7 +123,6 @@ export function MainPage() {
 	function onSubmit(data: IUserPost) {
 		async function request() {
 			const response = await createPost(data);
-			console.log(response);
 			closingModal();
 		}
 		request();
@@ -233,7 +259,10 @@ export function MainPage() {
 							{images.map((uri, index) => (
 								<View
 									key={index}
-									style={{ position: "relative", alignItems: "flex-end" }}
+									style={{
+										position: "relative",
+										alignItems: "flex-end",
+									}}
 								>
 									<Image
 										source={{ uri }}
@@ -248,7 +277,11 @@ export function MainPage() {
 										onPress={() => removeImage(index)}
 										style={styles.imageDeleteButton}
 									>
-										<ICONS.TrashCanIcon width={20} height={20} color={"#543C52"}/>
+										<ICONS.TrashCanIcon
+											width={20}
+											height={20}
+											color={"#543C52"}
+										/>
 									</TouchableOpacity>
 								</View>
 							))}
@@ -301,6 +334,23 @@ export function MainPage() {
 			</ModalTool>
 
 			<View>
+				<View>
+
+					
+
+					{posts.map((post, idx) => (
+						<PublicatedPost
+							key={idx}
+							name={post.name}
+							text={post.description}
+							hashtags={[...post.defaultTags, ...post.customTags]}
+							photo={post.image ? post.image.split(",") : []}
+							avatar={post.avatar ?? ""}
+							likes={post.likes ?? 0}
+							views={post.views ?? 0}
+						/>
+					))}
+				</View>
 				<PublicatedPost
 					name="anton"
 					avatar="..../shared/ui/icons/person.png"
