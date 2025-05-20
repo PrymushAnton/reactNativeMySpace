@@ -112,7 +112,7 @@ export const styles = StyleSheet.create({
 
 	headerRow: {
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "flex-end",
 		alignItems: "center",
 	},
 
@@ -121,6 +121,7 @@ export const styles = StyleSheet.create({
 		height: 20,
 		justifyContent: "center",
 		alignItems: "center",
+		marginRight: -5
 	},
 
 	mainEditPostButton: {

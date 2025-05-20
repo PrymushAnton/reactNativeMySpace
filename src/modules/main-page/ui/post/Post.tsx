@@ -2,7 +2,7 @@ import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 import { IPostProps } from "../../types/post-info";
 import { styles } from "./post.styles";
 import { ICONS } from "../../../../shared/ui/icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ModalTool } from "../../../../shared/modal";
 import { useModal } from "../../../../modules/auth/context";
 
@@ -15,6 +15,12 @@ export function PublicatedPost(props: IPostProps) {
 	const { openModal } = useModal();
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
 
+	const [modalPosition, setModalPosition] = useState<{
+		top: number;
+		left: number;
+	} | null>(null);
+	const dotsRef = useRef<View>(null);
+
 	return (
 		<View style={styles.post}>
 			<View style={styles.top}>
@@ -22,7 +28,18 @@ export function PublicatedPost(props: IPostProps) {
 					<Image style={styles.avatar} source={{ uri: avatar }} />
 					<Text style={styles.name}>{name}</Text>
 				</View>
-				<TouchableOpacity onPress={() => setSettingsVisible(true)}>
+				<TouchableOpacity
+					ref={dotsRef}
+					onPress={() => {
+						dotsRef.current?.measureInWindow((x, y) => {
+							setModalPosition({
+								top: y - 20,
+								left: x - 330 + 20,
+							}); 
+							setSettingsVisible(true);
+						});
+					}}
+				>
 					<View style={styles.actions}>
 						<ICONS.DotsIcon />
 					</View>
@@ -31,36 +48,32 @@ export function PublicatedPost(props: IPostProps) {
 			<ModalTool
 				isVisible={isSettingsVisible}
 				onClose={() => setSettingsVisible(false)}
+				position={modalPosition ?? undefined}
 			>
-				<View style={{alignItems: "center", justifyContent: "center"}}>
-					<View style={styles.mainSmallModalPostSettings}>
-						<View style={styles.headerRow}>
-							<View style={{ flex: 1 }} />
-							<View style={styles.threeDotsSmallModal}>
-								<ICONS.DotsIcon />
-							</View>
+				<View style={styles.mainSmallModalPostSettings}>
+					<View style={styles.headerRow}>
+						<View style={styles.threeDotsSmallModal}>
+							<ICONS.DotsIcon />
 						</View>
-
-						<TouchableOpacity style={styles.mainEditPostButton}>
-							<ICONS.PencilIcon width={15} height={15} />
-							<Text style={styles.actionText}>
-								Редагувати допис
-							</Text>
-						</TouchableOpacity>
-
-						<View style={styles.separator} />
-
-						<TouchableOpacity style={styles.mainDeletePostButton}>
-							<ICONS.TrashCanIcon
-								width={15}
-								height={15}
-								color={"#543C52"}
-							/>
-							<Text style={styles.actionText}>
-								Видалити публікацію
-							</Text>
-						</TouchableOpacity>
 					</View>
+
+					<TouchableOpacity style={styles.mainEditPostButton}>
+						<ICONS.PencilIcon width={15} height={15} />
+						<Text style={styles.actionText}>Редагувати допис</Text>
+					</TouchableOpacity>
+
+					<View style={styles.separator} />
+
+					<TouchableOpacity style={styles.mainDeletePostButton}>
+						<ICONS.TrashCanIcon
+							width={15}
+							height={15}
+							color={"#543C52"}
+						/>
+						<Text style={styles.actionText}>
+							Видалити публікацію
+						</Text>
+					</TouchableOpacity>
 				</View>
 			</ModalTool>
 
