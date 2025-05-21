@@ -68,12 +68,10 @@ export const styles = StyleSheet.create({
 		flexWrap: "wrap",
 		gap: 6,
 		marginTop: 8,
-		justifyContent: "space-between",
+		justifyContent: "flex-start",
 	},
 
 	photo: {
-		width: 80,
-		height: 80,
 		borderRadius: 8,
 	},
 
@@ -121,7 +119,7 @@ export const styles = StyleSheet.create({
 		height: 20,
 		justifyContent: "center",
 		alignItems: "center",
-		marginRight: -5
+		marginRight: -5,
 	},
 
 	mainEditPostButton: {

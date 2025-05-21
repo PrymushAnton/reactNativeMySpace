@@ -17,6 +17,22 @@ export function PublicatedPost(props: IPostProps) {
 	const { openModal } = useModal();
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
 
+	function getPhotoStyles(count: number, index: number) {
+		const size1 = { minWidth: 167.5, minHeight: 203 };
+		const size2 = { minWidth: 109, minHeight: 203 };
+
+		if (count <= 2) return size1;
+		if (count === 3) return size2;
+		if (count === 4) return size1;
+		if (count === 5) return index < 2 ? size1 : size2;
+		if (count === 6) return size2;
+		if (count === 7) return index < 2 ? size1 : index < 5 ? size2 : size1;
+		if (count === 8) return index < 2 ? size1 : size2;
+		if (count === 9) return size2;
+
+		return size2;
+	}
+
 	const {
 		createPost,
 		updatePost,
@@ -109,15 +125,18 @@ export function PublicatedPost(props: IPostProps) {
 
 				{photo ? (
 					<View style={styles.photoGrid}>
-						{photo.map((tag, i) => (
-							<Image
-								key={i}
-								source={{ uri: tag }}
-								style={styles.photo}
-							/>
-						))}
+						{photo.map((url, i) => {
+							const photoStyle = getPhotoStyles(photo.length, i);
+							return (
+								<Image
+									key={i}
+									source={{ uri: url }}
+									style={[styles.photo, photoStyle]}
+								/>
+							);
+						})}
 					</View>
-				) : undefined}
+				) : null}
 
 				<View style={styles.reactions}>
 					<View style={styles.postActions}>
