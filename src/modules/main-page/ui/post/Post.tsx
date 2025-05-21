@@ -130,7 +130,7 @@ export function PublicatedPost(props: IPostProps) {
 							return (
 								<Image
 									key={i}
-									source={{ uri: url }}
+									source={{ uri: "data:image/jpeg;base64," + url }}
 									style={[styles.photo, photoStyle]}
 								/>
 							);

@@ -44,7 +44,7 @@ export function MainPage() {
 			name: post.title ?? "",
 			description: post.text ?? "",
 			defaultTags: Array.isArray(post.tags) ? post.tags : [],
-			customTags: [], 
+			customTags: [],
 			image: Array.isArray(post.images) ? post.images.join(",") : "",
 			avatar: post.avatar ?? "",
 			likes: post.likes ?? 0,
@@ -109,13 +109,20 @@ export function MainPage() {
 				mediaTypes: "images",
 				allowsMultipleSelection: true,
 				selectionLimit: 9,
-				base64: false,
+				base64: true,
 			});
 
 			if (selected.assets) {
-				const uris = selected.assets.map((asset) => asset.uri);
-				setImages(uris);
-				setValue("image", uris.join(","));
+				const bases64 = selected.assets
+					.map((asset) => asset.base64)
+					.filter((base64): base64 is string => typeof base64 === "string");
+
+				if (bases64.length === 0) {
+					return 0;
+				}
+
+				setImages(bases64)
+				setValue("image", bases64.join(","));
 			}
 		}
 	}
@@ -123,6 +130,10 @@ export function MainPage() {
 	function onSubmit(data: IUserPost) {
 		async function request() {
 			const response = await createPost(data);
+			if (response.success && response.data) {
+				const newPost = adaptPost(response.data); // адаптируй серверный ответ
+				setPosts((prev) => [newPost, ...prev]); // добавь в начало списка
+			}
 			closingModal();
 		}
 		request();
@@ -265,7 +276,7 @@ export function MainPage() {
 									}}
 								>
 									<Image
-										source={{ uri }}
+										source={{ uri :"data:image/jpeg;base64," + uri }}
 										style={{
 											width: 100,
 											height: 100,
@@ -335,9 +346,6 @@ export function MainPage() {
 
 			<View>
 				<View>
-
-					
-
 					{posts.map((post, idx) => (
 						<PublicatedPost
 							key={idx}
