@@ -66,9 +66,8 @@ export const styles = StyleSheet.create({
 	photoGrid: {
 		flexDirection: "row",
 		flexWrap: "wrap",
-		gap: 6,
-		marginTop: 8,
 		justifyContent: "flex-start",
+		gap: 4,
 	},
 
 	photo: {

@@ -7,6 +7,7 @@ import { ModalTool } from "../../../../shared/modal";
 import { useModal } from "../../../../modules/auth/context";
 import { usePost } from "../../hooks/usePost";
 import { IUserPost } from "../../types/post";
+import { useWindowDimensions } from "react-native";
 
 export function PublicatedPost(props: IPostProps) {
 	const { name, avatar, text, hashtags, photo, likes, views } = props;
@@ -17,20 +18,34 @@ export function PublicatedPost(props: IPostProps) {
 	const { openModal } = useModal();
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
 
-	function getPhotoStyles(count: number, index: number) {
-		const size1 = { minWidth: 167.5, minHeight: 203 };
-		const size2 = { minWidth: 109, minHeight: 203 };
+	const { width: screenWidth } = useWindowDimensions();
 
-		if (count <= 2) return size1;
-		if (count === 3) return size2;
-		if (count === 4) return size1;
-		if (count === 5) return index < 2 ? size1 : size2;
-		if (count === 6) return size2;
-		if (count === 7) return index < 2 ? size1 : index < 5 ? size2 : size1;
-		if (count === 8) return index < 2 ? size1 : size2;
-		if (count === 9) return size2;
+	const GAP = 4;
+	const PADDING = 24;
 
-		return size2;
+	function getPhotosPerRow(totalPhotos: number): number[] {
+		switch (totalPhotos) {
+			case 1:
+				return [1];
+			case 2:
+				return [2];
+			case 3:
+				return [3];
+			case 4:
+				return [2, 2];
+			case 5:
+				return [2, 3];
+			case 6:
+				return [3, 3];
+			case 7:
+				return [3, 3, 1];
+			case 8:
+				return [4, 4];
+			case 9:
+				return [3, 3, 3];
+			default:
+				return [3]; // на всякий
+		}
 	}
 
 	const {
@@ -48,12 +63,8 @@ export function PublicatedPost(props: IPostProps) {
 	} | null>(null);
 	const dotsRef = useRef<View>(null);
 
-	// function deletingPost(data: IUserPost) {
-	// 	async function request() {
-	// 		const response = await deletePost(id);
-	// 	}
-	// 	request();
-	// }
+	let photoIndex = 0;
+	const rows = photo ? getPhotosPerRow(photo.length) : [];
 
 	return (
 		<View style={styles.post}>
@@ -124,15 +135,39 @@ export function PublicatedPost(props: IPostProps) {
 				</View>
 
 				{photo ? (
-					<View style={styles.photoGrid}>
-						{photo.map((url, i) => {
-							const photoStyle = getPhotoStyles(photo.length, i);
+					<View style={{ gap: GAP }}>
+						{rows.map((countInRow, rowIdx) => {
+							const photosInRow = photo.slice(photoIndex, photoIndex + countInRow);
+							photoIndex += countInRow;
+
 							return (
-								<Image
-									key={i}
-									source={{ uri: "data:image/jpeg;base64," + url }}
-									style={[styles.photo, photoStyle]}
-								/>
+								<View
+									key={rowIdx}
+									style={{
+										flexDirection: "row",
+										gap: GAP,
+										justifyContent: "flex-start",
+									}}
+								>
+									{photosInRow.map((url, i) => {
+										const totalGap = GAP * (countInRow - 1);
+										const width = (screenWidth - PADDING - totalGap) / countInRow;
+										const aspectRatio = 167.5 / 203; // расчитываем размер исходя из размера экрана
+
+										return (
+											<Image
+												key={i}
+												source={{ uri: "data:image/jpeg;base64," + url }}
+												style={{
+													width,
+													aspectRatio,
+													borderRadius: 8,
+												}}
+												resizeMode="cover"
+											/>
+										);
+									})}
+								</View>
 							);
 						})}
 					</View>
