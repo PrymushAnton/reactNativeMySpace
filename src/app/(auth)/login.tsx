@@ -1,6 +1,5 @@
 import { LoginForm } from "../../modules/auth/ui";
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import { View } from "react-native";
 
 export default function Login() {
 	return (

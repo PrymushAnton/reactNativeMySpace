@@ -23,6 +23,8 @@ import { CloseIcon } from "./close-icon";
 import { SendPostIcon } from "./send-post-icon";
 import { PencilIcon } from "./pencil-icon";
 import { TrashCanIcon } from "./trash-can-icon";
+import { UncheckedCheckbox } from "./unchecked-checkbox";
+import { CheckedCheckbox } from "./checked-checkbox";
 
 export const ICONS = {
 	DateIcon,
@@ -50,5 +52,6 @@ export const ICONS = {
 	SendPostIcon,
 	PencilIcon,
 	TrashCanIcon,
-    
+    UncheckedCheckbox,
+	CheckedCheckbox
 };

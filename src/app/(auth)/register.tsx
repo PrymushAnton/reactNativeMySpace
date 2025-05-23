@@ -1,6 +1,5 @@
-import { RegisterForm, RegisterEmailForm } from "../../modules/auth/ui";
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
+import { RegisterForm } from "../../modules/auth/ui";
+import { View } from "react-native";
 
 export default function Register() {
     return (
