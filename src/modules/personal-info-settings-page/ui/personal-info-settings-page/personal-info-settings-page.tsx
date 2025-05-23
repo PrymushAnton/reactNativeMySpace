@@ -3,6 +3,8 @@ import { Input } from "../../../../shared/ui/input";
 import { styles } from "./personal-info-settings-page.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { Controller, useForm } from "react-hook-form";
+import { useState } from "react";
+import { useRouter } from "expo-router";
 
 export function PersonalInfoSettingsPage() {
 	const { control } = useForm({
@@ -14,6 +16,10 @@ export function PersonalInfoSettingsPage() {
 			password: "",
 		},
 	});
+	const [isFullNameChecked, setIsFullNameChecked] = useState(true);
+	const [isWritingChecked, setIsWritingChecked] = useState(false);
+	const router = useRouter();
+
 	return (
 		<View
 			style={{
@@ -33,7 +39,9 @@ export function PersonalInfoSettingsPage() {
 							Особиста інформація
 						</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.personalInfoSettingsTopEl}>
+					<TouchableOpacity style={styles.personalInfoSettingsTopEl} onPress={()=>{
+						router.navigate("/(settings)/albumsSettingsPage")
+					}}>
 						<Text>Альбоми</Text>
 					</TouchableOpacity>
 				</View>
@@ -210,11 +218,21 @@ export function PersonalInfoSettingsPage() {
 							<View>
 								<TouchableOpacity
 									style={styles.writingVariantsCheckbox}
+									onPress={() =>
+										setIsFullNameChecked(!isFullNameChecked)
+									}
 								>
-									<ICONS.CheckedCheckbox
-										width={15}
-										height={15}
-									/>
+									{isFullNameChecked ? (
+										<ICONS.CheckedCheckbox
+											width={15}
+											height={15}
+										/>
+									) : (
+										<ICONS.UncheckedCheckbox
+											width={15}
+											height={15}
+										/>
+									)}
 									<Text style={{ color: "#AA9EA9" }}>
 										Ім'я та прізвище
 									</Text>
@@ -224,16 +242,29 @@ export function PersonalInfoSettingsPage() {
 							<View>
 								<TouchableOpacity
 									style={styles.writingVariantsCheckbox}
+									onPress={() =>
+										setIsWritingChecked(!isWritingChecked)
+									}
 								>
-									<ICONS.CheckedCheckbox
-										width={15}
-										height={15}
-									/>
+									{isWritingChecked ? (
+										<ICONS.CheckedCheckbox
+											width={15}
+											height={15}
+										/>
+									) : (
+										<ICONS.UncheckedCheckbox
+											width={15}
+											height={15}
+										/>
+									)}
 									<Text style={{ color: "#AA9EA9" }}>
 										Мій електроний підпис
 									</Text>
 								</TouchableOpacity>
-								<Image source={require("./2.png")} style = {{alignSelf: "center"}}></Image>
+								<Image
+									source={require("./2.png")}
+									style={{ alignSelf: "center" }}
+								></Image>
 							</View>
 						</View>
 					</View>

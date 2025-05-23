@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
     profileCardBottom:{
         alignItems: "center",
         flexDirection: "column",
+        paddingBottom: 16
     },
 
 
