@@ -2,14 +2,35 @@ import { ReactNode } from "react";
 import { View } from "react-native";
 import Modal from "react-native-modal";
 
+type AnimationName =
+	| "fadeIn"
+	| "fadeInUp"
+	| "fadeInDown"
+	| "fadeOut"
+	| "fadeOutDown"
+	| "fadeOutUp"
+	| "slideInUp"
+	| "slideOutDown"
+	| "zoomIn"
+	| "zoomOut";
+
 type ModalToolProps = {
 	children?: ReactNode;
 	isVisible: boolean;
 	onClose: () => void;
-	position?: { top: number; left: number }; // если передано — модалка будет около кнопки
+	position?: { top: number; left: number };
+	animationIn?: AnimationName;
+	animationOut?: AnimationName;
 };
 
-export function ModalTool({ children, isVisible, onClose, position }: ModalToolProps) {
+export function ModalTool({
+	children,
+	isVisible,
+	onClose,
+	position,
+	animationIn,
+	animationOut,
+}: ModalToolProps) {
 	return (
 		<Modal
 			isVisible={isVisible}
@@ -18,6 +39,8 @@ export function ModalTool({ children, isVisible, onClose, position }: ModalToolP
 			hideModalContentWhileAnimating={true}
 			useNativeDriver={true}
 			style={{ margin: 0 }}
+			animationIn={animationIn}
+			animationOut={animationOut}
 		>
 			{position ? (
 				<View

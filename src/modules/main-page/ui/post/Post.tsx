@@ -94,6 +94,8 @@ export function PublicatedPost(props: IPostProps) {
 				isVisible={isSettingsVisible}
 				onClose={() => setSettingsVisible(false)}
 				position={modalPosition ?? undefined}
+				animationIn="fadeIn"
+				animationOut="fadeOut"
 			>
 				<View style={styles.mainSmallModalPostSettings}>
 					<View style={styles.headerRow}>
@@ -137,7 +139,10 @@ export function PublicatedPost(props: IPostProps) {
 				{photo ? (
 					<View style={{ gap: GAP }}>
 						{rows.map((countInRow, rowIdx) => {
-							const photosInRow = photo.slice(photoIndex, photoIndex + countInRow);
+							const photosInRow = photo.slice(
+								photoIndex,
+								photoIndex + countInRow
+							);
 							photoIndex += countInRow;
 
 							return (
@@ -151,13 +156,19 @@ export function PublicatedPost(props: IPostProps) {
 								>
 									{photosInRow.map((url, i) => {
 										const totalGap = GAP * (countInRow - 1);
-										const width = (screenWidth - PADDING - totalGap) / countInRow;
+										const width =
+											(screenWidth - PADDING - totalGap) /
+											countInRow;
 										const aspectRatio = 167.5 / 203; // расчитываем размер исходя из размера экрана
 
 										return (
 											<Image
 												key={i}
-												source={{ uri: "data:image/jpeg;base64," + url }}
+												source={{
+													uri:
+														"data:image/jpeg;base64," +
+														url,
+												}}
 												style={{
 													width,
 													aspectRatio,
