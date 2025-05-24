@@ -39,8 +39,7 @@ export function MainPage() {
 		};
 	}
 
-	useEffect(() => {
-		async function fetchPosts() {
+	async function fetchPosts() {
 			const allPosts = await getAllPosts();
 			setPosts(allPosts.data.map(adaptPost));
 			if (allPosts.success && allPosts.data) {
@@ -48,6 +47,8 @@ export function MainPage() {
 				setPosts((prev) => [newPost, ...prev]); 
 			}
 		}
+
+	useEffect(() => {
 		fetchPosts();
 	}, []);
 
@@ -58,6 +59,7 @@ export function MainPage() {
 				<View>
 					{posts.map((post, idx) => (
 						<PublicatedPost
+							id={post.id}
 							key={idx}
 							name={post.name}
 							text={post.description}
@@ -66,6 +68,7 @@ export function MainPage() {
 							avatar={post.avatar ?? ""}
 							likes={post.likes ?? 0}
 							views={post.views ?? 0}
+							onRefresh={fetchPosts}
 						/>
 					))}
 				</View>

@@ -118,7 +118,8 @@ export const styles = StyleSheet.create({
 		height: 20,
 		justifyContent: "center",
 		alignItems: "center",
-		marginRight: -5,
+		marginRight: -7,
+		marginTop: 3
 	},
 
 	mainEditPostButton: {

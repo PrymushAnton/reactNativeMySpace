@@ -178,6 +178,7 @@ export function ModalPublicationPost() {
 								}}
 							/>
 						</View>
+						{/* style={{ position: 'relative', height: 40 }} */}
 						<View>
 							<Controller
 								control={control}
@@ -189,7 +190,9 @@ export function ModalPublicationPost() {
 									/>
 								)}
 							/>
+						</View>
 
+						<View>
 							<Controller
 								control={control}
 								name="customTags"

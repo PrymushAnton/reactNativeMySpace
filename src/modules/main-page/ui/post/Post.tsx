@@ -10,7 +10,7 @@ import { IUserPost } from "../../types/post";
 import { useWindowDimensions } from "react-native";
 
 export function PublicatedPost(props: IPostProps) {
-	const { name, avatar, text, hashtags, photo, likes, views } = props;
+	const { id, name, avatar, text, hashtags, photo, likes, views } = props;
 
 	const [isLiked, setIsLiked] = useState<boolean>(false);
 
@@ -99,9 +99,12 @@ export function PublicatedPost(props: IPostProps) {
 			>
 				<View style={styles.mainSmallModalPostSettings}>
 					<View style={styles.headerRow}>
-						<View style={styles.threeDotsSmallModal}>
+						<TouchableOpacity
+							style={styles.threeDotsSmallModal}
+							onPress={() => setSettingsVisible(false)}
+						>
 							<ICONS.DotsIcon />
-						</View>
+						</TouchableOpacity>
 					</View>
 
 					<TouchableOpacity style={styles.mainEditPostButton}>
@@ -111,7 +114,16 @@ export function PublicatedPost(props: IPostProps) {
 
 					<View style={styles.separator} />
 
-					<TouchableOpacity style={styles.mainDeletePostButton}>
+					<TouchableOpacity
+						style={styles.mainDeletePostButton}
+						onPress={async () => {
+							if (props.id !== undefined) {
+								await deletePost(props.id);
+								props.onRefresh?.(); // ?.() - если onRefresh, и он не undefined, то она будет вызвана
+								setSettingsVisible(false);
+							}
+						}}
+					>
 						<ICONS.TrashCanIcon
 							width={15}
 							height={15}

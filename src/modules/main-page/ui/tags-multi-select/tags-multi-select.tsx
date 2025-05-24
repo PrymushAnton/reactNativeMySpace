@@ -44,6 +44,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 	}, []);
 
 	return (
+		// style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 999 }}
 		<View>
 			<MultiSelect
 				items={tags}

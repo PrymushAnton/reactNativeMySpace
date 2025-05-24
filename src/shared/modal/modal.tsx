@@ -68,7 +68,7 @@ export function ModalTool({
 							backgroundColor: "white",
 							borderRadius: 20,
 							overflow: "hidden",
-							maxHeight: "90%", // чтобы ScrollView не уходил за экран
+							maxHeight: "95%",
 							width: "100%",
 							alignSelf: "center",
 						}}
