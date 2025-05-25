@@ -5,20 +5,47 @@ import { ICONS } from "../../../../shared/ui/icons";
 import { Controller, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { useAuthContext } from "../../../auth/context";
+
+interface IPersonalInfoFormData {
+	name: string
+	surname: string
+	birthDate: string
+}
 
 export function PersonalInfoSettingsPage() {
-	const { control } = useForm({
+	const { control, handleSubmit } = useForm<IPersonalInfoFormData>({
 		defaultValues: {
 			name: "",
 			surname: "",
 			birthDate: "",
-			email: "",
-			password: "",
+			// email: "",
+			// password: "",
 		},
 	});
 	const [isFullNameChecked, setIsFullNameChecked] = useState(true);
 	const [isWritingChecked, setIsWritingChecked] = useState(false);
 	const router = useRouter();
+	const {user, token} = useAuthContext()
+
+	function onSubmit(data: IPersonalInfoFormData) {
+		async function updateUser() {
+			const response = await fetch("http://192.168.3.11:3001/user/update", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					name: data.name,
+					surname: data.surname,
+					birthDate: data.birthDate,
+				}),
+			})
+		}
+		updateUser()
+		router.replace("/main");
+	}
 
 	return (
 		<View
@@ -40,7 +67,7 @@ export function PersonalInfoSettingsPage() {
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={styles.personalInfoSettingsTopEl} onPress={()=>{
-						router.navigate("/(settings)/albumsSettingsPage")
+						router.replace("/albums")
 					}}>
 						<Text>Альбоми</Text>
 					</TouchableOpacity>
@@ -66,27 +93,41 @@ export function PersonalInfoSettingsPage() {
 						</View>
 
 						<View style={styles.profileCardBottom}>
-							<Image
-								style={{
-									height: 100,
-									width: 100,
-								}}
-								source={require("./1.png")}
-							/>
+							{
+								user?.image
+								? <Image
+									style={{
+										height: 100,
+										width: 100,
+									}}
+									source={{uri: user.image}}
+								/>
+								: <ICONS.EyeIcon width={100} height={100}/>
+							}
+							
 							<Text
 								style={{
 									fontWeight: 700,
 									fontSize: 24,
 								}}
 							>
-								Lina Li
+								{	
+									user?.name && user?.surname
+									&& user.name + " " + user.surname
+								}
 							</Text>
 							<Text
 								style={{
 									fontWeight: 500,
 								}}
 							>
-								@thelili
+								{
+									user?.username
+									? user.username
+									: user?.email
+										&& "@" + user.email.split("@")[0]
+
+								}
 							</Text>
 						</View>
 					</View>
@@ -104,6 +145,7 @@ export function PersonalInfoSettingsPage() {
 									borderRadius: "50%",
 									padding: 10,
 								}}
+								onPress={handleSubmit(onSubmit)}
 							>
 								<ICONS.PencilIcon width={15} height={15} />
 							</TouchableOpacity>
@@ -150,7 +192,7 @@ export function PersonalInfoSettingsPage() {
 								render={({ field }) => {
 									return (
 										<Input
-											placeholder="дд.мм.рр"
+											placeholder="дд.мм.рррр"
 											autoCorrect={false}
 											value={field.value}
 											onChangeText={field.onChange}
@@ -162,37 +204,37 @@ export function PersonalInfoSettingsPage() {
 							<Text style={styles.inputText}>
 								Електрона адреса
 							</Text>
-							<Controller
+							{/* <Controller
 								name="email"
 								control={control}
 								render={({ field }) => {
-									return (
+									return ( */}
 										<Input
 											placeholder="you@example.com"
 											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
+											// value={field.value}
+											// onChangeText={field.onChange}
 										/>
-									);
+									{/* );
 								}}
-							/>
+							/> */}
 
 							<Text style={styles.inputText}>Пароль</Text>
-							<Controller
+							{/* <Controller
 								name="password"
 								control={control}
 								render={({ field }) => {
-									return (
+									return ( */}
 										<Input.Password
 											showLeftIcon={false}
 											placeholder="*****"
 											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
+											// value={field.value}
+											// onChangeText={field.onChange}
 										/>
-									);
+									{/* );
 								}}
-							/>
+							/> */}
 						</View>
 					</View>
 

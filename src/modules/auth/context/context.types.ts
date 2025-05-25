@@ -2,16 +2,19 @@ import { ReactNode } from "react";
 import { IReturnError } from "../../../shared/types/response";
 
 export interface IUser {
-	username: string;
-	email: string;
-	name: string;
-	surname: string;
-	phoneNumber: string;
-	birthDate: string;
+	id: number;
+    name?: string;
+    surname?: string
+    email?: string;
+    phoneNumber?: string
+    birthDate?: Date
+    image?: string
+    username?: string
 }
 
 export interface IAuthContext {
 	user: IUser | null;
+	token: string | null;
 	login: (email: string, password: string) => Promise<IReturnError[] | string>;
 	register: (
 		email: string,

@@ -6,27 +6,26 @@ import { useEffect, useState } from "react";
 import { useModal } from "../../modules/auth/context";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 interface IHeaderProps {
 	isOnSettings: boolean;
 }
 export function Header(props: IHeaderProps) {
 	const { logout } = useAuthContext();
 	const { openModal } = useModal();
-	useEffect(() => {
-		console.log(props);
-	}, []);
+	const {replace} = useRouter()
 
 	return (
 		<View style={styles.header}>
-			<TouchableOpacity>
+			<TouchableOpacity onPress={() => {replace("/main")}}>
 				<ICONS.LogoIcon />
 			</TouchableOpacity>
 			<View style={styles.icons}>
-				<TouchableOpacity onPress={openModal}>
+				<TouchableOpacity onPress={() => {props.isOnSettings ? null : openModal()}} disabled={props.isOnSettings}>
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 
-				<TouchableOpacity disabled={props.isOnSettings}>
+				<TouchableOpacity disabled={props.isOnSettings} onPress={() => {replace("/personal-info")}}>
 					{props.isOnSettings ? (
 						<ICONS.SettingsIcon fill={"#E9E5EE"} />
 					) : (
