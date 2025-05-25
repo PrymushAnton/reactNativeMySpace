@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native";
 export default function TabsLayout() {
 	return (
 		<Tabs initialRouteName="main" screenOptions={{
-            header: () => <Header/>,
+            header: () => <Header isOnSettings={false}/>,
             tabBarStyle:{
                 height: 56
             },
@@ -38,7 +38,6 @@ export default function TabsLayout() {
 				name="chats"
 				options={{
 					tabBarIcon: () => <ICONS.ChatIcon />,
-					header: () => <Header/>,
 				}}
 			/>
 		</Tabs>

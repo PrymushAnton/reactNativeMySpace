@@ -23,10 +23,15 @@ import { CloseIcon } from "./close-icon";
 import { SendPostIcon } from "./send-post-icon";
 import { PencilIcon } from "./pencil-icon";
 import { TrashCanIcon } from "./trash-can-icon";
+
+import { UncheckedCheckbox } from "./unchecked-checkbox";
+import { CheckedCheckbox } from "./checked-checkbox";
+
 import { ImageWithStylesIcon } from "./image-with-styles-icon"
 import { EmojiWithStylesIcon } from "./emoji-with-styles-icon"
 import { EmojiIcon } from "./emoji-icon"
 import { AnonymousLogoIcon } from "./anonymous-logo-icon";
+
 
 export const ICONS = {
 	DateIcon,
@@ -54,7 +59,9 @@ export const ICONS = {
 	SendPostIcon,
 	PencilIcon,
 	TrashCanIcon,
-    ImageWithStylesIcon,
+  UncheckedCheckbox,
+	CheckedCheckbox,
+  ImageWithStylesIcon,
 	EmojiWithStylesIcon,
 	EmojiIcon,
 	AnonymousLogoIcon

@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 
 const initialValue: IAuthContext = {
 	user: null,
+	token: null,
 	login: async (
 		email: string,
 		password: string
@@ -40,6 +41,8 @@ export function useAuthContext() {
 
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
+	const [token, setToken] = useState<string | null>(null);
+
 	const router = useRouter();
 
 	async function registerEmail(
@@ -168,6 +171,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	async function getToken() {
 		const token = await AsyncStorage.getItem("token");
 		if (!token) return;
+		setToken(token);
 		getData(token);
 	}
 
@@ -179,6 +183,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		<authContext.Provider
 			value={{
 				user,
+				token,
 				login,
 				register,
 				isAuthenticated,

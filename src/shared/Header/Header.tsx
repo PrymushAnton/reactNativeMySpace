@@ -2,38 +2,42 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { ICONS } from "../ui/icons";
 import { useAuthContext } from "../../modules/auth/context";
 import { ModalTool } from "../../shared/modal";
-import { useState } from "react";
-import { useModal } from "../../modules/auth/context"
+import { useEffect, useState } from "react";
+import { useModal } from "../../modules/auth/context";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-export function Header() {
-	const {logout} = useAuthContext()
+import { useRouter } from "expo-router";
+interface IHeaderProps {
+	isOnSettings: boolean;
+}
+export function Header(props: IHeaderProps) {
+	const { logout } = useAuthContext();
 	const { openModal } = useModal();
+	const {replace} = useRouter()
 
 	return (
 		<View style={styles.header}>
-			<TouchableOpacity>
+			<TouchableOpacity onPress={() => {replace("/main")}}>
 				<ICONS.LogoIcon />
 			</TouchableOpacity>
 			<View style={styles.icons}>
-
-				<TouchableOpacity onPress={openModal}>
+				<TouchableOpacity onPress={() => {props.isOnSettings ? null : openModal()}} disabled={props.isOnSettings}>
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 
-				<TouchableOpacity>
-					<ICONS.SettingsIcon />
+				<TouchableOpacity disabled={props.isOnSettings} onPress={() => {replace("/personal-info")}}>
+					{props.isOnSettings ? (
+						<ICONS.SettingsIcon fill={"#E9E5EE"} />
+					) : (
+						<ICONS.SettingsIcon />
+					)}
 				</TouchableOpacity>
-				
+
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
 				</TouchableOpacity>
-
 			</View>
 		</View>
-
-		
 	);
 }
 
@@ -45,11 +49,11 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		paddingHorizontal: 16,
 		paddingVertical: 8,
-		backgroundColor: "#fff"
+		backgroundColor: "#fff",
 	},
 	icons: {
 		justifyContent: "space-between",
 		flexDirection: "row",
-		gap: 10
+		gap: 10,
 	},
 });
