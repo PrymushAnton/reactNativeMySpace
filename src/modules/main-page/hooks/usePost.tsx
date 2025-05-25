@@ -15,7 +15,7 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-	const BASE_URL = "http://192.168.1.10:3001";
+	const BASE_URL = "http://192.168.3.11:3001";
 
 	async function getToken() {
 		return await AsyncStorage.getItem("token");

@@ -10,7 +10,7 @@ import { IUserPost } from "../../types/post";
 import { useWindowDimensions } from "react-native";
 
 export function PublicatedPost(props: IPostProps) {
-	const { id, name, avatar, text, hashtags, photo, likes, views } = props;
+	const { id, name, text, hashtags, photo, likes, views, user } = props;
 
 	const [isLiked, setIsLiked] = useState<boolean>(false);
 
@@ -70,8 +70,12 @@ export function PublicatedPost(props: IPostProps) {
 		<View style={styles.post}>
 			<View style={styles.top}>
 				<View style={styles.userInfo}>
-					<Image style={styles.avatar} source={{ uri: avatar }} />
-					<Text style={styles.name}>{name}</Text>
+					{
+						user.image
+						? <Image style={styles.avatar} source={{ uri: user.image }} />
+						: <ICONS.AnonymousLogoIcon width={36} height={36}/>
+					}
+					<Text style={styles.name}>{user.username ? user.username : user.email.split("@")[0]}</Text>
 				</View>
 				<TouchableOpacity
 					ref={dotsRef}

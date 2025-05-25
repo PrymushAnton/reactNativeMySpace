@@ -1,3 +1,6 @@
+import { IUser } from "./user";
+
+
 export interface IUserPost {
     id?: number;
     userId?: number;
@@ -9,7 +12,8 @@ export interface IUserPost {
 	customTags: string[];
 	link: string;
 
-	avatar?: string;
+	// avatar?: string;
+	user: IUser
 	likes?: number;
 	views?: number;
 }
