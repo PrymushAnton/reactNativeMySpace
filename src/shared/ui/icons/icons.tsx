@@ -8,8 +8,8 @@ import { PhoneNumberIcon } from "./phone-number-icon";
 import { UserIcon } from "./user-icon";
 import { ErrorIcon } from "./error-icon";
 import { LogoIcon } from "./logo-icon";
-import { PlusIcon } from "./plus-icon";
-import { SettingsIcon } from "./settings-icon";
+import { PlusIcon } from "./plus-with-styles-icon";
+import { SettingsIcon } from "./settings-with-styles-icon";
 import { LogoutIcon } from "./logout-icon";
 import { HouseIcon } from "./house-icon";
 import { ImageIcon } from "./image-icon";
@@ -23,8 +23,15 @@ import { CloseIcon } from "./close-icon";
 import { SendPostIcon } from "./send-post-icon";
 import { PencilIcon } from "./pencil-icon";
 import { TrashCanIcon } from "./trash-can-icon";
+
 import { UncheckedCheckbox } from "./unchecked-checkbox";
 import { CheckedCheckbox } from "./checked-checkbox";
+
+import { ImageWithStylesIcon } from "./image-with-styles-icon"
+import { EmojiWithStylesIcon } from "./emoji-with-styles-icon"
+import { EmojiIcon } from "./emoji-icon"
+import { AnonymousLogoIcon } from "./anonymous-logo-icon";
+
 
 export const ICONS = {
 	DateIcon,
@@ -52,6 +59,10 @@ export const ICONS = {
 	SendPostIcon,
 	PencilIcon,
 	TrashCanIcon,
-    UncheckedCheckbox,
-	CheckedCheckbox
+  UncheckedCheckbox,
+	CheckedCheckbox,
+  ImageWithStylesIcon,
+	EmojiWithStylesIcon,
+	EmojiIcon,
+	AnonymousLogoIcon
 };

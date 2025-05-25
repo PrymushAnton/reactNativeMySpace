@@ -1,20 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import MultiSelect from "react-native-multiple-select";
 import { styles } from "./tags-multi-select.styles";
 
-const defaultTags = [
-	{ id: "1", name: "Відпочинок" },
-	{ id: "2", name: "Натхнення" },
-	{ id: "3", name: "Життя" },
-	{ id: "4", name: "Природа" },
-	{ id: "5", name: "Читання" },
-	{ id: "6", name: "Спокій" },
-	{ id: "7", name: "Гармонія" },
-	{ id: "8", name: "Музика" },
-	{ id: "9", name: "Фільми" },
-	{ id: "10", name: "Подорожі" },
-];
+type Tag = {
+	id: string;
+	name: string;
+};
 
 type Props = {
 	selectedTags: string[];
@@ -22,10 +14,40 @@ type Props = {
 };
 
 export function TagsMultiSelect({ selectedTags, onChange }: Props) {
+	const BASE_URL = "192.168.3.11:3001";
+
+	const [tags, setTags] = useState<Tag[]>([]);
+
+	useEffect(() => {
+		const fetchTags = async () => {
+			try {
+				const response = await fetch(
+					`http://${BASE_URL}/post/find-all-tags`
+				);
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const json = await response.json();
+
+				const formattedTags: Tag[] = json.data.map((tag: any) => ({
+					id: String(tag.id),
+					name: tag.name,
+				}));
+
+				setTags(formattedTags);
+			} catch (error) {
+				console.error("Помилка при завантаженні тегів:", error);
+			}
+		};
+
+		fetchTags();
+	}, []);
+
 	return (
+		// style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 999 }}
 		<View>
 			<MultiSelect
-				items={defaultTags}
+				items={tags}
 				uniqueKey="id"
 				onSelectedItemsChange={onChange}
 				selectedItems={selectedTags}
@@ -50,7 +72,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				fontFamily="GTWalsheimPro-Regular"
 				itemFontFamily="GTWalsheimPro-Regular"
 				selectedItemFontFamily="GTWalsheimPro-Regular"
-				styleTextDropdownSelected={{paddingLeft: 16}}
+				styleTextDropdownSelected={{ paddingLeft: 16 }}
 			/>
 		</View>
 	);
