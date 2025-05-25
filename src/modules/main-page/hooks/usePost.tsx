@@ -104,7 +104,7 @@ export function usePost() {
 
 	async function getAllPosts() {
 		try {
-			const res = await fetch(`${BASE_URL}/find-all-posts`);
+			const res = await fetch(`${BASE_URL}/post/find-all-posts`);
 			return await res.json();
 		} catch (error) {
 			console.error(error);
@@ -115,7 +115,7 @@ export function usePost() {
 	async function getPostsByUserId(userId: number) {
 		try {
 			const res = await fetch(
-				`${BASE_URL}/find-posts-by-user-id/${userId}`
+				`${BASE_URL}/post/find-posts-by-user-id/${userId}`
 			);
 			return await res.json();
 		} catch (error) {
@@ -126,7 +126,7 @@ export function usePost() {
 
 	async function getAllTags() {
 		try {
-			const res = await fetch(`${BASE_URL}/find-all-tags`);
+			const res = await fetch(`${BASE_URL}/post/find-all-tags`);
 			return await res.json();
 		} catch (error) {
 			console.error(error);

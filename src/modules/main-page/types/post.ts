@@ -1,8 +1,19 @@
+import { IUser } from "./user";
+
+
 export interface IUserPost {
-    name: string
-    description: string
-    image: string
-    link: string
-    defaultTags: string[]
-    customTags: string[]
+    id?: number;
+    userId?: number;
+
+	name: string;
+	description: string;
+	image: string;
+	defaultTags: string[];
+	customTags: string[];
+	link: string;
+
+	// avatar?: string;
+	user: IUser
+	likes?: number;
+	views?: number;
 }

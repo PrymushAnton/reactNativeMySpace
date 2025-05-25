@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
 		marginTop: 5,
 		maxHeight: 250,
 		overflow: "hidden",
+		marginBottom: 5
 	},
 	styleDropdownMenuSubsection: {
 		paddingRight: 5,
