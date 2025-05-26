@@ -6,14 +6,19 @@ import { useEffect, useState } from "react";
 import { ModalPublicationPost } from "../modal-publication-post";
 import { usePost } from "../../hooks/usePost";
 import { IBackendPost } from "../../types/post-info";
+import { IUserPostWithUser } from "../../types/post";
+import { ModalEditPost } from "../modal-edit-post";
 
 export function MainPage() {
-	const { isVisible, closeModal } = useModal();
+	const { isCreateVisible, closeCreateModal } = useModal();
 
 	const [images, setImages] = useState<string[]>([]);
 	const [globalError, setGlobalError] = useState<string>("");
 
-	const [posts, setPosts] = useState<IUserPost[]>([]);
+	const [posts, setPosts] = useState<IUserPostWithUser[]>([]);
+
+	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+	const { openEditModal, closeEditModal } = useModal();
 
 	const {
 		createPost,
@@ -24,7 +29,7 @@ export function MainPage() {
 		getAllTags,
 	} = usePost();
 
-	function adaptPost(post: IBackendPost): IUserPost {
+	function adaptPost(post: IBackendPost): IUserPostWithUser {
 		return {
 			id: post.id,
 			name: post.title ?? "",
@@ -54,13 +59,14 @@ export function MainPage() {
 		fetchPosts();
 	}, []);
 
-	useEffect(() => {
-		console.log("posts", posts);
-	}, [posts]);
+	// useEffect(() => {
+	// 	console.log("posts", posts);
+	// }, [posts]);
 
 	return (
 		<View>
 			<ModalPublicationPost />
+			<ModalEditPost postId={selectedPostId} />
 			<View>
 				<View>
 					{posts.map((post, idx) => (
@@ -88,7 +94,7 @@ export function MainPage() {
 					likes={140}
 					views={10}
 					user={{
-						id: 1,
+						id: 20000,
 						email: "anton@gmail.com",
 					}}
 				></PublicatedPost>
@@ -101,7 +107,7 @@ export function MainPage() {
 					likes={5}
 					views={8}
 					user={{
-						id: 1,
+						id: 20001,
 						email: "rinat@gmail.com",
 					}}
 				></PublicatedPost>
@@ -114,7 +120,7 @@ export function MainPage() {
 					likes={4}
 					views={10}
 					user={{
-						id: 1,
+						id: 20003,
 						email: "ilia@gmail.com",
 					}}
 				></PublicatedPost>
@@ -127,7 +133,7 @@ export function MainPage() {
 					likes={9}
 					views={15}
 					user={{
-						id: 1,
+						id: 20004,
 						email: "oleksandr@gmail.com",
 					}}
 				></PublicatedPost>

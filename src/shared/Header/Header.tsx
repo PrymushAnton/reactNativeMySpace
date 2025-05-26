@@ -12,7 +12,7 @@ interface IHeaderProps {
 }
 export function Header(props: IHeaderProps) {
 	const { logout } = useAuthContext();
-	const { openModal } = useModal();
+	const { openCreateModal } = useModal();
 	const {replace} = useRouter()
 
 	return (
@@ -21,7 +21,7 @@ export function Header(props: IHeaderProps) {
 				<ICONS.LogoIcon />
 			</TouchableOpacity>
 			<View style={styles.icons}>
-				<TouchableOpacity onPress={() => {props.isOnSettings ? null : openModal()}} disabled={props.isOnSettings}>
+				<TouchableOpacity onPress={() => {props.isOnSettings ? null : openCreateModal()}} disabled={props.isOnSettings}>
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 

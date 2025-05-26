@@ -45,24 +45,23 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	const router = useRouter();
 
+	const BASE_URL = "http://192.168.1.10:3001";
+
 	async function registerEmail(
 		email: string,
 		password: string,
 		code: number
 	) {
 		try {
-			const response = await fetch(
-				"http://192.168.3.11:3001/user/verify-email-code",
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						email: email,
-						password: password,
-						code: code,
-					}),
-				}
-			);
+			const response = await fetch(`${BASE_URL}/user/verify-email-code`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					email: email,
+					password: password,
+					code: code,
+				}),
+			});
 
 			const result = await response.json();
 			if (result.status === "error") {
@@ -82,7 +81,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getData(token: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/me", {
+			const response = await fetch(`${BASE_URL}/user/me`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const result: Response<IUser> = await response.json();
@@ -100,7 +99,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/auth", {
+			const response = await fetch(`${BASE_URL}/user/auth`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password }),
@@ -124,7 +123,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function register(email: string, password: string) {
 		try {
-			const response = await fetch("http://192.168.3.11:3001/user/reg", {
+			const response = await fetch(`${BASE_URL}/user/reg`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -141,7 +140,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			await fetch("http://192.168.3.11:3001/user/send-email-code", {
+			await fetch(`${BASE_URL}/user/send-email-code`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),
@@ -199,28 +198,61 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 // modal context
 
 type ModalContextType = {
-	isVisible: boolean;
-	openModal: () => void;
-	closeModal: () => void;
+	isCreateVisible: boolean;
+	isEditVisible: boolean;
+	openCreateModal: () => void;
+	closeCreateModal: () => void;
+	openEditModal: (postId: number) => void;
+	closeEditModal: () => void;
+	editPostId: number | null;
 };
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
+
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+	const [isCreateVisible, setCreateVisible] = useState(false);
+	const [isEditVisible, setEditVisible] = useState(false);
+
+	const [editPostId, setEditPostId] = useState<number | null>(null);
+
+	const openEditModal = (postId: number) => {
+		setCreateVisible(false);
+		setEditVisible(true);
+		setEditPostId(postId);
+	};
+
+	const closeEditModal = () => {
+		setEditVisible(false);
+		setEditPostId(null);
+	};
+
+	const openCreateModal = () => {
+		setEditVisible(false);
+		setEditPostId(null);
+		setCreateVisible(true);
+	};
+
+	const closeCreateModal = () => setCreateVisible(false);
+
+	return (
+		<ModalContext.Provider
+			value={{
+				isCreateVisible,
+				isEditVisible,
+				openCreateModal,
+				closeCreateModal,
+				openEditModal,
+				closeEditModal,
+				editPostId,
+			}}
+		>
+			{children}
+		</ModalContext.Provider>
+	);
+};
 
 export const useModal = () => {
 	const context = useContext(ModalContext);
 	if (!context) throw new Error("useModal must be used inside ModalProvider");
 	return context;
-};
-
-export const ModalProvider = ({ children }: { children: ReactNode }) => {
-	const [isVisible, setIsVisible] = useState(false);
-
-	const openModal = () => setIsVisible(true);
-	const closeModal = () => setIsVisible(false);
-
-	return (
-		<ModalContext.Provider value={{ isVisible, openModal, closeModal }}>
-			{children}
-		</ModalContext.Provider>
-	);
 };

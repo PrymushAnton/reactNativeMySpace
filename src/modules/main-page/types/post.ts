@@ -13,7 +13,8 @@ export interface IUserPost {
 	link: string;
 
 	// avatar?: string;
-	user: IUser
 	likes?: number;
 	views?: number;
 }
+
+export type IUserPostWithUser = IUserPost & {user : IUser}

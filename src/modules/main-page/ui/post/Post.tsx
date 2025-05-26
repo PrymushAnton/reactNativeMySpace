@@ -8,15 +8,17 @@ import { useModal } from "../../../../modules/auth/context";
 import { usePost } from "../../hooks/usePost";
 import { IUserPost } from "../../types/post";
 import { useWindowDimensions } from "react-native";
+import { ModalEditPost } from "../modal-edit-post";
 
 export function PublicatedPost(props: IPostProps) {
 	const { id, name, text, hashtags, photo, likes, views, user } = props;
 
 	const [isLiked, setIsLiked] = useState<boolean>(false);
 
-	const { isVisible, closeModal } = useModal();
-	const { openModal } = useModal();
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
+
+	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+	const { openEditModal, closeEditModal } = useModal();
 
 	const { width: screenWidth } = useWindowDimensions();
 
@@ -70,12 +72,19 @@ export function PublicatedPost(props: IPostProps) {
 		<View style={styles.post}>
 			<View style={styles.top}>
 				<View style={styles.userInfo}>
-					{
-						user.image
-						? <Image style={styles.avatar} source={{ uri: user.image }} />
-						: <ICONS.AnonymousLogoIcon width={36} height={36}/>
-					}
-					<Text style={styles.name}>{user.username ? user.username : user.email.split("@")[0]}</Text>
+					{user?.image ? (
+						<Image
+							style={styles.avatar}
+							source={{ uri: user.image }}
+						/>
+					) : (
+						<ICONS.AnonymousLogoIcon width={36} height={36} />
+					)}
+					<Text style={styles.name}>
+						{user?.username ??
+							user?.email?.split("@")[0] ??
+							"Анонім"}
+					</Text>
 				</View>
 				<TouchableOpacity
 					ref={dotsRef}
@@ -111,7 +120,16 @@ export function PublicatedPost(props: IPostProps) {
 						</TouchableOpacity>
 					</View>
 
-					<TouchableOpacity style={styles.mainEditPostButton}>
+					<TouchableOpacity
+						style={styles.mainEditPostButton}
+						onPress={() => {
+							if (typeof id === "number") {
+								setSettingsVisible(false);
+								setSelectedPostId(id);
+								openEditModal(id)
+							}
+						}}
+					>
 						<ICONS.PencilIcon width={15} height={15} />
 						<Text style={styles.actionText}>Редагувати допис</Text>
 					</TouchableOpacity>

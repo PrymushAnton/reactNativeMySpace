@@ -13,61 +13,63 @@ import { useEffect, useState } from "react";
 import { usePost } from "../../hooks/usePost";
 import { useModal } from "../../../../modules/auth/context";
 import { IUserPost } from "../../../../modules/auth/types";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { styles } from "./modal-publication-post.styles";
+import { styles } from "./modal-edit-post.styles";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { COLORS } from "../../../../shared/constants";
+import { useAuthContext } from "../../../auth/context";
 
-export function ModalPublicationPost() {
-	const { isCreateVisible, closeCreateModal } = useModal();
+interface Props {
+	postId: number | null;
+}
+
+export function ModalEditPost({ postId }: Props) {
+	const { isEditVisible, closeEditModal, editPostId } = useModal();
+
+	const { getPostById, updatePost } = usePost();
 
 	const [images, setImages] = useState<string[]>([]);
-	const [globalError, setGlobalError] = useState<string>("");
+	const [postData, setPostData] = useState<IUserPost | null>(null);
 
-	const [posts, setPosts] = useState<IUserPost[]>([]);
+	const { user } = useAuthContext();
 
-	const {
-		createPost,
-		updatePost,
-		deletePost,
-		getAllPosts,
-		getPostsByUserId,
-		getAllTags,
-	} = usePost();
-
-	const schema = yup.object().shape({
-		name: yup.string().required("Це поле обов'язкове"),
-		description: yup.string().required("Це поле обов'язкове"),
-		image: yup.string().required("Додайте хоча б одне зображення"),
-		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
-		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
-		link: yup.string().default(""),
+	const { handleSubmit, control, setValue } = useForm<IUserPost>({
+		defaultValues: {
+			name: "",
+			description: "",
+			image: "",
+			defaultTags: [],
+			customTags: [],
+			link: "",
+		},
 	});
 
-	const { handleSubmit, control, formState, setValue, setError } =
-		useForm<IUserPost>({
-			defaultValues: {
-				name: "",
-				description: "",
-				image: "",
-				defaultTags: [],
-				customTags: [],
-				link: "",
-			},
-			resolver: yupResolver(schema),
-		});
+	useEffect(() => {
+		if (!isEditVisible || editPostId === null) return;
 
-	async function closingModal() {
-		closeCreateModal();
-		setValue("name", "");
-		setValue("description", "");
-		setImages([]);
-		setValue("image", "");
-		setValue("defaultTags", []);
-		setValue("customTags", []);
-		setValue("link", "");
-	}
+		async function fetchData() {
+			if (!user) return;
+			if (editPostId == null) return;
+
+			const targetPost = await getPostById(editPostId);
+			if (typeof targetPost === "string") return;
+			if (targetPost) {
+				setPostData(targetPost);
+
+				setValue("name", targetPost.name || "");
+				setValue("description", targetPost.description || "");
+				setValue("defaultTags", targetPost.defaultTags ?? []);
+				setValue("customTags", targetPost.customTags ?? []);
+				setValue("link", targetPost.link ?? "");
+				setValue("image", targetPost.image ?? "");
+
+				const baseImages =
+					targetPost.image?.split(",").filter(Boolean) ?? [];
+				setImages(baseImages);
+			}
+		}
+
+		fetchData();
+	}, [isEditVisible, editPostId]);
 
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
@@ -77,7 +79,6 @@ export function ModalPublicationPost() {
 
 	async function onSearch() {
 		const result = await requestMediaLibraryPermissionsAsync();
-
 		if (result.status === "granted") {
 			const selected = await launchImageLibraryAsync({
 				mediaTypes: "images",
@@ -93,9 +94,7 @@ export function ModalPublicationPost() {
 						(base64): base64 is string => typeof base64 === "string"
 					);
 
-				if (bases64.length === 0) {
-					return 0;
-				}
+				if (bases64.length === 0) return;
 
 				setImages(bases64);
 				setValue("image", bases64.join(","));
@@ -103,20 +102,22 @@ export function ModalPublicationPost() {
 		}
 	}
 
-	function onSubmit(data: IUserPost) {
-		async function request() {
-			const response = await createPost(data);
-			closingModal();
-		}
-		request();
+	async function onSubmit(data: IUserPost) {
+		if (editPostId == null) return;
+
+		await updatePost(editPostId, {
+			...data,
+			image: images.join(","),
+		});
+		closeEditModal();
 	}
 
 	return (
 		<View>
-			<ModalTool isVisible={isCreateVisible} onClose={closingModal}>
+			<ModalTool isVisible={isEditVisible} onClose={closeEditModal}>
 				<ScrollView style={styles.mainModalWindow}>
 					<View style={styles.closeModalButton}>
-						<TouchableOpacity onPress={closingModal}>
+						<TouchableOpacity onPress={closeEditModal}>
 							<ICONS.CloseIcon width={15} height={15} />
 						</TouchableOpacity>
 					</View>
@@ -126,8 +127,9 @@ export function ModalPublicationPost() {
 							fontSize: 24,
 						}}
 					>
-						Створення публікації
+						Редагувати публікацію
 					</Text>
+
 					<View style={styles.mainModalInputsFrame}>
 						<View style={styles.themeModalInputFrame}>
 							<Text
@@ -141,69 +143,55 @@ export function ModalPublicationPost() {
 							<Controller
 								control={control}
 								name="name"
-								render={({ field, fieldState }) => {
-									return (
-										<Input
-											placeholder="Напишіть тему публікації"
-											onChange={field.onChange}
-											onChangeText={field.onChange}
-											value={field.value}
-											autoCorrect={false}
-											errorMessage={
-												fieldState.error?.message
-											}
-										/>
-									);
-								}}
+								render={({ field, fieldState }) => (
+									<Input
+										placeholder="Напишіть тему публікації"
+										value={field.value}
+										onChangeText={field.onChange}
+										autoCorrect={false}
+										errorMessage={fieldState.error?.message}
+									/>
+								)}
 							/>
 							<Controller
 								control={control}
 								name="description"
-								render={({ field, fieldState }) => {
-									return (
-										<Input
-											height={140}
-											placeholder="Напишіть опис до публікації"
-											onChange={field.onChange}
-											onChangeText={field.onChange}
-											value={field.value}
-											autoCorrect={false}
-											multiline={true}
-											isTextArea={true}
-											errorMessage={
-												fieldState.error?.message
-											}
-										/>
-									);
-								}}
-							/>
-						</View>
-						{/* style={{ position: 'relative', height: 40 }} */}
-						<View>
-							<Controller
-								control={control}
-								name="defaultTags"
-								render={({ field }) => (
-									<TagsMultiSelect
-										selectedTags={field.value}
-										onChange={field.onChange}
+								render={({ field, fieldState }) => (
+									<Input
+										height={140}
+										placeholder="Напишіть опис до публікації"
+										value={field.value}
+										onChangeText={field.onChange}
+										autoCorrect={false}
+										multiline={true}
+										isTextArea={true}
+										errorMessage={fieldState.error?.message}
 									/>
 								)}
 							/>
 						</View>
 
-						<View>
-							<Controller
-								control={control}
-								name="customTags"
-								render={({ field }) => (
-									<TagsCustomInput
-										value={field.value}
-										onChange={field.onChange}
-									/>
-								)}
-							/>
-						</View>
+						<Controller
+							control={control}
+							name="defaultTags"
+							render={({ field }) => (
+								<TagsMultiSelect
+									selectedTags={field.value}
+									onChange={field.onChange}
+								/>
+							)}
+						/>
+
+						<Controller
+							control={control}
+							name="customTags"
+							render={({ field }) => (
+								<TagsCustomInput
+									value={field.value}
+									onChange={field.onChange}
+								/>
+							)}
+						/>
 					</View>
 
 					<View style={styles.themeModalInputFrame}>
@@ -218,28 +206,25 @@ export function ModalPublicationPost() {
 						<Controller
 							control={control}
 							name="link"
-							render={({ field, fieldState }) => {
-								return (
-									<Input
-										placeholder="Напишіть посилання"
-										onChange={field.onChange}
-										onChangeText={field.onChange}
-										value={field.value}
-										autoCorrect={false}
-										errorMessage={fieldState.error?.message}
-									/>
-								);
-							}}
+							render={({ field, fieldState }) => (
+								<Input
+									placeholder="Напишіть посилання"
+									value={field.value}
+									onChangeText={field.onChange}
+									autoCorrect={false}
+									errorMessage={fieldState.error?.message}
+								/>
+							)}
 						/>
 					</View>
+
 					{images.length > 0 && (
 						<View
 							style={{
 								flexDirection: "row",
 								flexWrap: "wrap",
 								gap: 16,
-								marginBottom: 15,
-								marginTop: 15,
+								marginVertical: 15,
 							}}
 						>
 							{images.map((uri, index) => (
@@ -278,25 +263,15 @@ export function ModalPublicationPost() {
 					)}
 
 					<View
-						style={
-							images && images.length >= 2
-								? {
-										flexDirection: "row",
-										justifyContent: "flex-end",
-										gap: 10,
-										width: 343,
-										height: 40,
-										marginBottom: 40,
-								  }
-								: {
-										flexDirection: "row",
-										justifyContent: "flex-end",
-										gap: 10,
-										width: 343,
-										height: 40,
-										marginTop: 20,
-								  }
-						}
+						style={{
+							flexDirection: "row",
+							justifyContent: "flex-end",
+							gap: 10,
+							width: 343,
+							height: 40,
+							marginTop: images.length >= 2 ? 0 : 20,
+							marginBottom: 40,
+						}}
 					>
 						<TouchableOpacity onPress={onSearch}>
 							<ICONS.ImageWithStylesIcon />
@@ -313,7 +288,7 @@ export function ModalPublicationPost() {
 										color: COLORS.WHITE,
 									}}
 								>
-									Публікація
+									Редагувати
 								</Text>
 								<ICONS.SendPostIcon width={16} height={18} />
 							</View>
