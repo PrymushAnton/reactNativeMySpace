@@ -24,24 +24,26 @@ interface Props {
 
 export function ModalEditPost({ postId }: Props) {
 	const { isEditVisible, closeEditModal, editPostId } = useModal();
-
 	const { getPostById, updatePost } = usePost();
+	const { user } = useAuthContext();
 
 	const [images, setImages] = useState<string[]>([]);
 	const [postData, setPostData] = useState<IUserPost | null>(null);
 
-	const { user } = useAuthContext();
-
-	const { handleSubmit, control, setValue } = useForm<IUserPost>({
+	const { handleSubmit, control, setValue, reset } = useForm<IUserPost>({
 		defaultValues: {
 			name: "",
 			description: "",
-			image: "",
+			image: [],
 			defaultTags: [],
 			customTags: [],
 			link: "",
 		},
 	});
+
+	// useEffect(() => {
+	// 	console.log(images.length);
+	// }, [images]);
 
 	useEffect(() => {
 		if (!isEditVisible || editPostId === null) return;
@@ -50,22 +52,25 @@ export function ModalEditPost({ postId }: Props) {
 			if (!user) return;
 			if (editPostId == null) return;
 
-			const targetPost = await getPostById(editPostId);
-			if (typeof targetPost === "string") return;
-			if (targetPost) {
-				setPostData(targetPost);
+			const response = await getPostById(editPostId);
+			if (response.status === "error" || response.status === "error-validation") return;
 
-				setValue("name", targetPost.name || "");
-				setValue("description", targetPost.description || "");
-				setValue("defaultTags", targetPost.defaultTags ?? []);
-				setValue("customTags", targetPost.customTags ?? []);
-				setValue("link", targetPost.link ?? "");
-				setValue("image", targetPost.image ?? "");
+			const post = response.data;
+			if (!post) return;
 
-				const baseImages =
-					targetPost.image?.split(",").filter(Boolean) ?? [];
-				setImages(baseImages);
-			}
+			const formData: IUserPost = {
+				name: post.title || "",
+				description: post.text || "",
+				defaultTags: post.tags || [],
+				customTags: [],
+				image: (post.images || []),
+				link: post.link || "",
+			};
+
+			setPostData(formData);
+			reset(formData);
+
+			setImages(post.images || []);
 		}
 
 		fetchData();
@@ -74,31 +79,30 @@ export function ModalEditPost({ postId }: Props) {
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
 		setImages(updatedImages);
-		setValue("image", updatedImages.join(","));
+		setValue("image", updatedImages);
 	}
 
 	async function onSearch() {
-		const result = await requestMediaLibraryPermissionsAsync();
-		if (result.status === "granted") {
-			const selected = await launchImageLibraryAsync({
-				mediaTypes: "images",
-				allowsMultipleSelection: true,
-				selectionLimit: 9,
-				base64: true,
-			});
+		const permission = await requestMediaLibraryPermissionsAsync();
+		if (permission.status !== "granted") return;
 
-			if (selected.assets) {
-				const bases64 = selected.assets
-					.map((asset) => asset.base64)
-					.filter(
-						(base64): base64 is string => typeof base64 === "string"
-					);
+		const selected = await launchImageLibraryAsync({
+			mediaTypes: "images",
+			allowsMultipleSelection: true,
+			selectionLimit: 9,
+			base64: true,
+		});
 
-				if (bases64.length === 0) return;
+		if (selected.assets && selected.assets.length > 0) {
+			const bases64 = selected.assets
+				.map((asset) => asset.base64)
+				.filter((b): b is string => !!b);
 
-				setImages(bases64);
-				setValue("image", bases64.join(","));
-			}
+			if (bases64.length === 0) return;
+
+			const newImages = [...images, ...bases64].slice(0, 9);
+			setImages(newImages);
+			setValue("image", newImages);
 		}
 	}
 
@@ -107,7 +111,7 @@ export function ModalEditPost({ postId }: Props) {
 
 		await updatePost(editPostId, {
 			...data,
-			image: images.join(","),
+			image: images
 		});
 		closeEditModal();
 	}
@@ -121,6 +125,7 @@ export function ModalEditPost({ postId }: Props) {
 							<ICONS.CloseIcon width={15} height={15} />
 						</TouchableOpacity>
 					</View>
+
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
@@ -140,6 +145,7 @@ export function ModalEditPost({ postId }: Props) {
 							>
 								Тема публікації
 							</Text>
+
 							<Controller
 								control={control}
 								name="name"
@@ -153,6 +159,7 @@ export function ModalEditPost({ postId }: Props) {
 									/>
 								)}
 							/>
+
 							<Controller
 								control={control}
 								name="description"
@@ -203,6 +210,7 @@ export function ModalEditPost({ postId }: Props) {
 						>
 							Посилання
 						</Text>
+
 						<Controller
 							control={control}
 							name="link"

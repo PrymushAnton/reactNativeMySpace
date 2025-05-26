@@ -39,7 +39,7 @@ export function ModalPublicationPost() {
 	const schema = yup.object().shape({
 		name: yup.string().required("Це поле обов'язкове"),
 		description: yup.string().required("Це поле обов'язкове"),
-		image: yup.string().required("Додайте хоча б одне зображення"),
+		image: yup.array().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
 		link: yup.string().default(""),
@@ -50,7 +50,7 @@ export function ModalPublicationPost() {
 			defaultValues: {
 				name: "",
 				description: "",
-				image: "",
+				image: [],
 				defaultTags: [],
 				customTags: [],
 				link: "",
@@ -63,7 +63,7 @@ export function ModalPublicationPost() {
 		setValue("name", "");
 		setValue("description", "");
 		setImages([]);
-		setValue("image", "");
+		setValue("image", []);
 		setValue("defaultTags", []);
 		setValue("customTags", []);
 		setValue("link", "");
@@ -72,7 +72,7 @@ export function ModalPublicationPost() {
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
 		setImages(updatedImages);
-		setValue("image", updatedImages.join(","));
+		setValue("image", updatedImages);
 	}
 
 	async function onSearch() {
@@ -98,7 +98,7 @@ export function ModalPublicationPost() {
 				}
 
 				setImages(bases64);
-				setValue("image", bases64.join(","));
+				setValue("image", bases64);
 			}
 		}
 	}

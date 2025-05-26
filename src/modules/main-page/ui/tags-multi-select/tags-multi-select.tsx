@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function TagsMultiSelect({ selectedTags, onChange }: Props) {
-	const BASE_URL = "192.168.1.10:3001";
+	const BASE_URL = "192.168.1.10:3011";
 
 	const [tags, setTags] = useState<Tag[]>([]);
 
@@ -73,6 +73,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				itemFontFamily="GTWalsheimPro-Regular"
 				selectedItemFontFamily="GTWalsheimPro-Regular"
 				styleTextDropdownSelected={{ paddingLeft: 16 }}
+				
 			/>
 		</View>
 	);

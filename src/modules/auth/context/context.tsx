@@ -45,7 +45,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	const router = useRouter();
 
-	const BASE_URL = "http://192.168.1.10:3001";
+	const BASE_URL = "http://192.168.1.10:3011";
 
 	async function registerEmail(
 		email: string,

@@ -36,7 +36,7 @@ export function MainPage() {
 			description: post.text ?? "",
 			defaultTags: Array.isArray(post.tags) ? post.tags : [],
 			customTags: [],
-			image: Array.isArray(post.images) ? post.images.join(",") : "",
+			image: Array.isArray(post.images) ? post.images : [],
 			// avatar: post.user.image ?? "",
 			likes: post.likes ?? 0,
 			views: post.views ?? 0,
@@ -76,7 +76,7 @@ export function MainPage() {
 							name={post.name}
 							text={post.description}
 							hashtags={[...post.defaultTags, ...post.customTags]}
-							photo={post.image ? post.image.split(",") : []}
+							photo={post.image ? post.image : []}
 							// avatar={post.avatar ?? ""}
 							user={post.user}
 							likes={post.likes ?? 0}

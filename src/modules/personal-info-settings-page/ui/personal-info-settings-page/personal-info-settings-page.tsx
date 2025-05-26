@@ -30,7 +30,7 @@ export function PersonalInfoSettingsPage() {
 
 	function onSubmit(data: IPersonalInfoFormData) {
 		async function updateUser() {
-			const response = await fetch("http://192.168.1.10:3001/user/update", {
+			const response = await fetch("http://192.168.1.10:3011/user/update", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
