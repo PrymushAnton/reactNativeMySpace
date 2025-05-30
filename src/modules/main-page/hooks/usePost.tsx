@@ -139,7 +139,6 @@ export function usePost() {
 		try {
 			const res = await fetch(`${BASE_URL}/post/find-post-by-id/${postId}`, {"method": "GET"});
 			const data = await res.json();
-			console.log(data.data.tags)
 			return data
 		} catch (error) {
 			console.error(error);

@@ -59,10 +59,6 @@ export function MainPage() {
 		fetchPosts();
 	}, []);
 
-	// useEffect(() => {
-	// 	console.log("posts", posts);
-	// }, [posts]);
-
 	return (
 		<View>
 			<ModalPublicationPost />

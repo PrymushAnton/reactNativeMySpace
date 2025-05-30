@@ -40,11 +40,7 @@ export function ModalEditPost({ postId }: Props) {
 			link: "",
 		},
 	});
-
-	// useEffect(() => {
-	// 	console.log(images.length);
-	// }, [images]);
-
+	
 	useEffect(() => {
 		if (!isEditVisible || editPostId === null) return;
 
