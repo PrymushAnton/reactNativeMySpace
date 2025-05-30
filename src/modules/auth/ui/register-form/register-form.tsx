@@ -124,6 +124,7 @@ export function RegisterForm() {
 									value={field.value}
 									autoCorrect={false}
 									errorMessage={fieldState.error?.message}
+									height={42}
 								/>
 							);
 						}}
@@ -145,6 +146,7 @@ export function RegisterForm() {
 									value={field.value}
 									autoCorrect={false}
 									errorMessage={fieldState.error?.message}
+									height={42}
 								/>
 							);
 						}}
