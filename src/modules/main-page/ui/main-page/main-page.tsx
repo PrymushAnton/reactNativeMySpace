@@ -82,7 +82,7 @@ export function MainPage() {
 					))}
 				</View>
 				<PublicatedPost
-					name="anton"
+					name="Theme"
 					// avatar="a"
 					text="Інколи найкращі ідеї народжуються в тиші  Природа, книга і спокій — усе, що потрібно, аби перезавантажитись"
 					hashtags={["відпочинок", "натхнення"]}
@@ -95,7 +95,7 @@ export function MainPage() {
 					}}
 				></PublicatedPost>
 				<PublicatedPost
-					name="rinat"
+					name="Theme"
 					// avatar="a"
 					text="Природа, книга і спокій — усе, що потрібно, аби перезавантажитись Інколи найкращі ідеї народжуються в тиші  "
 					hashtags={["натхнення"]}
@@ -108,7 +108,7 @@ export function MainPage() {
 					}}
 				></PublicatedPost>
 				<PublicatedPost
-					name="ilia"
+					name="Theme"
 					// avatar="a"
 					text="буває такий настрій: просто лежиш і існуєш  чай в одній руці, телефон в іншій, думки десь у космосі  і знаєте шо? норм"
 					hashtags={[]}
@@ -121,7 +121,7 @@ export function MainPage() {
 					}}
 				></PublicatedPost>
 				<PublicatedPost
-					name="oleksandr"
+					name="Theme"
 					// avatar="a"
 					text="чай в одній руці, телефон в іншій, думки десь у космосі  і знаєте шо? норм буває такий настрій: просто лежиш і існуєш "
 					hashtags={["вайб"]}

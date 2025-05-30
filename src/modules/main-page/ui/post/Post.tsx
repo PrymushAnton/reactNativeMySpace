@@ -159,6 +159,7 @@ export function PublicatedPost(props: IPostProps) {
 			</ModalTool>
 
 			<View style={styles.content}>
+				<Text style={styles.name}>{name}</Text>
 				<Text style={styles.text}>{text}</Text>
 				<View style={styles.hashtags}>
 					{hashtags
