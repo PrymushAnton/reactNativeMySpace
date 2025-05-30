@@ -106,6 +106,7 @@ export function ModalPublicationPost() {
 	function onSubmit(data: IUserPost) {
 		async function request() {
 			const response = await createPost(data);
+			// onRefresh?.();
 			closingModal();
 		}
 		request();

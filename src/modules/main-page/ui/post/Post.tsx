@@ -1,14 +1,10 @@
-import { View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { IPostProps } from "../../types/post-info";
 import { styles } from "./post.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { useRef, useState } from "react";
-import { ModalTool } from "../../../../shared/modal";
-import { useModal } from "../../../../modules/auth/context";
-import { usePost } from "../../hooks/usePost";
-import { IUserPost } from "../../types/post";
 import { useWindowDimensions } from "react-native";
-import { ModalEditPost } from "../modal-edit-post";
+import { ModalThreeDots } from "../modal-three-dots/modal-three-dots";
 
 export function PublicatedPost(props: IPostProps) {
 	const { id, name, text, hashtags, photo, likes, views, user } = props;
@@ -16,9 +12,6 @@ export function PublicatedPost(props: IPostProps) {
 	const [isLiked, setIsLiked] = useState<boolean>(false);
 
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
-
-	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
-	const { openEditModal, closeEditModal } = useModal();
 
 	const { width: screenWidth } = useWindowDimensions();
 
@@ -50,15 +43,6 @@ export function PublicatedPost(props: IPostProps) {
 		}
 	}
 
-	const {
-		createPost,
-		updatePost,
-		deletePost,
-		getAllPosts,
-		getPostsByUserId,
-		getAllTags,
-	} = usePost();
-
 	const [modalPosition, setModalPosition] = useState<{
 		top: number;
 		left: number;
@@ -69,180 +53,137 @@ export function PublicatedPost(props: IPostProps) {
 	const rows = photo ? getPhotosPerRow(photo.length) : [];
 
 	return (
-		<View style={styles.post}>
-			<View style={styles.top}>
-				<View style={styles.userInfo}>
-					{user?.image ? (
-						<Image
-							style={styles.avatar}
-							source={{ uri: user.image }}
-						/>
-					) : (
-						<ICONS.AnonymousLogoIcon width={36} height={36} />
-					)}
-					<Text style={styles.name}>
-						{user?.username ??
-							user?.email?.split("@")[0] ??
-							"Анонім"}
-					</Text>
-				</View>
-				<TouchableOpacity
-					ref={dotsRef}
-					onPress={() => {
-						dotsRef.current?.measureInWindow((x, y) => {
-							setModalPosition({
-								top: y - 20,
-								left: x - 330 + 20,
-							});
-							setSettingsVisible(true);
-						});
-					}}
-				>
-					<View style={styles.actions}>
-						<ICONS.DotsIcon />
-					</View>
-				</TouchableOpacity>
-			</View>
-			<ModalTool
+		<View>
+			<ModalThreeDots
+				{...props}
 				isVisible={isSettingsVisible}
-				onClose={() => setSettingsVisible(false)}
-				position={modalPosition ?? undefined}
-				animationIn="fadeIn"
-				animationOut="fadeOut"
-			>
-				<View style={styles.mainSmallModalPostSettings}>
-					<View style={styles.headerRow}>
-						<TouchableOpacity
-							style={styles.threeDotsSmallModal}
-							onPress={() => setSettingsVisible(false)}
-						>
-							<ICONS.DotsIcon />
-						</TouchableOpacity>
+				setIsVisible={setSettingsVisible}
+				modalPosition={modalPosition}
+			/>
+			<View style={styles.post}>
+				<View style={styles.top}>
+					<View style={styles.userInfo}>
+						{user?.image ? (
+							<Image
+								style={styles.avatar}
+								source={{ uri: user.image }}
+							/>
+						) : (
+							<ICONS.AnonymousLogoIcon width={36} height={36} />
+						)}
+						<Text style={styles.name}>
+							{user?.username ??
+								user?.email?.split("@")[0] ??
+								"Анонім"}
+						</Text>
 					</View>
-
 					<TouchableOpacity
-						style={styles.mainEditPostButton}
+						ref={dotsRef}
 						onPress={() => {
-							if (typeof id === "number") {
-								setSettingsVisible(false);
-								setSelectedPostId(id);
-								openEditModal(id)
-							}
+							dotsRef.current?.measureInWindow((x, y) => {
+								setModalPosition({
+									top: y - 40,
+									left: x - 330 + 20,
+								});
+								setSettingsVisible(true);
+							});
 						}}
 					>
-						<ICONS.PencilIcon width={15} height={15} />
-						<Text style={styles.actionText}>Редагувати допис</Text>
-					</TouchableOpacity>
-
-					<View style={styles.separator} />
-
-					<TouchableOpacity
-						style={styles.mainDeletePostButton}
-						onPress={async () => {
-							if (props.id !== undefined) {
-								await deletePost(props.id);
-								props.onRefresh?.(); // ?.() - если onRefresh, и он не undefined, то она будет вызвана
-								setSettingsVisible(false);
-							}
-						}}
-					>
-						<ICONS.TrashCanIcon
-							width={15}
-							height={15}
-							color={"#543C52"}
-						/>
-						<Text style={styles.actionText}>
-							Видалити публікацію
-						</Text>
+						<View style={styles.actions}>
+							<ICONS.DotsIcon />
+						</View>
 					</TouchableOpacity>
 				</View>
-			</ModalTool>
 
-			<View style={styles.content}>
-				<Text style={styles.name}>{name}</Text>
-				<Text style={styles.text}>{text}</Text>
-				<View style={styles.hashtags}>
-					{hashtags
-						? hashtags.map((tag, i) => (
-								<Text key={i} style={styles.hashtag}>
-									#{tag}
-								</Text>
-						  ))
-						: undefined}
-				</View>
-
-				{photo ? (
-					<View style={{ gap: GAP }}>
-						{rows.map((countInRow, rowIdx) => {
-							const photosInRow = photo.slice(
-								photoIndex,
-								photoIndex + countInRow
-							);
-							photoIndex += countInRow;
-
-							return (
-								<View
-									key={rowIdx}
-									style={{
-										flexDirection: "row",
-										gap: GAP,
-										justifyContent: "flex-start",
-									}}
-								>
-									{photosInRow.map((url, i) => {
-										const totalGap = GAP * (countInRow - 1);
-										const width =
-											(screenWidth - PADDING - totalGap) /
-											countInRow;
-										const aspectRatio = 167.5 / 203; // расчитываем размер исходя из размера экрана
-
-										return (
-											<Image
-												key={i}
-												source={{
-													uri:
-														"data:image/jpeg;base64," +
-														url,
-												}}
-												style={{
-													width,
-													aspectRatio,
-													borderRadius: 8,
-												}}
-												resizeMode="cover"
-											/>
-										);
-									})}
-								</View>
-							);
-						})}
-					</View>
-				) : null}
-
-				<View style={styles.reactions}>
-					<View style={styles.postActions}>
-						<TouchableOpacity
-							style={styles.reaction}
-							onPress={() => {
-								setIsLiked(!isLiked);
-							}}
-						>
-							{isLiked ? (
-								<ICONS.PressedLikeIcon />
-							) : (
-								<ICONS.LikeIcon />
-							)}
-						</TouchableOpacity>
-						<Text style={styles.reactionText}>
-							{likes} Вподобань
-						</Text>
+				<View style={styles.content}>
+					<Text style={styles.name}>{name}</Text>
+					<Text style={styles.text}>{text}</Text>
+					<View style={styles.hashtags}>
+						{hashtags
+							? hashtags.map((tag, i) => (
+									<Text key={i} style={styles.hashtag}>
+										#{tag}
+									</Text>
+							  ))
+							: undefined}
 					</View>
 
-					<View style={styles.postActions}>
-						<ICONS.ViewsIcon />
-						<Text style={styles.reactionText}>
-							{views} Переглядів
-						</Text>
+					{photo ? (
+						<View style={{ gap: GAP }}>
+							{rows.map((countInRow, rowIdx) => {
+								const photosInRow = photo.slice(
+									photoIndex,
+									photoIndex + countInRow
+								);
+								photoIndex += countInRow;
+
+								return (
+									<View
+										key={rowIdx}
+										style={{
+											flexDirection: "row",
+											gap: GAP,
+											justifyContent: "flex-start",
+										}}
+									>
+										{photosInRow.map((url, i) => {
+											const totalGap =
+												GAP * (countInRow - 1);
+											const width =
+												(screenWidth -
+													PADDING -
+													totalGap) /
+												countInRow;
+											const aspectRatio = 167.5 / 203; // расчитываем размер исходя из размера экрана
+
+											return (
+												<Image
+													key={i}
+													source={{
+														uri:
+															"data:image/jpeg;base64," +
+															url,
+													}}
+													style={{
+														width,
+														aspectRatio,
+														borderRadius: 8,
+													}}
+													resizeMode="cover"
+												/>
+											);
+										})}
+									</View>
+								);
+							})}
+						</View>
+					) : null}
+
+					<View style={styles.reactions}>
+						<View style={styles.postActions}>
+							<TouchableOpacity
+								style={styles.reaction}
+								onPress={() => {
+									setIsLiked(!isLiked);
+								}}
+							>
+								{isLiked ? (
+									<ICONS.PressedLikeIcon />
+								) : (
+									<ICONS.LikeIcon />
+								)}
+							</TouchableOpacity>
+							<Text style={styles.reactionText}>
+								{likes} Вподобань
+							</Text>
+						</View>
+
+						<View style={styles.postActions}>
+							<ICONS.ViewsIcon />
+							<Text style={styles.reactionText}>
+								{views} Переглядів
+							</Text>
+						</View>
 					</View>
 				</View>
 			</View>

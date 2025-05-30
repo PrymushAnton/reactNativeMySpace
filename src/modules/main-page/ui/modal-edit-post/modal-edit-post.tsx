@@ -113,6 +113,7 @@ export function ModalEditPost({ postId }: Props) {
 			...data,
 			image: images,
 		});
+		// onRefresh?.();
 		closeEditModal();
 	}
 
