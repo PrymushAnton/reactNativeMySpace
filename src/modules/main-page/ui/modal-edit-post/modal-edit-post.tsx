@@ -282,8 +282,8 @@ export function ModalEditPost({ postId }: Props) {
 							gap: 10,
 							width: 343,
 							height: 40,
-							marginTop: images.length >= 2 ? 0 : 20,
-							marginBottom: 40,
+							marginTop: images.length >= 1 ? 0 : 20,
+							marginBottom: images.length >= 4 ? 40 : 0,
 						}}
 					>
 						<TouchableOpacity onPress={onSearch}>

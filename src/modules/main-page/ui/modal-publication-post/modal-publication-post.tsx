@@ -180,7 +180,7 @@ export function ModalPublicationPost() {
 							/>
 						</View>
 
-						<View style={{marginTop: 16}}>
+						<View style={{ marginTop: 16 }}>
 							<Controller
 								control={control}
 								name="defaultTags"
@@ -279,25 +279,15 @@ export function ModalPublicationPost() {
 					)}
 
 					<View
-						style={
-							images && images.length >= 2
-								? {
-										flexDirection: "row",
-										justifyContent: "flex-end",
-										gap: 10,
-										width: 343,
-										height: 40,
-										marginBottom: 40,
-								  }
-								: {
-										flexDirection: "row",
-										justifyContent: "flex-end",
-										gap: 10,
-										width: 343,
-										height: 40,
-										marginTop: 20,
-								  }
-						}
+						style={{
+							flexDirection: "row",
+							justifyContent: "flex-end",
+							gap: 10,
+							width: 343,
+							height: 40,
+							marginTop: images.length >= 1 ? 0 : 20,
+							marginBottom: images.length >= 4 ? 40 : 0,
+						}}
 					>
 						<TouchableOpacity onPress={onSearch}>
 							<ICONS.ImageWithStylesIcon />
