@@ -147,7 +147,10 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 
 										{isSelected && (
 											<View style={{ marginLeft: 8 }}>
-												<ICONS.CheckMarkIcon width={15} height={15} />
+												<ICONS.CheckMarkIcon
+													width={15}
+													height={15}
+												/>
 											</View>
 										)}
 									</TouchableOpacity>
@@ -183,15 +186,15 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 								</Text>
 								<TouchableOpacity
 									onPress={() => handleRemove(tag.name)}
-									style={
-										styles.selectedTagCloseButtonTouchableOpacity
-									}
+									style={{marginLeft: 16}}
 								>
-									<ICONS.CloseIcon
-										color={"#000"}
-										width={10}
-										height={10}
-									/>
+									<View style={styles.selectedTagCloseButtonView} >
+										<ICONS.CloseIcon
+											color={"#FFFFFF"}
+											width={10}
+											height={10}
+										/>
+									</View>
 								</TouchableOpacity>
 							</View>
 						);
