@@ -44,6 +44,7 @@ export function TagsCustomInput({ value, onChange }: Props) {
 					value={customTag}
 					onChangeText={setCustomTag}
 					style={styles.customTagsTextInput}
+					placeholderTextColor={"#81818D"}
 				/>
 				<TouchableOpacity
 					onPress={handleAddTag}

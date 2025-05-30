@@ -36,12 +36,13 @@ export const styles = StyleSheet.create({
 		position: "relative",
 	},
 	mainInputTagsTouchableOpacity: {
-		borderColor: "#D1D5DB",
+		borderColor: "#CDCED2",
 		borderWidth: 1,
 		borderRadius: 12,
-		paddingVertical: 10,
+		// paddingVertical: 10,
 		paddingHorizontal: 14,
-		backgroundColor: "#fff",
+		height: 42,
+		justifyContent: "center",
 	},
 
 	tagsView: {
@@ -67,6 +68,13 @@ export const styles = StyleSheet.create({
 		borderRadius: 10,
 		backgroundColor: "#fff",
 		fontFamily: "GTWalsheimPro-Regular",
+	},
+	tagsTouchableOpacity: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		padding: 10,
+		marginBottom: 6,
 	},
 	tagsConfirmButtonTouchableOpacity: {
 		backgroundColor: "#543C52",

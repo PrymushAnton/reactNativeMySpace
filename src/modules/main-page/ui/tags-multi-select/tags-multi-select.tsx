@@ -99,7 +99,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				>
 					<Text
 						style={{
-							color: "#9A9A9A",
+							color: "#81818D",
 							fontSize: 14,
 							fontFamily: "GTWalsheimPro-Regular",
 						}}
@@ -123,31 +123,36 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 							keyboardShouldPersistTaps="handled"
 							nestedScrollEnabled={true}
 						>
-							{filteredTags.map((tag) => (
-								<TouchableOpacity
-									key={tag.id}
-									onPress={() => handleSelect(tag.name)}
-									style={{
-										padding: 10,
-										marginBottom: 6,
-										borderRadius: 8,
-										backgroundColor: tempSelected.includes(
-											tag.name
-										)
-											? "#E4E4E4"
-											: "#F5F5F5",
-									}}
-								>
-									<Text
-										style={{
-											color: "#070A1C",
-											fontFamily: "GTWalsheimPro-Regular",
-										}}
+							{filteredTags.map((tag) => {
+								const isSelected = tempSelected.includes(
+									tag.name
+								);
+								return (
+									<TouchableOpacity
+										key={tag.id}
+										onPress={() => handleSelect(tag.name)}
+										style={styles.tagsTouchableOpacity}
 									>
-										{tag.name}
-									</Text>
-								</TouchableOpacity>
-							))}
+										<Text
+											style={{
+												color: isSelected
+													? "#9CA3AF"
+													: "#070A1C",
+												fontFamily:
+													"GTWalsheimPro-Regular",
+											}}
+										>
+											{tag.name}
+										</Text>
+
+										{isSelected && (
+											<View style={{ marginLeft: 8 }}>
+												<ICONS.CheckMarkIcon width={15} height={15} />
+											</View>
+										)}
+									</TouchableOpacity>
+								);
+							})}
 						</ScrollView>
 
 						<TouchableOpacity
@@ -167,9 +172,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 					</View>
 				)}
 
-				<View
-					style={styles.selectedTagMainView}
-				>
+				<View style={styles.selectedTagMainView}>
 					{selectedTags.map((tagName) => {
 						const tag = tags.find((t) => t.name === tagName);
 						if (!tag) return null;
