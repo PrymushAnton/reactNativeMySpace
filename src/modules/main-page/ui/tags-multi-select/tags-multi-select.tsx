@@ -9,6 +9,7 @@ import {
 	Platform,
 } from "react-native";
 import { ICONS } from "../../../../shared/ui/icons";
+import { styles } from "./tags-multi-select.styles";
 
 type Tag = {
 	id: string;
@@ -16,7 +17,7 @@ type Tag = {
 };
 
 type Props = {
-	selectedTags: string[];
+	selectedTags: string[]; 
 	onChange: (value: string[]) => void;
 };
 
@@ -55,6 +56,10 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 	}, []);
 
 	useEffect(() => {
+		setTempSelected(selectedTags);
+	}, [selectedTags]);
+
+	useEffect(() => {
 		setFilteredTags(
 			tags.filter((tag) =>
 				tag.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,11 +67,11 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 		);
 	}, [searchTerm, tags]);
 
-	const handleSelect = (id: string) => {
+	const handleSelect = (tagName: string) => {
 		setTempSelected((prev) =>
-			prev.includes(id)
-				? prev.filter((tagId) => tagId !== id)
-				: [...prev, id]
+			prev.includes(tagName)
+				? prev.filter((name) => name !== tagName)
+				: [...prev, tagName]
 		);
 	};
 
@@ -75,65 +80,41 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 		setInputVisible(false);
 	};
 
-	const handleRemove = (id: string) => {
-		onChange(selectedTags.filter((tagId) => tagId !== id));
-		setTempSelected((prev) => prev.filter((tagId) => tagId !== id));
+	const handleRemove = (tagName: string) => {
+		onChange(selectedTags.filter((name) => name !== tagName));
+		setTempSelected((prev) => prev.filter((name) => name !== tagName));
 	};
 
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : undefined}
 		>
-			<View style={{ marginBottom: 10, position: "relative" }}>
+			<View style={styles.mainInputTagsView}>
 				<TouchableOpacity
 					onPress={() => {
 						setTempSelected(selectedTags);
 						setInputVisible((prev) => !prev);
 					}}
-					style={{
-						borderColor: "#D1D5DB",
-						borderWidth: 1,
-						borderRadius: 12,
-						paddingVertical: 10,
-						paddingHorizontal: 14,
-						backgroundColor: "#fff",
-					}}
+					style={styles.mainInputTagsTouchableOpacity}
 				>
-					<Text style={{ color: "#9A9A9A", fontSize: 16 }}>
+					<Text
+						style={{
+							color: "#9A9A9A",
+							fontSize: 14,
+							fontFamily: "GTWalsheimPro-Regular",
+						}}
+					>
 						Оберіть теги
 					</Text>
 				</TouchableOpacity>
 
 				{inputVisible && (
-					<View
-						style={{
-							position: "absolute",
-							top: 50, 
-							left: 0,
-							right: 0,
-							borderRadius: 12,
-							backgroundColor: "#fff",
-							borderColor: "#D1D5DB",
-							borderWidth: 1,
-							maxHeight: 250,
-							overflow: "hidden",
-							zIndex: 9999, 
-							elevation: 10, // для дроида
-						}}
-					>
+					<View style={styles.tagsView}>
 						<TextInput
 							value={searchTerm}
 							onChangeText={setSearchTerm}
 							placeholder="Пошук"
-							style={{
-								height: 40,
-								borderBottomWidth: 1,
-								borderColor: "#ccc",
-								margin: 10,
-								paddingHorizontal: 10,
-								borderRadius: 10,
-								backgroundColor: "#fff",
-							}}
+							style={styles.tagsInputSearch}
 						/>
 
 						<ScrollView
@@ -145,19 +126,24 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 							{filteredTags.map((tag) => (
 								<TouchableOpacity
 									key={tag.id}
-									onPress={() => handleSelect(tag.id)}
+									onPress={() => handleSelect(tag.name)}
 									style={{
 										padding: 10,
 										marginBottom: 6,
 										borderRadius: 8,
 										backgroundColor: tempSelected.includes(
-											tag.id
+											tag.name
 										)
 											? "#E4E4E4"
 											: "#F5F5F5",
 									}}
 								>
-									<Text style={{ color: "#070A1C" }}>
+									<Text
+										style={{
+											color: "#070A1C",
+											fontFamily: "GTWalsheimPro-Regular",
+										}}
+									>
 										{tag.name}
 									</Text>
 								</TouchableOpacity>
@@ -166,15 +152,14 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 
 						<TouchableOpacity
 							onPress={handleConfirm}
-							style={{
-								backgroundColor: "#543C52",
-								padding: 12,
-								borderTopWidth: 1,
-								borderTopColor: "#D1D5DB",
-							}}
+							style={styles.tagsConfirmButtonTouchableOpacity}
 						>
 							<Text
-								style={{ color: "#fff", textAlign: "center" }}
+								style={{
+									color: "#fff",
+									textAlign: "center",
+									fontFamily: "GTWalsheimPro-Regular",
+								}}
 							>
 								Підтвердити
 							</Text>
@@ -189,43 +174,19 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 						marginTop: 10,
 					}}
 				>
-					{selectedTags.map((tagId) => {
-						const tag = tags.find((t) => t.id === tagId);
+					{selectedTags.map((tagName) => {
+						const tag = tags.find((t) => t.name === tagName);
 						if (!tag) return null;
 						return (
-							<View
-								key={tag.id}
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderColor: "#CDCED2",
-									borderWidth: 1,
-									borderRadius: 50,
-									paddingVertical: 4,
-									paddingHorizontal: 10,
-									marginRight: 8,
-									marginBottom: 8,
-									backgroundColor: "#fff",
-								}}
-							>
-								<Text
-									style={{
-										marginRight: 6,
-										fontSize: 14,
-										color: "#000",
-									}}
-								>
+							<View key={tag.id} style={styles.selectedTagView}>
+								<Text style={styles.selectedTagText}>
 									{tag.name}
 								</Text>
 								<TouchableOpacity
-									onPress={() => handleRemove(tag.id)}
-									style={{
-										backgroundColor: "#CDCED2",
-										borderRadius: 999,
-										padding: 4,
-										justifyContent: "center",
-										alignItems: "center",
-									}}
+									onPress={() => handleRemove(tag.name)}
+									style={
+										styles.selectedTagCloseButtonTouchableOpacity
+									}
 								>
 									<ICONS.CloseIcon
 										color={"#000"}
