@@ -19,7 +19,11 @@ import { styles } from "./modal-publication-post.styles";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { COLORS } from "../../../../shared/constants";
 
-export function ModalPublicationPost() {
+interface ModalPublicationPostProps {
+	onRefresh?: () => void;
+}
+
+export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	const { isCreateVisible, closeCreateModal } = useModal();
 
 	const [images, setImages] = useState<string[]>([]);
@@ -106,7 +110,7 @@ export function ModalPublicationPost() {
 	function onSubmit(data: IUserPost) {
 		async function request() {
 			const response = await createPost(data);
-			// onRefresh?.();
+			onRefresh?.();
 			closingModal();
 		}
 		request();

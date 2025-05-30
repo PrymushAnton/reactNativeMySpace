@@ -20,15 +20,16 @@ import { useAuthContext } from "../../../auth/context";
 
 interface Props {
 	postId: number | null;
+	onRefresh?: () => void;
 }
 
-export function ModalEditPost({ postId }: Props) {
+export function ModalEditPost({ postId, onRefresh }: Props) {
 	const { isEditVisible, closeEditModal, editPostId } = useModal();
 	const { getPostById, updatePost } = usePost();
 	const { user } = useAuthContext();
 
 	const [images, setImages] = useState<string[]>([]);
-	const [postData, setPostData] = useState<IUserPost | null>(null);
+	// const [postData, setPostData] = useState<IUserPost | null>(null);
 
 	const { handleSubmit, control, setValue, reset } = useForm<IUserPost>({
 		defaultValues: {
@@ -67,7 +68,7 @@ export function ModalEditPost({ postId }: Props) {
 				link: post.link || "",
 			};
 
-			setPostData(formData);
+			// setPostData(formData);
 			reset(formData);
 
 			setImages(post.images || []);
@@ -113,7 +114,7 @@ export function ModalEditPost({ postId }: Props) {
 			...data,
 			image: images,
 		});
-		// onRefresh?.();
+		onRefresh?.();
 		closeEditModal();
 	}
 

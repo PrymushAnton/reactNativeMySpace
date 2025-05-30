@@ -61,8 +61,8 @@ export function MainPage() {
 
 	return (
 		<View>
-			<ModalPublicationPost />
-			<ModalEditPost postId={selectedPostId} />
+			<ModalPublicationPost onRefresh={fetchPosts} />
+			<ModalEditPost postId={selectedPostId} onRefresh={fetchPosts} />
 			<View>
 				<View>
 					{posts.map((post, idx) => (
