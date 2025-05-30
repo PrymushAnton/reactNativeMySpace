@@ -22,7 +22,6 @@ export const styles = StyleSheet.create({
         minHeight: 368,
         paddingTop: 24,
         paddingBottom: 24,
-        gap: 16,
     },
     themeModalInputFrame: {
         width: 343,

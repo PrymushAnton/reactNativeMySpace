@@ -179,7 +179,7 @@ export function ModalPublicationPost() {
 							/>
 						</View>
 
-						<View>
+						<View style={{marginTop: 16}}>
 							<Controller
 								control={control}
 								name="defaultTags"

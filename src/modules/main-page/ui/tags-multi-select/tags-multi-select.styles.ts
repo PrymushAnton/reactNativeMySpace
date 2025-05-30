@@ -75,6 +75,10 @@ export const styles = StyleSheet.create({
 		borderTopColor: "#D1D5DB",
 	},
 
+	selectedTagMainView: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+	},
 	selectedTagView: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -84,8 +88,8 @@ export const styles = StyleSheet.create({
 		paddingVertical: 4,
 		paddingHorizontal: 10,
 		marginRight: 8,
-		marginBottom: 8,
 		backgroundColor: "#fff",
+		marginTop: 10,
 	},
 	selectedTagText: {
 		marginRight: 6,

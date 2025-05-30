@@ -40,7 +40,7 @@ export function ModalEditPost({ postId }: Props) {
 			link: "",
 		},
 	});
-	
+
 	useEffect(() => {
 		if (!isEditVisible || editPostId === null) return;
 
@@ -49,7 +49,11 @@ export function ModalEditPost({ postId }: Props) {
 			if (editPostId == null) return;
 
 			const response = await getPostById(editPostId);
-			if (response.status === "error" || response.status === "error-validation") return;
+			if (
+				response.status === "error" ||
+				response.status === "error-validation"
+			)
+				return;
 
 			const post = response.data;
 			if (!post) return;
@@ -59,7 +63,7 @@ export function ModalEditPost({ postId }: Props) {
 				description: post.text || "",
 				defaultTags: post.tags || [],
 				customTags: [],
-				image: (post.images || []),
+				image: post.images || [],
 				link: post.link || "",
 			};
 
@@ -107,7 +111,7 @@ export function ModalEditPost({ postId }: Props) {
 
 		await updatePost(editPostId, {
 			...data,
-			image: images
+			image: images,
 		});
 		closeEditModal();
 	}
@@ -174,27 +178,31 @@ export function ModalEditPost({ postId }: Props) {
 							/>
 						</View>
 
-						<Controller
-							control={control}
-							name="defaultTags"
-							render={({ field }) => (
-								<TagsMultiSelect
-									selectedTags={field.value}
-									onChange={field.onChange}
-								/>
-							)}
-						/>
-
-						<Controller
-							control={control}
-							name="customTags"
-							render={({ field }) => (
-								<TagsCustomInput
-									value={field.value}
-									onChange={field.onChange}
-								/>
-							)}
-						/>
+						<View style={{marginTop: 16}}>
+							<Controller
+								control={control}
+								name="defaultTags"
+								render={({ field }) => (
+									<TagsMultiSelect
+										selectedTags={field.value}
+										onChange={field.onChange}
+									/>
+								)}
+							/>
+						</View>
+						
+						<View>
+							<Controller
+								control={control}
+								name="customTags"
+								render={({ field }) => (
+									<TagsCustomInput
+										value={field.value}
+										onChange={field.onChange}
+									/>
+								)}
+							/>
+						</View>
 					</View>
 
 					<View style={styles.themeModalInputFrame}>

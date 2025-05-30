@@ -17,7 +17,7 @@ type Tag = {
 };
 
 type Props = {
-	selectedTags: string[]; 
+	selectedTags: string[];
 	onChange: (value: string[]) => void;
 };
 
@@ -168,11 +168,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				)}
 
 				<View
-					style={{
-						flexDirection: "row",
-						flexWrap: "wrap",
-						marginTop: 10,
-					}}
+					style={styles.selectedTagMainView}
 				>
 					{selectedTags.map((tagName) => {
 						const tag = tags.find((t) => t.name === tagName);
