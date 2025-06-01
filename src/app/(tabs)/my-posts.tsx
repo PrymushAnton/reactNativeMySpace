@@ -1,5 +1,5 @@
-import { ScrollView, Text } from "react-native";
-import { MyPostsPage } from "../../modules/my-posts-component/ui"
+import { ScrollView } from "react-native";
+import { MyPostsPage } from "../../modules/my-posts-page/ui"
 
 
 export default function MyPosts() {

@@ -4,17 +4,57 @@ import { ModalPublicationPost } from "../modal-publication-post";
 import { ModalEditPost } from "../modal-edit-post";
 import { useModal } from "../../../../modules/auth/context";
 import { useFetchPosts } from "../../hooks/useFetchPosts";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ModalFirstLogin } from "../modal-first-login";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
 
 export function MainPage() {
-	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } = useModal();
+	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } =
+		useModal();
 	const { posts, fetchPosts } = useFetchPosts();
+
 	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+	const [modalVisible, setModalVisible] = useState<boolean | null>(null);
+
+	const [email, setEmail] = useState<string>("");
+
+	useEffect(() => {
+		async function init() {
+			try {
+				const storedEmail = await AsyncStorage.getItem("userEmail");
+
+				const alreadyShown = await checkFirstLoginFlag(storedEmail || "");
+
+				setEmail(storedEmail || "");
+				setModalVisible(!alreadyShown);
+			} catch (error) {
+				console.error(
+					"Ошибка при инициализации главной страницы:",
+					error
+				);
+			}
+		}
+
+		init();
+	}, []);
 
 	return (
 		<View>
+			{modalVisible !== null && (
+				<ModalFirstLogin
+					isVisible={modalVisible}
+					setIsVisible={setModalVisible}
+					email={email}
+					onRefresh={fetchPosts}
+				/>
+			)}
+
 			<ModalPublicationPost onRefresh={fetchPosts} />
+
 			<ModalEditPost postId={selectedPostId} onRefresh={fetchPosts} />
+
 			<View>
 				{posts.map((post) => (
 					<PublicatedPost

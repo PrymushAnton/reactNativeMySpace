@@ -1,8 +1,8 @@
 import { View, Text } from "react-native";
 import { useEffect } from "react";
 import { PublicatedPost } from "../../main-page/ui/post";
-import { useAuthContext } from "../../../modules/auth/context";
-import { styles } from "./my-posts-component.styles";
+import { useAuthContext } from "../../auth/context";
+import { styles } from "./my-posts-page.styles";
 import { useFetchPosts } from "../../main-page/hooks/useFetchPosts";
 
 export function MyPostsPage() {

@@ -1,1 +1,0 @@
-export {MyPostsPage} from "../ui/my-posts-component"

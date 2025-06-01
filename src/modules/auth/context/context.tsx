@@ -112,6 +112,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 			await AsyncStorage.setItem("token", result.data);
+			await AsyncStorage.setItem("userEmail", email);
 			await getData(result.data);
 			router.replace("/main/");
 			return "";
