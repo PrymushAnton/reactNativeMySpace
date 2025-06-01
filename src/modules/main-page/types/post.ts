@@ -30,6 +30,8 @@ export interface IUserFromBackend {
 	username: string | null;
 }
 
+export type IUserAdditionalInfo = Omit<IUserFromBackend, "id" | "phoneNumber" | "birthDate" | "image">
+
 export interface IPostFromBackend {
 	userId: number;
 	id: number;

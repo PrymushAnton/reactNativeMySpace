@@ -10,8 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
 
 export function MainPage() {
-	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } =
-		useModal();
+	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } = useModal();
 	const { posts, fetchPosts } = useFetchPosts();
 
 	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
@@ -29,6 +28,8 @@ export function MainPage() {
 
 				setEmail(storedEmail || "");
 				setModalVisible(!alreadyShown);
+				await AsyncStorage.removeItem("userEmail")
+				await AsyncStorage.removeItem("first_login_shown");
 			} catch (error) {
 				console.error(
 					"Ошибка при инициализации главной страницы:",
