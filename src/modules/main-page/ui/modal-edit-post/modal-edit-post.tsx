@@ -77,6 +77,11 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 		fetchData();
 	}, [isEditVisible, editPostId]);
 
+	const shouldAddMarginBottom =
+		images.length >= 4 ||
+		control._formValues.defaultTags?.length > 0 ||
+		control._formValues.customTags?.length > 0;
+
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
 		setImages(updatedImages);
@@ -284,7 +289,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 							width: 343,
 							height: 40,
 							marginTop: images.length >= 1 ? 0 : 20,
-							marginBottom: images.length >= 4 ? 40 : 0,
+							marginBottom: shouldAddMarginBottom ? 40 : 10,
 						}}
 					>
 						<TouchableOpacity onPress={onSearch}>

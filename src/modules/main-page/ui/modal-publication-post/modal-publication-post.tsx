@@ -62,6 +62,11 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 			resolver: yupResolver(schema),
 		});
 
+	const shouldAddMarginBottom =
+		images.length >= 4 ||
+		control._formValues.defaultTags?.length > 0 ||
+		control._formValues.customTags?.length > 0;
+
 	async function closingModal() {
 		closeCreateModal();
 		setValue("name", "");
@@ -290,7 +295,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 							width: 343,
 							height: 40,
 							marginTop: images.length >= 1 ? 0 : 20,
-							marginBottom: images.length >= 4 ? 40 : 0,
+							marginBottom: shouldAddMarginBottom ? 40 : 10,
 						}}
 					>
 						<TouchableOpacity onPress={onSearch}>
