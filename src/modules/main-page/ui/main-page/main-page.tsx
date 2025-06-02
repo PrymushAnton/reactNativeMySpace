@@ -28,8 +28,6 @@ export function MainPage() {
 
 				setEmail(storedEmail || "");
 				setModalVisible(!alreadyShown);
-				await AsyncStorage.removeItem("userEmail")
-				await AsyncStorage.removeItem("first_login_shown");
 			} catch (error) {
 				console.error(
 					"Ошибка при инициализации главной страницы:",

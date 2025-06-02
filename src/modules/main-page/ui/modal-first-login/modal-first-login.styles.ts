@@ -7,8 +7,6 @@ export const styles = StyleSheet.create({
 		borderRadius: 20,
 		paddingTop: 24,
         paddingBottom: 24,
-        // paddingLeft: 16,
-        // paddingRight: 16,
 		width: "90%",
         minHeight: 467,
         alignItems: "flex-end",
@@ -19,25 +17,22 @@ export const styles = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: "700",
 		textAlign: "center",
-		marginBottom: 24,
 		color: "#070A1C",
         fontFamily: "GTWalsheimPro-Regular",
 	},
 	variantsOfNameAndSurnameText: {
 		fontSize: 14,
 		marginTop: 8,
-		marginBottom: 16,
 		color: "#070A1C",
 		textAlign: "center",
         fontFamily: "GTWalsheimPro-Regular",
+		marginBottom: 24
 	},
 	buttonNext: {
 		backgroundColor: "#543C52",
-		// paddingVertical: 14,
 		borderRadius: 30,
 		alignItems: "center",
         justifyContent: "center",
-		// marginTop: 8,
         width: 112,
         height: 40
 	},
@@ -47,4 +42,10 @@ export const styles = StyleSheet.create({
 		fontWeight: "600",
         fontFamily: "GTWalsheimPro-Regular",
 	},
+	inputLabelText: {
+		marginBottom: 6,
+		fontFamily: "GTWalsheimPro-Regular",
+		fontSize: 16,
+		color: "#070A1C"
+	}
 });
