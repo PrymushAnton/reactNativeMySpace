@@ -10,23 +10,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
 
 export function MainPage() {
-	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } = useModal();
+	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } =
+		useModal();
 	const { posts, fetchPosts } = useFetchPosts();
 
 	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
 	const [modalVisible, setModalVisible] = useState<boolean | null>(null);
 
-	const [email, setEmail] = useState<string>("");
+	const [userId, setUserId] = useState<number | null>(null);
 
 	useEffect(() => {
 		async function init() {
 			try {
-				const storedEmail = await AsyncStorage.getItem("userEmail");
+				const storedUser = await AsyncStorage.getItem("user");
+				if (!storedUser) return;
+				
+				const parsedUser = JSON.parse(storedUser);
+				const userId = parsedUser?.id;
 
-				const alreadyShown = await checkFirstLoginFlag(storedEmail || "");
+				if (!userId) return;
 
-				setEmail(storedEmail || "");
+				const alreadyShown = await checkFirstLoginFlag(userId);
+
+				setUserId(userId);
 				setModalVisible(!alreadyShown);
 			} catch (error) {
 				console.error(
@@ -41,11 +48,11 @@ export function MainPage() {
 
 	return (
 		<View>
-			{modalVisible !== null && (
+			{modalVisible !== null && userId !== null && (
 				<ModalFirstLogin
 					isVisible={modalVisible}
 					setIsVisible={setModalVisible}
-					email={email}
+					userId={userId}
 					onRefresh={fetchPosts}
 				/>
 			)}

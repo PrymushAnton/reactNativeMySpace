@@ -59,9 +59,9 @@ function Password(props: Omit<IInputProps, "iconLeft" | "iconRight"> & {showLeft
 						}}
 					>
 						{isHidden ? (
-							<ICONS.EyeCrossedIcon width={30} height={30} />
+							<ICONS.EyeCrossedIcon width={20} height={20} />
 						) : (
-							<ICONS.EyeIcon width={30} height={30} />
+							<ICONS.EyeIcon width={20} height={20} />
 						)}
 					</TouchableWithoutFeedback>
 				</View>

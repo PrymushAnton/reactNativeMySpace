@@ -69,6 +69,17 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			}
 
 			await AsyncStorage.setItem("token", result.data);
+			
+			const meResponse = await fetch(`${BASE_URL}/user/me`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			const meResult: Response<IUser> = await meResponse.json();
+
+			if (meResult.status === "success") {
+				const userData = meResult.data;
+				await AsyncStorage.setItem("user", JSON.stringify(userData)); 
+				setUser(userData);
+			}
 			await getData(result.data);
 
 			router.replace("/main/");

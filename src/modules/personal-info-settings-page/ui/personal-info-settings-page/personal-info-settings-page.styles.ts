@@ -2,9 +2,12 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
     inputText:{
-        color: "#83858E",
+        color: "#070A1C",
 		fontWeight: 400,
 		fontSize: 16,
+        fontFamily: "GTWalsheimPro-Regular",
+        marginBottom: 6,
+        marginTop: 16
     },
 
     personalInfoSettings:{

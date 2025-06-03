@@ -10,18 +10,19 @@ import { Controller, useForm } from "react-hook-form";
 import { Input } from "../../../../shared/ui/input";
 import { IUserAdditionalInfo } from "../../types/post";
 import { ICONS } from "../../../../shared/ui/icons";
+import { useAuthContext } from "../../../auth/context";
 
 interface ModalFirstLoginProps {
 	isVisible: boolean;
 	setIsVisible: (visible: boolean) => void;
 	onRefresh?: () => void;
-	email: string;
+	userId: number;
 }
 
 export function ModalFirstLogin({
 	isVisible,
 	setIsVisible,
-	email,
+	userId,
 	onRefresh,
 }: ModalFirstLoginProps) {
 	const {
@@ -31,18 +32,19 @@ export function ModalFirstLogin({
 		setValue,
 	} = useForm<IUserAdditionalInfo>({
 		defaultValues: {
-			email: email,
 			name: "",
 			surname: "",
 			username: "",
 		},
 	});
 
+	const { token } = useAuthContext();
+
 	useEffect(() => {
-		checkFirstLoginFlag(email).then((alreadyShown) => {
+		checkFirstLoginFlag(userId).then((alreadyShown) => {
 			if (alreadyShown) setIsVisible(false);
 		});
-	}, [email]);
+	}, [userId]);
 
 	const onSubmit = async (data: IUserAdditionalInfo) => {
 		try {
@@ -50,16 +52,13 @@ export function ModalFirstLogin({
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({
-					email,
-					data,
-				}),
+				body: JSON.stringify(data),
 			});
-
 			if (!res.ok) throw new Error("Не вдалося оновити дані");
 
-			await saveFirstLoginFlag(email);
+			await saveFirstLoginFlag(userId);
 			setIsVisible(false);
 			onRefresh?.();
 		} catch (error) {
