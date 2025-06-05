@@ -3,10 +3,10 @@ import { Input } from "../../../../shared/ui/input";
 import { styles } from "./personal-info-settings-page.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { useAuthContext } from "../../../auth/context";
-import { EmailIcon } from "../../../../shared/ui/icons/email-icon";
+import { HeaderNavigationSettingsPages } from "../header-navigation-settings-pages";
 
 interface IPersonalInfoFormData {
 	name: string;
@@ -17,221 +17,188 @@ interface IPersonalInfoFormData {
 	birthDate: string;
 }
 
+const inputs = [
+	{
+		label: "Ім'я",
+		name: "name",
+		placeholder: "Your name",
+	},
+	{
+		label: "Прізвище",
+		name: "surname",
+		placeholder: "Your surname",
+	},
+	{
+		label: "Дата народження",
+		name: "birthDate",
+		placeholder: "дд.мм.рррр",
+	},
+	{
+		label: "Електрона адреса",
+		name: "email",
+		placeholder: "you@example.com",
+	},
+	{
+		label: "Пароль",
+		name: "password",
+		placeholder: "Password here",
+		isPassword: true,
+	},
+	{
+		label: "Username",
+		name: "username",
+		placeholder: "@",
+	},
+];
+
 export function PersonalInfoSettingsPage() {
-	const { control, handleSubmit } = useForm<IPersonalInfoFormData>({
-		defaultValues: {
-			name: "",
-			surname: "",
-			birthDate: "",
-			email: "",
-			password: "",
-			username: ""
-		},
-	});
-	const [isFullNameChecked, setIsFullNameChecked] = useState(true);
-	const [isWritingChecked, setIsWritingChecked] = useState(false);
 	const router = useRouter();
-	const { user, token } = useAuthContext();
+	const { user, token, getData } = useAuthContext();
+
+	const { control, handleSubmit, setValue, getValues } =
+		useForm<IPersonalInfoFormData>({
+			defaultValues: {
+				name: "",
+				surname: "",
+				birthDate: "",
+				email: "",
+				password: "",
+				username: "",
+			},
+		});
+
+	useEffect(() => {
+		if (!user && token && getData) {
+			getData(token);
+		}
+	}, [user, token]);
+
+	useEffect(() => {
+		if (user) {
+			setValue("name", user.name || "");
+			setValue("surname", user.surname || "");
+			setValue("birthDate", user.birthDate ? String(user.birthDate) : "");
+			setValue("email", user.email || "");
+			setValue("username", user.username || "");
+		}
+		console.log("us on sett", user)
+	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
 		async function updateUser() {
-			const response = await fetch(
-				"http://192.168.1.10:3011/user/update",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({
-						name: data.name,
-						surname: data.surname,
-						birthDate: data.birthDate,
-					}),
+			const body: Partial<IPersonalInfoFormData> = {};
+			(Object.keys(data) as (keyof IPersonalInfoFormData)[]).forEach(
+				(key) => {
+					const value = data[key];
+					if (
+						key === "password"
+							? value
+							: value &&
+							  value !== user?.[key as keyof typeof user]
+					) {
+						body[key] = value;
+					}
 				}
 			);
+
+			if (Object.keys(body).length === 0) {
+				console.log("haven't edits for send");
+				return;
+			}
+
+			await fetch("http://192.168.1.10:3011/user/update", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify(body),
+			});
+
+			router.replace("/main");
 		}
+
 		updateUser();
-		router.replace("/main");
 	}
 
 	return (
-		<View
-			style={{
-				marginVertical: 10,
-			}}
-		>
-			<ScrollView style={styles.personalInfoSettings}>
-				<View style={styles.personalInfoSettingsTop}>
-					<TouchableOpacity style={styles.personalInfoSettingsTopEl}>
+		<ScrollView style={styles.personalInfoSettings}>
+			<HeaderNavigationSettingsPages />
+			<View>
+				<View style={styles.profileCard}>
+					<View style={styles.profileCardTop}>
 						<Text
 							style={{
-								fontWeight: 700,
-								borderBottomWidth: 2,
+								fontWeight: "700",
+								fontFamily: "GTWalsheimPro-Regular",
+							}}
+						>
+							Картка профілю
+						</Text>
+					</View>
+
+					<View style={styles.profileCardBottom}>
+						{user?.image ? (
+							<Image
+								style={{ height: 100, width: 100 }}
+								source={{ uri: user.image }}
+							/>
+						) : (
+							<ICONS.AnonymousLogoIcon width={150} height={150} />
+						)}
+					</View>
+				</View>
+
+				<View style={styles.personalInfo}>
+					<View style={styles.personalInfoTop}>
+						<Text
+							style={{
+								fontWeight: "700",
 								fontFamily: "GTWalsheimPro-Regular",
 							}}
 						>
 							Особиста інформація
 						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.personalInfoSettingsTopEl}
-						onPress={() => {
-							router.replace("/albums");
-						}}
-					>
-						<Text style={{fontFamily: "GTWalsheimPro-Regular",}}>Альбоми</Text>
-					</TouchableOpacity>
-				</View>
-
-				<View>
-					<View style={styles.profileCard}>
-						<View style={styles.profileCardTop}>
-							<Text style={{ fontWeight: 700, fontFamily: "GTWalsheimPro-Regular", }}>
-								Картка профілю
-							</Text>
-						</View>
-
-						<View style={styles.profileCardBottom}>
-							{user?.image ? (
-								<Image
-									style={{
-										height: 100,
-										width: 100,
-									}}
-									source={{ uri: user.image }}
-								/>
-							) : (
-								<ICONS.AnonymousLogoIcon
-									width={150}
-									height={150}
-								/>
-							)}
-						</View>
+						<TouchableOpacity
+							style={{
+								borderWidth: 1,
+								borderColor: "#543C52",
+								borderRadius: 50,
+								padding: 10,
+							}}
+							onPress={handleSubmit(onSubmit)}
+						>
+							<ICONS.PencilIcon width={15} height={15} />
+						</TouchableOpacity>
 					</View>
 
-					<View style={styles.personalInfo}>
-						<View style={styles.personalInfoTop}>
-							<Text style={{ fontWeight: 700, fontFamily: "GTWalsheimPro-Regular", }}>
-								Особиста інформація
-							</Text>
-							<TouchableOpacity
-								style={{
-									borderWidth: 1,
-									borderColor: "#543C52",
-									borderRadius: "50%",
-									padding: 10,
-								}}
-								onPress={handleSubmit(onSubmit)}
-							>
-								<ICONS.PencilIcon width={15} height={15} />
-							</TouchableOpacity>
-						</View>
-						<View>
-							<Text style={styles.inputText}>Ім'я</Text>
+					{inputs.map((field) => (
+						<View key={field.name}>
+							<Text style={styles.inputText}>{field.label}</Text>
 							<Controller
-								name="name"
+								name={field.name as keyof IPersonalInfoFormData}
 								control={control}
-								render={({ field }) => {
+								render={({ field: controllerField }) => {
+									const InputComponent = field.isPassword
+										? Input.Password
+										: Input;
 									return (
-										<Input
-											placeholder="Your name"
-											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
-										/>
-									);
-								}}
-							/>
-
-							<Text style={styles.inputText}>Прізвище</Text>
-							<Controller
-								name="surname"
-								control={control}
-								render={({ field }) => {
-									return (
-										<Input
-											placeholder="Your surname"
-											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
-										/>
-									);
-								}}
-							/>
-
-							<Text style={styles.inputText}>
-								Дата народження
-							</Text>
-							<Controller
-								name="birthDate"
-								control={control}
-								render={({ field }) => {
-									return (
-										<Input
-											placeholder="дд.мм.рррр"
-											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
-										/>
-									);
-								}}
-							/>
-
-							<Text style={styles.inputText}>
-								Електрона адреса
-							</Text>
-							<Controller
-								name="email"
-								control={control}
-								render={({ field }) => {
-									return (
-										<Input
-											placeholder="you@example.com"
-											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
-										/>
-									);
-								}}
-							/>
-
-							<Text style={styles.inputText}>Пароль</Text>
-							<Controller
-								name="password"
-								control={control}
-								render={({ field }) => {
-									return (
-										<Input.Password
+										<InputComponent
 											showLeftIcon={false}
-											placeholder="*****"
+											placeholder={field.placeholder}
 											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
-										/>
-									);
-								}}
-							/>
-
-							<Text style={styles.inputText}>Username</Text>
-							<Controller
-								name="username"
-								control={control}
-								render={({ field }) => {
-									return (
-										<Input
-											placeholder="@"
-											autoCorrect={false}
-											value={field.value}
-											onChangeText={field.onChange}
+											value={controllerField.value}
+											onChangeText={
+												controllerField.onChange
+											}
 										/>
 									);
 								}}
 							/>
 						</View>
-					</View>
+					))}
 				</View>
-			</ScrollView>
-		</View>
+			</View>
+		</ScrollView>
 	);
 }
