@@ -4,16 +4,28 @@ import Svg, { Path, SvgProps } from "react-native-svg"
 export function EyeIcon(props: SvgProps) {
   return (
     <Svg
-    //   width={22}
-    //   height={15}
-      viewBox="0 0 22 15"
-    //   fill="none"
-    //   xmlns="http://www.w3.org/2000/svg"
+      // width={20}
+      // height={14}
+      viewBox="0 0 20 14"
+      fill="none"
+      // xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <Path
-        d="M11 4.5a3 3 0 100 6 3 3 0 000-6zm0 8a5 5 0 110-10 5 5 0 010 10zM11 0C6 0 1.73 3.11 0 7.5 1.73 11.89 6 15 11 15s9.27-3.11 11-7.5C20.27 3.11 16 0 11 0z"
-        fill="#81818D"
+        d="M1.547 7s2.5-5.833 8.334-5.833C15.714 1.167 18.214 7 18.214 7s-2.5 5.833-8.333 5.833C4.047 12.833 1.547 7 1.547 7z"
+        stroke="#81818D"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity={1}
+      />
+      <Path
+        d="M9.88 9.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z"
+        stroke="#81818D"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeOpacity={1}
       />
     </Svg>
   )

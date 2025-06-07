@@ -72,8 +72,10 @@ export const styles = StyleSheet.create({
 	},
 	label: {
 		fontWeight: 500,
-		fontSize: 24,
-		color: "white",
+		fontSize: 16,
+		color: "#070A1C",
+		fontFamily: "GTWalsheimPro-Regular",
+		paddingBottom: 6
 	},
 	errorBox: {
 		flexDirection: "row",

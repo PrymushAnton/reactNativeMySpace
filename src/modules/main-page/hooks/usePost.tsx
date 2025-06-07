@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { IUserPost } from "../types/post";
+import { IPostFromBackend, IUserPost } from "../types/post";
+import { Response } from "../../../shared/types";
 
 interface PostPayload {
 	title: string;
@@ -7,7 +8,7 @@ interface PostPayload {
 	existingTags: string[];
 	newTags: string[];
 	images: string[];
-	link: string
+	link: string;
 }
 
 interface UpdatePayload extends PostPayload {
@@ -15,7 +16,7 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-	const BASE_URL = "http://192.168.3.11:3001";
+	const BASE_URL = "http://192.168.1.10:3011";
 
 	async function getToken() {
 		return await AsyncStorage.getItem("token");
@@ -27,8 +28,8 @@ export function usePost() {
 			text: post.description,
 			existingTags: post.defaultTags,
 			newTags: post.customTags,
-			images: post.image ? [post.image] : [],
-			link: post.link
+			images: post.image ,
+			link: post.link,
 		};
 	}
 
@@ -43,12 +44,12 @@ export function usePost() {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					"Authorization": `Bearer ${token}`,
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify(payload),
 			});
-            const results = await res.json();
-			return results
+			const results = await res.json();
+			return results;
 		} catch (error) {
 			console.error(error);
 			return "";
@@ -134,6 +135,17 @@ export function usePost() {
 		}
 	}
 
+	async function getPostById(postId: number): Promise<Response <IPostFromBackend>> {
+		try {
+			const res = await fetch(`${BASE_URL}/post/find-post-by-id/${postId}`, {"method": "GET"});
+			const data = await res.json();
+			return data
+		} catch (error) {
+			console.error(error);
+			return {status: "error", message: ""};
+		}
+	}
+
 	return {
 		createPost,
 		updatePost,
@@ -141,5 +153,6 @@ export function usePost() {
 		getAllPosts,
 		getPostsByUserId,
 		getAllTags,
+		getPostById
 	};
 }

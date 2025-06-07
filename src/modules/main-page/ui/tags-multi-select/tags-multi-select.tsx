@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import MultiSelect from "react-native-multiple-select";
+import {
+	View,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	ScrollView,
+	KeyboardAvoidingView,
+	Platform,
+} from "react-native";
+import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./tags-multi-select.styles";
 
 type Tag = {
@@ -14,9 +22,13 @@ type Props = {
 };
 
 export function TagsMultiSelect({ selectedTags, onChange }: Props) {
-	const BASE_URL = "192.168.3.11:3001";
+	const BASE_URL = "192.168.1.10:3011";
 
 	const [tags, setTags] = useState<Tag[]>([]);
+	const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
+	const [inputVisible, setInputVisible] = useState(false);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [tempSelected, setTempSelected] = useState<string[]>([]);
 
 	useEffect(() => {
 		const fetchTags = async () => {
@@ -24,17 +36,17 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 				const response = await fetch(
 					`http://${BASE_URL}/post/find-all-tags`
 				);
-				if (!response.ok) {
+				if (!response.ok)
 					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				const json = await response.json();
 
+				const json = await response.json();
 				const formattedTags: Tag[] = json.data.map((tag: any) => ({
 					id: String(tag.id),
 					name: tag.name,
 				}));
 
 				setTags(formattedTags);
+				setFilteredTags(formattedTags);
 			} catch (error) {
 				console.error("Помилка при завантаженні тегів:", error);
 			}
@@ -43,37 +55,152 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 		fetchTags();
 	}, []);
 
+	useEffect(() => {
+		setTempSelected(selectedTags);
+	}, [selectedTags]);
+
+	useEffect(() => {
+		setFilteredTags(
+			tags.filter((tag) =>
+				tag.name.toLowerCase().includes(searchTerm.toLowerCase())
+			)
+		);
+	}, [searchTerm, tags]);
+
+	const handleSelect = (tagName: string) => {
+		setTempSelected((prev) =>
+			prev.includes(tagName)
+				? prev.filter((name) => name !== tagName)
+				: [...prev, tagName]
+		);
+	};
+
+	const handleConfirm = () => {
+		onChange(tempSelected);
+		setInputVisible(false);
+	};
+
+	const handleRemove = (tagName: string) => {
+		onChange(selectedTags.filter((name) => name !== tagName));
+		setTempSelected((prev) => prev.filter((name) => name !== tagName));
+	};
+
 	return (
-		// style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 999 }}
-		<View>
-			<MultiSelect
-				items={tags}
-				uniqueKey="id"
-				onSelectedItemsChange={onChange}
-				selectedItems={selectedTags}
-				selectText="Оберіть теги"
-				searchInputPlaceholderText="Пошук"
-				tagRemoveIconColor="#F43F5E"
-				tagBorderColor="#CDCED2"
-				tagTextColor="#070A1C"
-				selectedItemTextColor="#CDCED2"
-				selectedItemIconColor="#CDCED2"
-				itemTextColor="#070A1C"
-				displayKey="name"
-				searchInputStyle={{ color: "#CCC" }}
-				submitButtonColor="#543C52"
-				submitButtonText="Підтвердити"
-				styleTextDropdown={{ paddingLeft: 16 }}
-				styleDropdownMenuSubsection={styles.styleDropdownMenuSubsection}
-				styleDropdownMenu={styles.styleDropdownMenu}
-				styleSelectorContainer={styles.styleSelectorContainer}
-				styleListContainer={styles.styleListContainer}
-				altFontFamily="GTWalsheimPro-Regular"
-				fontFamily="GTWalsheimPro-Regular"
-				itemFontFamily="GTWalsheimPro-Regular"
-				selectedItemFontFamily="GTWalsheimPro-Regular"
-				styleTextDropdownSelected={{ paddingLeft: 16 }}
-			/>
-		</View>
+		<KeyboardAvoidingView
+			behavior={Platform.OS === "ios" ? "padding" : undefined}
+		>
+			<View style={styles.mainInputTagsView}>
+				<TouchableOpacity
+					onPress={() => {
+						setTempSelected(selectedTags);
+						setInputVisible((prev) => !prev);
+					}}
+					style={styles.mainInputTagsTouchableOpacity}
+				>
+					<Text
+						style={{
+							color: "#81818D",
+							fontSize: 14,
+							fontFamily: "GTWalsheimPro-Regular",
+						}}
+					>
+						Оберіть теги
+					</Text>
+				</TouchableOpacity>
+
+				{inputVisible && (
+					<View style={styles.tagsView}>
+						<TextInput
+							value={searchTerm}
+							onChangeText={setSearchTerm}
+							placeholder="Пошук"
+							style={styles.tagsInputSearch}
+						/>
+
+						<ScrollView
+							showsVerticalScrollIndicator={true}
+							style={{ maxHeight: 150, paddingHorizontal: 10 }}
+							keyboardShouldPersistTaps="handled"
+							nestedScrollEnabled={true}
+						>
+							{filteredTags.map((tag) => {
+								const isSelected = tempSelected.includes(
+									tag.name
+								);
+								return (
+									<TouchableOpacity
+										key={tag.id}
+										onPress={() => handleSelect(tag.name)}
+										style={styles.tagsTouchableOpacity}
+									>
+										<Text
+											style={{
+												color: isSelected
+													? "#9CA3AF"
+													: "#070A1C",
+												fontFamily:
+													"GTWalsheimPro-Regular",
+											}}
+										>
+											{tag.name}
+										</Text>
+
+										{isSelected && (
+											<View style={{ marginLeft: 8 }}>
+												<ICONS.CheckMarkIcon
+													width={15}
+													height={15}
+												/>
+											</View>
+										)}
+									</TouchableOpacity>
+								);
+							})}
+						</ScrollView>
+
+						<TouchableOpacity
+							onPress={handleConfirm}
+							style={styles.tagsConfirmButtonTouchableOpacity}
+						>
+							<Text
+								style={{
+									color: "#fff",
+									textAlign: "center",
+									fontFamily: "GTWalsheimPro-Regular",
+								}}
+							>
+								Підтвердити
+							</Text>
+						</TouchableOpacity>
+					</View>
+				)}
+
+				<View style={styles.selectedTagMainView}>
+					{selectedTags.map((tagName) => {
+						const tag = tags.find((t) => t.name === tagName);
+						if (!tag) return null;
+						return (
+							<View key={tag.id} style={styles.selectedTagView}>
+								<Text style={styles.selectedTagText}>
+									{tag.name}
+								</Text>
+								<TouchableOpacity
+									onPress={() => handleRemove(tag.name)}
+									style={{marginLeft: 16}}
+								>
+									<View style={styles.selectedTagCloseButtonView} >
+										<ICONS.CloseIcon
+											color={"#FFFFFF"}
+											width={10}
+											height={10}
+										/>
+									</View>
+								</TouchableOpacity>
+							</View>
+						);
+					})}
+				</View>
+			</View>
+		</KeyboardAvoidingView>
 	);
 }

@@ -103,6 +103,7 @@ export function LoginForm() {
 									value={field.value}
 									autoCorrect={false}
 									errorMessage={fieldState.error?.message}
+									height={42}
 								/>
 							);
 						}}
@@ -124,6 +125,7 @@ export function LoginForm() {
 									value={field.value}
 									autoCorrect={false}
 									errorMessage={fieldState.error?.message}
+									height={42}
 								/>
 							);
 						}}

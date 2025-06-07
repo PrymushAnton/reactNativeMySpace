@@ -1,10 +1,11 @@
-import { ScrollView, Text } from "react-native";
+import { ScrollView } from "react-native";
+import { MyPostsPage } from "../../modules/my-posts-page/ui"
 
 
 export default function MyPosts() {
     return (
         <ScrollView style={{ backgroundColor: "#FAF8FF" }}>
-            <Text>MyPosts</Text>
+            <MyPostsPage></MyPostsPage>
         </ScrollView>
     );
 }
