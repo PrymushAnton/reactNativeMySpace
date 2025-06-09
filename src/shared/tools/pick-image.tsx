@@ -12,5 +12,6 @@ export async function pickImage(options?: ImagePickerOptions){
             return images.assets
         }
     } else {
+        return null
     }
 }

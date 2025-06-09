@@ -32,6 +32,7 @@ import { ImageWithStylesIcon } from "./image-with-styles-icon";
 import { EmojiWithStylesIcon } from "./emoji-with-styles-icon";
 import { EmojiIcon } from "./emoji-icon";
 import { AnonymousLogoIcon } from "./anonymous-logo-icon";
+import { PlusAvatarIcon } from "./plus-avatar-icon";
 
 export const ICONS = {
 	DateIcon,
@@ -66,5 +67,5 @@ export const ICONS = {
 	EmojiIcon,
 	AnonymousLogoIcon,
 	CheckMarkIcon,
-	
+	PlusAvatarIcon
 };

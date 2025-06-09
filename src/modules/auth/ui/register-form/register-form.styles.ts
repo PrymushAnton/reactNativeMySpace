@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
 		gap: 24,
 		flexDirection: "column",
 		marginHorizontal: 16,
-		flexShrink: 1,
+		flexGrow: 0,
 	},
 
 	loginRegisterNav: {

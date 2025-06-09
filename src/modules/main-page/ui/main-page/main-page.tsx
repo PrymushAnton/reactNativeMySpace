@@ -2,57 +2,38 @@ import { View } from "react-native";
 import { PublicatedPost } from "../post";
 import { ModalPublicationPost } from "../modal-publication-post";
 import { ModalEditPost } from "../modal-edit-post";
-import { useModal } from "../../../../modules/auth/context";
+import { useAuthContext, useModal } from "../../../../modules/auth/context";
 import { useFetchPosts } from "../../hooks/useFetchPosts";
 import { useState, useEffect } from "react";
 import { ModalFirstLogin } from "../modal-first-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
+// import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
 
 export function MainPage() {
 	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } =
 		useModal();
 	const { posts, fetchPosts } = useFetchPosts();
 
+	const {justRegistered, setJustRegistered} = useAuthContext()
+
 	const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
-	const [modalVisible, setModalVisible] = useState<boolean | null>(null);
+	// const [modalVisible, setModalVisible] = useState<boolean>(false);
 
-	const [userId, setUserId] = useState<number | null>(null);
+	// const [userId, setUserId] = useState<number | null>(null);
 
-	useEffect(() => {
-		async function init() {
-			try {
-				const storedUser = await AsyncStorage.getItem("user");
-				if (!storedUser) return;
-				
-				const parsedUser = JSON.parse(storedUser);
-				const userId = parsedUser?.id;
-
-				if (!userId) return;
-
-				const alreadyShown = await checkFirstLoginFlag(userId);
-
-				setUserId(userId);
-				setModalVisible(!alreadyShown);
-			} catch (error) {
-				console.error(
-					"Ошибка при инициализации главной страницы:",
-					error
-				);
-			}
-		}
-
-		init();
-	}, []);
+	// useEffect(() => {
+	// 	setModalVisible(justRegistered)
+	// }, [justRegistered]);
 
 	return (
 		<View>
-			{modalVisible !== null && userId !== null && (
+			{justRegistered && (
 				<ModalFirstLogin
-					isVisible={modalVisible}
-					setIsVisible={setModalVisible}
-					userId={userId}
+					isVisible={justRegistered}
+					// setIsVisible={setModalVisible}
+					setJustRegistered={setJustRegistered}
+					// userId={userId}
 					onRefresh={fetchPosts}
 				/>
 			)}

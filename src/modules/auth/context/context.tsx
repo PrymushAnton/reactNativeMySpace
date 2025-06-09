@@ -9,15 +9,18 @@ import {
 	IUser,
 	IAuthContext,
 	IAuthContextProviderProps,
-	IReturnError,
 } from "./context.types";
 import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
+import { IReturnError } from "../../../shared/types/response";
+
 
 const initialValue: IAuthContext = {
 	user: null,
 	token: null,
+	justRegistered: false,
+	setJustRegistered: (value: boolean) => {},
 	login: async (
 		email: string,
 		password: string
@@ -31,6 +34,7 @@ const initialValue: IAuthContext = {
 	registerEmail: async (email: string, password: string, code: number) => {
 		return "";
 	},
+	getData: async (token: string) => {}
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -42,10 +46,11 @@ export function useAuthContext() {
 export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUser | null>(null);
 	const [token, setToken] = useState<string | null>(null);
+	const [justRegistered, setJustRegistered] = useState<boolean>(false);
 
 	const router = useRouter();
 
-	const BASE_URL = "http://192.168.1.10:3011";
+	const BASE_URL = "http://192.168.3.11:3011";
 
 	async function registerEmail(
 		email: string,
@@ -70,17 +75,20 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 			await AsyncStorage.setItem("token", result.data);
 
-			const meResponse = await fetch(`${BASE_URL}/user/me`, {
-				headers: { Authorization: `Bearer ${result.data}` },
-			});
-			const meResult: Response<IUser> = await meResponse.json();
+			// const meResponse = await fetch(`${BASE_URL}/user/me`, {
+			// 	headers: { Authorization: `Bearer ${result.data}` },
+			// });
+			// const meResult: Response<IUser> = await meResponse.json();
 
-			if (meResult.status === "success") {
-				const userData = meResult.data;
-				await AsyncStorage.setItem("user", JSON.stringify(userData));
-				setUser(userData);
-			}
+			// if (meResult.status === "success") {
+			// 	const userData = meResult.data;
+			// 	await AsyncStorage.setItem("user", JSON.stringify(userData));
+			// 	setUser(userData);
+			// }
 			await getData(result.data);
+			await getToken()
+			setJustRegistered(true);
+			
 
 			router.replace("/main/");
 			return "";
@@ -123,7 +131,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 			await AsyncStorage.setItem("token", result.data);
-			await AsyncStorage.setItem("userEmail", email);
+			// await AsyncStorage.setItem("userEmail", email);
 			await getData(result.data);
 			router.replace("/main/");
 			return "";
@@ -159,7 +167,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			});
 
 			router.replace({
-				pathname: "/registerEmail/",
+				pathname: "/register-email/",
 				params: { email: email, password: password },
 			});
 			return "";
@@ -176,6 +184,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	async function logout() {
 		await AsyncStorage.removeItem("token");
 		setUser(null);
+		setToken(null);
 		router.replace("/login/");
 	}
 
@@ -183,18 +192,20 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		const token = await AsyncStorage.getItem("token");
 		if (!token) return;
 		setToken(token);
-		getData(token);
+		// getData(token);
 	}
 
-	useEffect(() => {
-		getToken();
-	}, []);
+	// useEffect(() => {
+	// 	getToken();
+	// }, []);
 
 	return (
 		<authContext.Provider
 			value={{
 				user,
 				token,
+				justRegistered,
+				setJustRegistered,
 				login,
 				register,
 				isAuthenticated,

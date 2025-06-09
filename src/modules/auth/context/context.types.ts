@@ -15,6 +15,8 @@ export interface IUser {
 export interface IAuthContext {
 	user: IUser | null;
 	token: string | null;
+	justRegistered: boolean;
+	setJustRegistered: (value: boolean) => void;
 	login: (email: string, password: string) => Promise<IReturnError[] | string>;
 	register: (
 		email: string,
@@ -23,11 +25,11 @@ export interface IAuthContext {
 	isAuthenticated: () => boolean;
 	logout: () => void;
 	registerEmail: (email: string, password: string, code: number) => Promise<string | IReturnError[]>;
-	getData?: (token: string) => Promise<void>;
+	getData: (token: string) => Promise<void>;
 }
 
 export interface IAuthContextProviderProps {
 	children?: ReactNode;
 }
-export { IReturnError };
+// export { IReturnError };
 

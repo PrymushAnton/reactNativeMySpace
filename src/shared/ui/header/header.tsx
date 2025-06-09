@@ -1,15 +1,11 @@
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { ICONS } from "../ui/icons";
-import { useAuthContext } from "../../modules/auth/context";
-import { ModalTool } from "../../shared/modal";
-import { useEffect, useState } from "react";
-import { useModal } from "../../modules/auth/context";
-import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, TouchableOpacity } from "react-native";
+import { ICONS } from "../icons";
+import { useAuthContext } from "../../../modules/auth/context";
+import { useModal } from "../../../modules/auth/context";
 import { useRouter } from "expo-router";
-interface IHeaderProps {
-	isOnSettings: boolean;
-}
+import { IHeaderProps } from "./header.types";
+import {styles} from "./header.styles";
+
 export function Header(props: IHeaderProps) {
 	const { logout } = useAuthContext();
 	const { openCreateModal } = useModal();
@@ -24,6 +20,11 @@ export function Header(props: IHeaderProps) {
 				<TouchableOpacity onPress={() => {props.isOnSettings ? null : openCreateModal()}} disabled={props.isOnSettings}>
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
+
+
+				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+					<ICONS.AnonymousLogoIcon width={41} height={40}/>
+				</TouchableOpacity> */}
 
 				<TouchableOpacity disabled={props.isOnSettings} onPress={() => {replace("/personal-info")}}>
 					{props.isOnSettings ? (
@@ -41,19 +42,17 @@ export function Header(props: IHeaderProps) {
 	);
 }
 
-const styles = StyleSheet.create({
-	header: {
-		height: 56,
-		justifyContent: "space-between",
-		flexDirection: "row",
-		alignItems: "center",
-		paddingHorizontal: 16,
-		paddingVertical: 8,
-		backgroundColor: "#fff",
-	},
-	icons: {
-		justifyContent: "space-between",
-		flexDirection: "row",
-		gap: 10,
-	},
-});
+export function HeaderAuth() {
+	const {replace} = useRouter()
+
+	return (
+		<View style={styles.headerAuth}>
+			<ICONS.LogoIcon width={145} height={18} />
+			{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+				<ICONS.AnonymousLogoIcon width={41} height={40}/>
+			</TouchableOpacity> */}
+		</View>       
+	)
+}
+
+Header.HeaderAuth = HeaderAuth;

@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
-import { HeaderAuth } from "../../modules/auth/ui/header";
+import { Header } from "../../shared/ui/header";
 
 export default function RootLayout() {
     return (
         <Stack screenOptions={{
             headerShown: true,
             contentStyle: { backgroundColor: "#E9E5EE" },
-            header: (props) => <HeaderAuth {...props} />,
+            header: () => <Header.HeaderAuth/>,
         }}>
 
         </Stack>

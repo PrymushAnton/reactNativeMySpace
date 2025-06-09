@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { Header } from "../../shared/Header/Header";
+import { Header } from "../../shared/ui/header/header";
 import { ICONS } from "../../shared/ui/icons";
 import { TouchableOpacity } from "react-native";
 

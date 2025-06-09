@@ -1,4 +1,9 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+	Text,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	View,
+} from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
 import { ILogin } from "../../types";
@@ -30,7 +35,7 @@ export function LoginForm() {
 
 	const [globalError, setGlobalError] = useState<string>("");
 	const { login } = useAuthContext();
-	const {replace} = useRouter();
+	const { replace } = useRouter();
 
 	function onSubmit(data: ILogin) {
 		async function request() {
@@ -52,99 +57,95 @@ export function LoginForm() {
 	}
 
 	return (
-		<View style={styles.loginForm}>
-			<View style={styles.form}>
-				<View style={styles.loginRegisterNav}>
-					<TouchableOpacity onPress={()=>(
-						replace("/register")
-					)}>
-						<Text
-							style={{
-								fontWeight: 500,
-								color: "#81818D",
-								fontSize: 24,
-							}}
-						>
-							Реєстрація
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity>
-						<Text
-							style={{
-								fontWeight: 700,
-								color: "#070A1C",
-								fontSize: 24,
-								borderBottomColor: "#543C52",
-								borderBottomWidth: 2,
-							}}
-						>
-							Авторизація
-						</Text>
-					</TouchableOpacity>
-				</View>
-				<Text style={styles.greetingText}>Раді тебе знову бачити!</Text>
-				<View>
-					<Text style={styles.inputText}>Електрона пошта</Text>
-					<Controller
-						control={control}
-						name="email"
-						render={({ field, fieldState }) => {
-							return (
-								<Input
-									// iconLeft={
-									// 	<ICONS.EmailIcon
-									// 		width={30}
-									// 		height={30}
-									// 	/>
-									// }
-									placeholder="you@example.com"
-									onChange={field.onChange}
-									onChangeText={field.onChange}
-									value={field.value}
-									autoCorrect={false}
-									errorMessage={fieldState.error?.message}
-									height={42}
-								/>
-							);
-						}}
-					/>
-				</View>
-
-				<View>
-					<Text style={styles.inputText}>Пароль</Text>
-					<Controller
-						control={control}
-						name="password"
-						render={({ field, fieldState }) => {
-							return (
-								<Input.Password
-									showLeftIcon={false}
-									placeholder="Введи пароль"
-									onChange={field.onChange}
-									onChangeText={field.onChange}
-									value={field.value}
-									autoCorrect={false}
-									errorMessage={fieldState.error?.message}
-									height={42}
-								/>
-							);
-						}}
-					/>
-				</View>
-
-				{!(globalError === "") && (
-					<View>
-						<ICONS.ErrorIcon width={30} height={30} />
-						<Text>{globalError}</Text>
+		<TouchableWithoutFeedback>
+			<View style={styles.loginForm}>
+				<View style={styles.form}>
+					<View style={styles.loginRegisterNav}>
+						<TouchableOpacity onPress={() => replace("/register")}>
+							<Text
+								style={{
+									fontWeight: 500,
+									color: "#81818D",
+									fontSize: 24,
+								}}
+							>
+								Реєстрація
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity>
+							<Text
+								style={{
+									fontWeight: 700,
+									color: "#070A1C",
+									fontSize: 24,
+									borderBottomColor: "#543C52",
+									borderBottomWidth: 2,
+								}}
+							>
+								Авторизація
+							</Text>
+						</TouchableOpacity>
 					</View>
-				)}
-				<TouchableOpacity
-					onPress={handleSubmit(onSubmit)}
-					style={styles.submitButt}
-				>
-					<Text style={{ color: "#FFFFFF" }}>Увійти</Text>
-				</TouchableOpacity>
+					<Text style={styles.greetingText}>
+						Раді тебе знову бачити!
+					</Text>
+					<View>
+						<Text style={styles.inputText}>Електрона пошта</Text>
+						<Controller
+							control={control}
+							name="email"
+							render={({ field, fieldState }) => {
+								return (
+									<Input
+										placeholder="you@example.com"
+										onChange={field.onChange}
+										onChangeText={field.onChange}
+										value={field.value}
+										autoCorrect={false}
+										errorMessage={fieldState.error?.message}
+										height={42}
+									/>
+								);
+							}}
+						/>
+					</View>
+
+					<View>
+						<Text style={styles.inputText}>Пароль</Text>
+						<Controller
+							control={control}
+							name="password"
+							render={({ field, fieldState }) => {
+								return (
+									<Input.Password
+										showLeftIcon={false}
+										placeholder="Введи пароль"
+										onChange={field.onChange}
+										onChangeText={field.onChange}
+										value={field.value}
+										autoCorrect={false}
+										errorMessage={fieldState.error?.message}
+										height={42}
+									/>
+								);
+							}}
+						/>
+					</View>
+
+					{!(globalError === "") && (
+						<View>
+							<ICONS.ErrorIcon width={30} height={30} />
+							<Text>{globalError}</Text>
+						</View>
+					)}
+					<TouchableOpacity
+						onPress={handleSubmit(onSubmit)}
+						style={styles.submitButt}
+					>
+						<Text style={{ color: "#FFFFFF" }}>Увійти</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 }

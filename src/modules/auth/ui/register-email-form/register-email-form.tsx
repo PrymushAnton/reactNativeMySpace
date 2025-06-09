@@ -1,4 +1,9 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+	Text,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	View,
+} from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { ICONS } from "../../../../shared/ui/icons";
 import { IEmailCode } from "../../types";
@@ -43,79 +48,94 @@ export function RegisterEmailForm() {
 	}
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.form}>
-				<Text
-					style={{
-						fontSize: 24,
-						textAlign: "center",
-						color: "#070A1C",
-						fontFamily: 'GTWalsheimPro-Regular',
-					}}
-				>
-					Підтвердження пошти
-				</Text>
-				<View style={styles.textEmailContainer}>
+		<TouchableWithoutFeedback>
+			<View style={styles.container}>
+				<View style={styles.form}>
 					<Text
 						style={{
-							fontSize: 14,
+							fontSize: 24,
 							textAlign: "center",
 							color: "#070A1C",
-							fontFamily: "GTWalsheimPro-Regular"
+							fontFamily: "GTWalsheimPro-Regular",
 						}}
 					>
-						Ми надіслали 6-значний код на вашу пошту
-						({params.email}). Введіть його нижче, щоб підтвердити
-						акаунт
+						Підтвердження пошти
 					</Text>
-				</View>
-
-				<Controller
-					control={control}
-					name="code"
-					render={({ field, fieldState }) => (
-						<Input.Code
-							label="Код підтвердження"
-							errorMessage={fieldState.error?.message}
-							onChangeText={field.onChange}
-						/>
-					)}
-				/>
-
-				{!(globalError === "") && (
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-					>
-						<ICONS.ErrorIcon width={30} height={30} />
-						<Text style={{ display: "flex", color: "red" }}>
-							{globalError}
-						</Text>
-					</View>
-				)}
-				<View style={styles.buttonsBlock}>
-					<TouchableOpacity onPress={handleSubmit(onSubmit)}>
-						<View style={styles.buttonRegister}>
-							<Text style={{ color: COLORS.WHITE, fontFamily: "GTWalsheimPro-Regular", fontSize: 16, }}>
-								Підтвердити
-							</Text>
-						</View>
-					</TouchableOpacity>
-					
-					<View>
-						<TouchableOpacity
-							onPress={() => {
-								router.replace("/register")
+					<View style={styles.textEmailContainer}>
+						<Text
+							style={{
+								fontSize: 14,
+								textAlign: "center",
+								color: "#070A1C",
+								fontFamily: "GTWalsheimPro-Regular",
 							}}
 						>
-							<Text style={{ color: COLORS.BLACK, fontFamily: "GTWalsheimPro-Regular" }}>Назад</Text>
+							Ми надіслали 6-значний код на вашу пошту (
+							{params.email}). Введіть його нижче, щоб підтвердити
+							акаунт
+						</Text>
+					</View>
+
+					<Controller
+						control={control}
+						name="code"
+						render={({ field, fieldState }) => (
+							<Input.Code
+								label="Код підтвердження"
+								errorMessage={fieldState.error?.message}
+								onChangeText={field.onChange}
+							/>
+						)}
+					/>
+
+					{!(globalError === "") && (
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<ICONS.ErrorIcon width={30} height={30} />
+							<Text style={{ display: "flex", color: "red" }}>
+								{globalError}
+							</Text>
+						</View>
+					)}
+					<View style={styles.buttonsBlock}>
+						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
+							<View style={styles.buttonRegister}>
+								<Text
+									style={{
+										color: COLORS.WHITE,
+										fontFamily: "GTWalsheimPro-Regular",
+										fontSize: 16,
+									}}
+								>
+									Підтвердити
+								</Text>
+							</View>
 						</TouchableOpacity>
+
+						<View>
+							<TouchableOpacity
+								onPress={() => {
+									router.replace("/register");
+								}}
+							>
+								<Text
+									style={{
+										color: COLORS.BLACK,
+										fontFamily: "GTWalsheimPro-Regular",
+									}}
+								>
+									Назад
+								</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableWithoutFeedback>
 	);
 }

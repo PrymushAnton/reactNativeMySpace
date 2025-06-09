@@ -1,59 +1,42 @@
-import { TouchableOpacity, View, Text, Image, ScrollView } from "react-native";
+import {
+	TouchableOpacity,
+	View,
+	Text,
+	Image,
+	ScrollView,
+	FlatList,
+} from "react-native";
 import { Input } from "../../../../shared/ui/input";
 import { styles } from "./personal-info-settings-page.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { Controller, useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { useAuthContext } from "../../../auth/context";
 import { HeaderNavigationSettingsPages } from "../header-navigation-settings-pages";
+import { ProfileCard } from "../../../../shared/ui/profileCard";
+import { IUser } from "../../../auth/context/context.types";
+import { Avatar } from "../avatar";
+import { Response } from "../../../../shared/types";
 
 interface IPersonalInfoFormData {
 	name: string;
 	surname: string;
 	username: string;
 	email: string;
-	password: string;
+	phoneNumber: string;
 	birthDate: string;
 }
 
-const inputs = [
-	{
-		label: "Ім'я",
-		name: "name",
-		placeholder: "Your name",
-	},
-	{
-		label: "Прізвище",
-		name: "surname",
-		placeholder: "Your surname",
-	},
-	{
-		label: "Дата народження",
-		name: "birthDate",
-		placeholder: "дд.мм.рррр",
-	},
-	{
-		label: "Електрона адреса",
-		name: "email",
-		placeholder: "you@example.com",
-	},
-	{
-		label: "Пароль",
-		name: "password",
-		placeholder: "Password here",
-		isPassword: true,
-	},
-	{
-		label: "Username",
-		name: "username",
-		placeholder: "@",
-	},
-];
-
 export function PersonalInfoSettingsPage() {
 	const router = useRouter();
-	const { user, token, getData } = useAuthContext();
+	const { user, token } = useAuthContext();
+
+	const [editable, setEditable] = useState<boolean>(false);
+
+	if (!user) {
+		throw Error("Ви не авторизовані!");
+	}
 
 	const { control, handleSubmit, setValue, getValues } =
 		useForm<IPersonalInfoFormData>({
@@ -62,67 +45,53 @@ export function PersonalInfoSettingsPage() {
 				surname: "",
 				birthDate: "",
 				email: "",
-				password: "",
+				phoneNumber: "",
 				username: "",
 			},
 		});
 
 	useEffect(() => {
-		if (!user && token && getData) {
-			getData(token);
-		}
-	}, [user, token]);
-
-	useEffect(() => {
 		if (user) {
-			setValue("name", user.name || "");
-			setValue("surname", user.surname || "");
-			setValue("birthDate", user.birthDate ? String(user.birthDate) : "");
-			setValue("email", user.email || "");
-			setValue("username", user.username || "");
+			setValue("name", user.name ? user.name : "");
+			setValue("surname", user.surname ? user.surname : "");
+			setValue(
+				"birthDate",
+				user.birthDate
+					? String(user.birthDate)
+					: ""
+			);
+			setValue("email", user.email ? user.email : "");
+			setValue("username", user.username ? user.username : "");
+			setValue("phoneNumber", user.phoneNumber ? user.phoneNumber : "");
 		}
-		console.log("us on sett", user)
 	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
-		async function updateUser() {
-			const body: Partial<IPersonalInfoFormData> = {};
-			(Object.keys(data) as (keyof IPersonalInfoFormData)[]).forEach(
-				(key) => {
-					const value = data[key];
-					if (
-						key === "password"
-							? value
-							: value &&
-							  value !== user?.[key as keyof typeof user]
-					) {
-						body[key] = value;
+		console.log(data);
+		async function sendRequest() {
+			try {
+				const res = await fetch(
+					"http://192.168.3.11:3011/user/update",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify(data),
 					}
-				}
-			);
-
-			if (Object.keys(body).length === 0) {
-				console.log("haven't edits for send");
-				return;
+				);
+				const result: Response<string> = await res.json();
+				console.log(result);
+			} catch (error) {
+				console.log((error as Error).message);
 			}
-
-			await fetch("http://192.168.1.10:3011/user/update", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify(body),
-			});
-
-			router.replace("/main");
 		}
-
-		updateUser();
+		sendRequest();
 	}
 
 	return (
-		<ScrollView style={styles.personalInfoSettings}>
+		<ScrollView style={styles.personalInfoSettings} overScrollMode="never">
 			<HeaderNavigationSettingsPages />
 			<View>
 				<View style={styles.profileCard}>
@@ -136,17 +105,7 @@ export function PersonalInfoSettingsPage() {
 							Картка профілю
 						</Text>
 					</View>
-
-					<View style={styles.profileCardBottom}>
-						{user?.image ? (
-							<Image
-								style={{ height: 100, width: 100 }}
-								source={{ uri: user.image }}
-							/>
-						) : (
-							<ICONS.AnonymousLogoIcon width={150} height={150} />
-						)}
-					</View>
+					<Avatar image={user.image} />
 				</View>
 
 				<View style={styles.personalInfo}>
@@ -166,37 +125,136 @@ export function PersonalInfoSettingsPage() {
 								borderRadius: 50,
 								padding: 10,
 							}}
-							onPress={handleSubmit(onSubmit)}
+							onPress={() => {
+								if (editable) {
+									handleSubmit(onSubmit)();
+								}
+								setEditable(!editable);
+							}}
 						>
 							<ICONS.PencilIcon width={15} height={15} />
 						</TouchableOpacity>
 					</View>
 
-					{inputs.map((field) => (
-						<View key={field.name}>
-							<Text style={styles.inputText}>{field.label}</Text>
-							<Controller
-								name={field.name as keyof IPersonalInfoFormData}
-								control={control}
-								render={({ field: controllerField }) => {
-									const InputComponent = field.isPassword
-										? Input.Password
-										: Input;
-									return (
-										<InputComponent
-											showLeftIcon={false}
-											placeholder={field.placeholder}
-											autoCorrect={false}
-											value={controllerField.value}
-											onChangeText={
-												controllerField.onChange
-											}
-										/>
-									);
-								}}
+					<Controller
+						control={control}
+						name="name"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.name ? undefined : "Не вказано :("
+								}
+								bottomText="Ім'я"
+								type="text"
+								defaultValue={user.name}
+								editable={editable}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
 							/>
-						</View>
-					))}
+						)}
+					/>
+
+					<Controller
+						control={control}
+						name="surname"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.surname ? undefined : "Не вказано :("
+								}
+								bottomText="Прізвище"
+								type="text"
+								editable={editable}
+								defaultValue={user.surname}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+
+					<Controller
+						control={control}
+						name="username"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.username ? undefined : "Не вказано :("
+								}
+								bottomText="Нікнейм"
+								type="text"
+								editable={editable}
+								defaultValue={user.username}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+
+					<Controller
+						control={control}
+						name="birthDate"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.birthDate ? undefined : "Не вказано :("
+								}
+								bottomText="Дата народження"
+								type="date"
+								editable={editable}
+								defaultValue={
+									user.birthDate
+										? String(user.birthDate)
+										: undefined
+								}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+
+					<Controller
+						control={control}
+						name="email"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.email ? undefined : "Не вказано :("
+								}
+								bottomText="Електронна пошта"
+								type="email"
+								editable={editable}
+								defaultValue={user.email}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
+
+					<Controller
+						control={control}
+						name="phoneNumber"
+						render={({ field, fieldState }) => (
+							<ProfileCard
+								placeholder={
+									user.phoneNumber
+										? undefined
+										: "Не вказано :("
+								}
+								bottomText="Мобільний"
+								type="tel"
+								editable={editable}
+								defaultValue={user.phoneNumber}
+								value={field.value}
+								onChangeText={field.onChange}
+								errorMessage={fieldState.error?.message}
+							/>
+						)}
+					/>
 				</View>
 			</View>
 		</ScrollView>

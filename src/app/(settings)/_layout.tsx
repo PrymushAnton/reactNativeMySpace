@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { Header } from "../../shared/Header/Header";
+import { Header } from "../../shared/ui/header/header";
 
 
 export default function RootLayout() {

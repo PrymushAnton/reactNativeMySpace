@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         paddingBottom: 24,
 		width: "90%",
         minHeight: 467,
-        alignItems: "flex-end",
+        alignItems: "flex-start",
         justifyContent: "center",
         alignSelf: "center"
 	},
@@ -34,7 +34,8 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
         justifyContent: "center",
         width: 112,
-        height: 40
+        height: 40,
+        alignSelf: "center"
 	},
 	buttonNextText: {
 		color: "#fff",
