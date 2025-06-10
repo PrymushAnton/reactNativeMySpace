@@ -34,6 +34,8 @@ import { EmojiIcon } from "./emoji-icon";
 import { AnonymousLogoIcon } from "./anonymous-logo-icon";
 import { PlusAvatarIcon } from "./plus-avatar-icon";
 
+import { PaperPlaneIcon } from "./paper-plane-icon"
+
 export const ICONS = {
 	DateIcon,
 	EmailIcon,
@@ -67,5 +69,7 @@ export const ICONS = {
 	EmojiIcon,
 	AnonymousLogoIcon,
 	CheckMarkIcon,
-	PlusAvatarIcon
+	PlusAvatarIcon,
+	PaperPlaneIcon,
+	
 };
