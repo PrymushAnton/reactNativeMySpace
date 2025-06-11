@@ -5,6 +5,7 @@ import { styles } from "./avatar.styles";
 import { pickImage } from "../../../../shared/tools";
 import { useState } from "react";
 import { useAuthContext } from "../../../auth/context";
+import { Response } from "../../../../shared/types";
 
 export function Avatar({ image }: IAvatarProps) {
     
@@ -20,21 +21,23 @@ export function Avatar({ image }: IAvatarProps) {
             if (!image) return
             if (!image[0].base64) return
             setAvatar(image[0].base64)
+			const newImage = image[0].base64
 
             try {
-                console.log('Sending request...')
+                if (!token) return
+
 				const res = await fetch(
-					"http://192.168.3.11:3011/user/update",
+					"http://192.168.3.11:3011/user/update-avatar",
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`,
 						},
-						body: JSON.stringify({ image: avatar }),
+						body: JSON.stringify({ image: newImage }),
 					}
 				);
-                if (!token) return
+				const result: Response<string> = await res.json()
                 getData(token)
             } catch (error) {
 				console.log("Помилка при оновленні:", (error as Error).message);

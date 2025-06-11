@@ -88,6 +88,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await getData(result.data);
 			await getToken()
 			setJustRegistered(true);
+
 			
 
 			router.replace("/main/");
@@ -133,6 +134,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await AsyncStorage.setItem("token", result.data);
 			// await AsyncStorage.setItem("userEmail", email);
 			await getData(result.data);
+			await getToken()
 			router.replace("/main/");
 			return "";
 		} catch (error) {

@@ -21,8 +21,8 @@ export function Header(props: IHeaderProps) {
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 
-
-				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+{/* 
+				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
 					<ICONS.AnonymousLogoIcon width={41} height={40}/>
 				</TouchableOpacity> */}
 

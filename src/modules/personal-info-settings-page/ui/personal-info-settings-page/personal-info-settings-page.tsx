@@ -5,8 +5,10 @@ import {
 	Image,
 	ScrollView,
 	FlatList,
+	Platform,
+	Pressable,
 } from "react-native";
-import { Input } from "../../../../shared/ui/input";
+// import { Input } from "../../../../shared/ui/input";
 import { styles } from "./personal-info-settings-page.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { Controller, useForm } from "react-hook-form";
@@ -15,9 +17,14 @@ import { useRouter } from "expo-router";
 import { useAuthContext } from "../../../auth/context";
 import { HeaderNavigationSettingsPages } from "../header-navigation-settings-pages";
 import { ProfileCard } from "../../../../shared/ui/profileCard";
-import { IUser } from "../../../auth/context/context.types";
+// import { IUser } from "../../../auth/context/context.types";
 import { Avatar } from "../avatar";
 import { Response } from "../../../../shared/types";
+import parsePhoneNumberFromString, {
+	isValidPhoneNumber,
+} from "libphonenumber-js";
+import { format } from "date-fns";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 interface IPersonalInfoFormData {
 	name: string;
@@ -25,14 +32,19 @@ interface IPersonalInfoFormData {
 	username: string;
 	email: string;
 	phoneNumber: string;
-	birthDate: string;
+	birthDate: Date;
 }
 
 export function PersonalInfoSettingsPage() {
 	const router = useRouter();
-	const { user, token } = useAuthContext();
+	const { user, token, getData } = useAuthContext();
 
 	const [editable, setEditable] = useState<boolean>(false);
+
+	const [show, setShow] = useState(false);
+	function showDatepicker() {
+		setShow(true);
+	}
 
 	if (!user) {
 		throw Error("Ви не авторизовані!");
@@ -43,7 +55,7 @@ export function PersonalInfoSettingsPage() {
 			defaultValues: {
 				name: "",
 				surname: "",
-				birthDate: "",
+				birthDate: new Date(),
 				email: "",
 				phoneNumber: "",
 				username: "",
@@ -54,22 +66,40 @@ export function PersonalInfoSettingsPage() {
 		if (user) {
 			setValue("name", user.name ? user.name : "");
 			setValue("surname", user.surname ? user.surname : "");
-			setValue(
-				"birthDate",
-				user.birthDate
-					? String(user.birthDate)
-					: ""
-			);
+			// setValue(
+			// 	"birthDate",
+			// 	user.birthDate
+			// 		? format(new Date(user.birthDate), "dd.MM.yyyy")
+			// 		: ""
+			// );
 			setValue("email", user.email ? user.email : "");
 			setValue("username", user.username ? user.username : "");
-			setValue("phoneNumber", user.phoneNumber ? user.phoneNumber : "");
+			setValue(
+				"phoneNumber",
+				user.phoneNumber
+					? parsePhoneNumberFromString(
+							user.phoneNumber
+					  )!.formatInternational()
+					: ""
+			);
 		}
 	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
-		console.log(data);
+		console.log("1", data);
+		const filteredData = Object.entries(data).filter(([key, value]) => {
+			return value !== "";
+		});
+		const obj: Partial<IPersonalInfoFormData> =
+			Object.fromEntries(filteredData);
+
+		console.log("1.1", obj);
 		async function sendRequest() {
 			try {
+				if (!token) {
+					console.log("lolo")
+					return
+				};
 				const res = await fetch(
 					"http://192.168.3.11:3011/user/update",
 					{
@@ -78,11 +108,12 @@ export function PersonalInfoSettingsPage() {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`,
 						},
-						body: JSON.stringify(data),
+						body: JSON.stringify(obj),
 					}
 				);
 				const result: Response<string> = await res.json();
-				console.log(result);
+				getData(token);
+				console.log("4", result);
 			} catch (error) {
 				console.log((error as Error).message);
 			}
@@ -146,7 +177,7 @@ export function PersonalInfoSettingsPage() {
 								}
 								bottomText="Ім'я"
 								type="text"
-								defaultValue={user.name}
+								// defaultValue={user.name}
 								editable={editable}
 								value={field.value}
 								onChangeText={field.onChange}
@@ -166,7 +197,7 @@ export function PersonalInfoSettingsPage() {
 								bottomText="Прізвище"
 								type="text"
 								editable={editable}
-								defaultValue={user.surname}
+								// defaultValue={user.surname}
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
@@ -185,14 +216,14 @@ export function PersonalInfoSettingsPage() {
 								bottomText="Нікнейм"
 								type="text"
 								editable={editable}
-								defaultValue={user.username}
+								// defaultValue={user.username}
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
 							/>
 						)}
 					/>
-
+					{/* 
 					<Controller
 						control={control}
 						name="birthDate"
@@ -204,17 +235,17 @@ export function PersonalInfoSettingsPage() {
 								bottomText="Дата народження"
 								type="date"
 								editable={editable}
-								defaultValue={
-									user.birthDate
-										? String(user.birthDate)
-										: undefined
-								}
+								// defaultValue={
+								// 	user.birthDate
+								// 		? String(user.birthDate)
+								// 		: undefined
+								// }
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
 							/>
 						)}
-					/>
+					/> */}
 
 					<Controller
 						control={control}
@@ -227,7 +258,7 @@ export function PersonalInfoSettingsPage() {
 								bottomText="Електронна пошта"
 								type="email"
 								editable={editable}
-								defaultValue={user.email}
+								// defaultValue={user.email}
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
@@ -238,6 +269,14 @@ export function PersonalInfoSettingsPage() {
 					<Controller
 						control={control}
 						name="phoneNumber"
+						rules={{
+							validate: (value) => {
+								if (value === "") return true;
+								if (!isValidPhoneNumber(value))
+									return "Невалідний номер телефона";
+								return true;
+							},
+						}}
 						render={({ field, fieldState }) => (
 							<ProfileCard
 								placeholder={
@@ -245,15 +284,69 @@ export function PersonalInfoSettingsPage() {
 										? undefined
 										: "Не вказано :("
 								}
-								bottomText="Мобільний"
+								bottomText="Мобільний (з кодом країни)"
 								type="tel"
 								editable={editable}
-								defaultValue={user.phoneNumber}
+								// defaultValue={
+								// 	user.phoneNumber?.slice(0, 4) +
+								// 	" " +
+								// 	user.phoneNumber?.slice(4, 6) +
+								// 	" " +
+								// 	user.phoneNumber?.slice(6, 9) +
+								// 	" " +
+								// 	user.phoneNumber?.slice(9, 11) +
+								// 	" " +
+								// 	user.phoneNumber?.slice(11, 13)
+								// }
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
 							/>
 						)}
+					/>
+
+					<Controller
+						control={control}
+						name="birthDate"
+						render={({ field }) => {
+							return (
+								<>
+									<Pressable
+										onPress={
+											editable
+												? showDatepicker
+												: undefined
+										}
+									>
+										<ProfileCard
+											bottomText="Дата народження"
+											value={field.value?.toLocaleDateString()}
+											editable={false}
+											type="date"
+											// pointerEvents="none"
+										/>
+									</Pressable>
+									{show && (
+										<DateTimePicker
+											value={field.value}
+											mode="date"
+											display={
+												Platform.OS === "ios"
+													? "spinner"
+													: "default"
+											}
+											onChange={(event, selectedDate) => {
+												setShow(Platform.OS === "ios");
+												if (!selectedDate) return;
+												field.onChange(selectedDate);
+											}}
+											maximumDate={new Date()}
+											minimumDate={new Date(1900, 0, 1)}
+										/>
+									)}
+								</>
+							);
+						}}
 					/>
 				</View>
 			</View>

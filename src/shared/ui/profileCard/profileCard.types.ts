@@ -3,8 +3,8 @@ export interface IProfileCardProps {
 	bottomText: string;
 	type: "text" | "tel" | "date" | "email" | "username";
 	editable: boolean,
-	defaultValue?: string,
+	// defaultValue?: string,
 	value: string,
-	onChangeText: (text: string) => void
+	onChangeText?: (text: string) => void
 	errorMessage?: string
 }
