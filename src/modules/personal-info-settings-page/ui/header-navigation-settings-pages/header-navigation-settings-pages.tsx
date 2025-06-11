@@ -18,6 +18,7 @@ export function HeaderNavigationSettingsPages() {
 							fontFamily: "GTWalsheimPro-Regular",
 							fontWeight: pathname === "/personal-info" ? "700" : "400",
 							borderBottomWidth: pathname === "/personal-info" ? 2 : 0,
+							color: "#81818D"
 						}}
 					>
 						Особиста інформація
@@ -33,6 +34,8 @@ export function HeaderNavigationSettingsPages() {
 							fontFamily: "GTWalsheimPro-Regular",
 							fontWeight: pathname === "/albums" ? "700" : "400",
 							borderBottomWidth: pathname === "/albums" ? 2 : 0,
+							borderBottomColor: "#543C52",
+							color: "#070A1C"
 						}}
 					>
 						Альбоми
