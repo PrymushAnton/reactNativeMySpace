@@ -133,4 +133,56 @@ export function FriendSendRequest({
 	);
 }
 
+export function FriendItem({
+	id,
+	image,
+	name,
+	surname,
+	username,
+}: FriendCard) {
+	return (
+		<View style={styles.friendCard}>
+			<View style={styles.userInfo}>
+				{image ? (
+					<Image
+						source={{ uri: image }}
+						style={{ width: 46, height: 46, borderRadius: 20 }}
+					/>
+				) : (
+					<ICONS.AnonymousLogoIcon width={46} height={46} />
+				)}
+				<View style={{ marginLeft: 12 }}>
+					<Text
+						style={{
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 16,
+							fontWeight: "700",
+						}}
+					>
+						{name} {surname}
+					</Text>
+					<Text style={{ fontSize: 14 }}>@{username}</Text>
+				</View>
+			</View>
+
+			<TouchableOpacity
+				style={[
+					styles.button,
+					{
+						backgroundColor: "#543C52",
+						paddingHorizontal: 12,
+						paddingVertical: 6,
+						borderRadius: 8,
+						justifyContent: "center",
+						alignItems: "center",
+					},
+				]}
+			>
+				<Text style={{ color: "#fff", fontWeight: "600" }}>Друзі</Text>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
 FriendRequest.FriendSendRequest = FriendSendRequest;
+FriendRequest.FriendItem = FriendItem;

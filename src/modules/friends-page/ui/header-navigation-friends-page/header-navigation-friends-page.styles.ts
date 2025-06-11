@@ -7,6 +7,6 @@ export const styles = StyleSheet.create({
         justifyContent: "center"
     },
     personalInfoSettingsTopEl:{
-        marginHorizontal: 32,
+        marginHorizontal: 16,
     },
 })

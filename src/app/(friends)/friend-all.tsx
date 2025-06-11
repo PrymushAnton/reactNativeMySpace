@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import { FriendRequestPage } from "../../modules/friends-page/ui/friend-request-page"
+import { FriendAllPage } from "../../modules/friends-page/ui/friend-all-page"
 
 export default function FriendRequest() {
     return (
         <View style={{flex: 1}}>
-            <FriendRequestPage/>
+            <FriendAllPage/>
         </View>
     );
 }

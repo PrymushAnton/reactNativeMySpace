@@ -11,8 +11,9 @@ export const styles = StyleSheet.create({
         borderRadius: 10
 	},
 	button: {
-		width: 32,
-		height: 32,
+		// width: 32,
+		// height: 32,
+		padding: 8,
 		borderRadius: 8,
 		justifyContent: "center",
 		alignItems: "center",
