@@ -50,7 +50,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	const router = useRouter();
 
-	const BASE_URL = "http://192.168.3.11:3011";
+	const BASE_URL = "http://192.168.1.10:3011";
 
 	async function registerEmail(
 		email: string,
@@ -193,6 +193,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	async function getToken() {
 		const token = await AsyncStorage.getItem("token");
 		if (!token) return;
+		console.log(token)
 		setToken(token);
 		// getData(token);
 	}

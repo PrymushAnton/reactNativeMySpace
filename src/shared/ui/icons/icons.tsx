@@ -34,6 +34,8 @@ import { PlusAvatarIcon } from "./plus-avatar-icon";
 import { EyeIconWithoutFill } from "./eye-icon-without-fill";
 import { TrashCanIconWithoutFill } from "./trash-icon-without-fill";
 
+import { PaperPlaneIcon } from "./paper-plane-icon"
+
 export const ICONS = {
 	DateIcon,
 	EmailIcon,
@@ -68,6 +70,8 @@ export const ICONS = {
 	AnonymousLogoIcon,
 	CheckMarkIcon,
 	PlusAvatarIcon,
+	PaperPlaneIcon,
 	EyeIconWithoutFill,
 	TrashCanIconWithoutFill,
 };
+

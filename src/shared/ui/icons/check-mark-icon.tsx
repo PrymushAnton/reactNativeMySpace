@@ -12,7 +12,7 @@ export function CheckMarkIcon(props: SvgProps) {
 		>
 			<Path
 				d="M13.125 2.813L5.25 12.187l-3.375-3.75"
-				stroke="#9CA3AF"
+				stroke={props.color ? props.color : "#9CA3AF" }
 				strokeWidth={2}
 				strokeLinecap="round"
 				strokeLinejoin="round"
