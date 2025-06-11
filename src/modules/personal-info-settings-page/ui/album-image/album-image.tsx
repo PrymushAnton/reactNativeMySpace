@@ -9,8 +9,8 @@ import { createContext, useContext } from "react";
 // }
 
 export function AlbumImage() {
-	// const albumContext = createContext<IAlbumImage>();
-	// const {image, isHidden} = useContext(albumContext)
+	// const albumImageContext = createContext<IAlbumImage>();
+	// const {image, isHidden} = useContext(albumImageContext)
 
 	return (
 		<View style={styles.container}>
@@ -21,14 +21,18 @@ export function AlbumImage() {
 				}}
 			/>
 			<View style={styles.icons}>
-				<TouchableOpacity>
-					<ICONS.EyeIcon width={40} height={40} fill={"#543C52"} />
+				<TouchableOpacity style={styles.button}>
+					<ICONS.EyeIconWithoutFill
+						width={20}
+						height={20}
+						fill={"#543C52"}
+					/>
 				</TouchableOpacity>
-				
-				<TouchableOpacity>
+
+				<TouchableOpacity style={styles.button}>
 					<ICONS.TrashCanIcon
-						width={40}
-						height={40}
+						width={20}
+						height={20}
 						fill={"#543C52"}
 					/>
 				</TouchableOpacity>
