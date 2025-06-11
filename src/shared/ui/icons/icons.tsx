@@ -24,15 +24,17 @@ import { SendPostIcon } from "./send-post-icon";
 import { PencilIcon } from "./pencil-icon";
 import { TrashCanIcon } from "./trash-can-icon";
 import { CheckMarkIcon } from "./check-mark-icon";
-
 import { UncheckedCheckbox } from "./unchecked-checkbox";
 import { CheckedCheckbox } from "./checked-checkbox";
-
 import { ImageWithStylesIcon } from "./image-with-styles-icon";
 import { EmojiWithStylesIcon } from "./emoji-with-styles-icon";
 import { EmojiIcon } from "./emoji-icon";
 import { AnonymousLogoIcon } from "./anonymous-logo-icon";
 import { PlusAvatarIcon } from "./plus-avatar-icon";
+import { EyeIconWithoutFill } from "./eye-icon-without-fill";
+import { TrashCanIconWithoutFill } from "./trash-icon-without-fill";
+
+import { PaperPlaneIcon } from "./paper-plane-icon"
 
 export const ICONS = {
 	DateIcon,
@@ -67,5 +69,9 @@ export const ICONS = {
 	EmojiIcon,
 	AnonymousLogoIcon,
 	CheckMarkIcon,
-	PlusAvatarIcon
+	PlusAvatarIcon,
+	PaperPlaneIcon,
+	EyeIconWithoutFill,
+	TrashCanIconWithoutFill,
 };
+

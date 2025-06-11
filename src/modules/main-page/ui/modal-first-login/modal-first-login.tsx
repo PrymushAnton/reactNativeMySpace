@@ -41,7 +41,7 @@ export function ModalFirstLogin({
 		},
 	});
 
-	const { token } = useAuthContext();
+	const { token, getData } = useAuthContext();
 
 	// useEffect(() => {
 	// 	checkFirstLoginFlag(userId).then((alreadyShown) => {
@@ -52,8 +52,9 @@ export function ModalFirstLogin({
 	function onSubmit(data: IUserAdditionalInfo) {
 		async function sendRequest() {
 			try {
+				if (!token) return
 				const res = await fetch(
-					"http://192.168.3.11:3011/user/update",
+					"http://192.168.1.10:3011/user/update",
 					{
 						method: "POST",
 						headers: {
@@ -70,6 +71,7 @@ export function ModalFirstLogin({
 				// await saveFirstLoginFlag(userId);
 				// setIsVisible(false);
 				setJustRegistered(false);
+				getData(token)
 				onRefresh?.();
 			} catch (error) {
 				console.log("Помилка при оновленні:", (error as Error).message);

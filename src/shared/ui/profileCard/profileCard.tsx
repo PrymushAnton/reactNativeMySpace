@@ -3,22 +3,26 @@ import { IProfileCardProps } from "./profileCard.types";
 import { styles } from "./profileCard.styles";
 
 export function ProfileCard(props: IProfileCardProps) {
-	const { onChangeText,placeholder, bottomText, editable, type, value } = props;
+	const { onChangeText, placeholder, bottomText, editable, type, value, errorMessage } =
+		props;
+
 
 	return (
 		<View style={styles.card}>
-
 			<TextInput
+				keyboardType={type === "tel" ? "phone-pad": "default"}
 				style={styles.input}
 				editable={editable}
-                
 				placeholder={placeholder}
-                defaultValue={value}
-                value={value}
-                onChangeText={onChangeText}
+				// defaultValue={defaultValue}
+				value={value}
+				onChangeText={onChangeText}
 				// placeholderTextColor={"black"}
 			/>
-			<Text style={styles.bottomText}>{bottomText}</Text>
+			<View>
+				<Text style={styles.bottomText}>{bottomText}</Text>
+				<Text style={styles.bottomText}>{errorMessage}</Text>
+			</View>
 		</View>
 	);
 }

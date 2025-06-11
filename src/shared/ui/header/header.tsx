@@ -2,7 +2,7 @@ import { View, TouchableOpacity } from "react-native";
 import { ICONS } from "../icons";
 import { useAuthContext } from "../../../modules/auth/context";
 import { useModal } from "../../../modules/auth/context";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { IHeaderProps } from "./header.types";
 import {styles} from "./header.styles";
 
@@ -21,8 +21,8 @@ export function Header(props: IHeaderProps) {
 					<ICONS.PlusIcon />
 				</TouchableOpacity>
 
-
-				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+{/* 
+				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
 					<ICONS.AnonymousLogoIcon width={41} height={40}/>
 				</TouchableOpacity> */}
 
@@ -36,6 +36,9 @@ export function Header(props: IHeaderProps) {
 
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+					<ICONS.LogoutIcon/>
 				</TouchableOpacity>
 			</View>
 		</View>
