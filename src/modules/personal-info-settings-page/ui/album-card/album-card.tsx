@@ -13,14 +13,27 @@ export function AlbumCard() {
 	return (
 		<View style={styles.container}>
 			<View style={styles.container1}>
-				<View style={{ flexDirection: "row", gap: 10 }}>
-					<Text style={{ fontWeight: 500, fontSize: 16 }}>
+				<View
+					style={{
+						flexDirection: "row",
+						gap: 10,
+						alignItems: "center",
+					}}
+				>
+					<Text
+						style={{
+							fontWeight: 500,
+							fontSize: 16,
+							fontFamily: "GTWalsheimPro-Regular",
+						}}
+					>
 						Настрій
 					</Text>
 					<Text
 						style={{
 							fontWeight: 400,
 							fontSize: 16,
+							fontFamily: "GTWalsheimPro-Regular",
 							color: "#81818D",
 						}}
 					>
@@ -47,8 +60,16 @@ export function AlbumCard() {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Text style={{ fontWeight: 500, fontSize: 16 }}>Фотографії</Text>
-			<ScrollView horizontal={true}>
+			<Text
+				style={{
+					fontWeight: 500,
+					fontSize: 16,
+					fontFamily: "GTWalsheimPro-Regular",
+				}}
+			>
+				Фотографії
+			</Text>
+			<ScrollView horizontal={true} overScrollMode="never">
 				<View
 					style={{
 						width: 200,
@@ -74,7 +95,7 @@ export function AlbumCard() {
 }
 export function MyPhoto() {
 	return (
-		<ScrollView horizontal={true}>
+		<ScrollView horizontal={true} overScrollMode="never" style={{gap: 8}}>
 			<AlbumImage></AlbumImage>
 			<AlbumImage></AlbumImage>
 			<AlbumImage></AlbumImage>

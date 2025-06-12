@@ -3,10 +3,10 @@ import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./album-image.styles";
 import { createContext, useContext } from "react";
 
-// interface IAlbumImage{
-//     image: string,
-//     isHidden: boolean,
-// }
+interface IAlbumImage{
+    image: string,
+    isHidden: boolean,
+}
 
 export function AlbumImage() {
 	// const albumImageContext = createContext<IAlbumImage>();

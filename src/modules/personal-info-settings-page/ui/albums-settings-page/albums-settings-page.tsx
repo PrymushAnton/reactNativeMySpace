@@ -14,18 +14,36 @@ export function AlbumsSettingsPage() {
 				<HeaderNavigationSettingsPages />
 				<View style={styles.container1}>
 					<View style={styles.myPhotoTop}>
-						<Text style={{ fontWeight: 500, fontSize: 16 }}>
+						<Text
+							style={{
+								fontWeight: 500,
+								fontSize: 16,
+								fontFamily: "GTWalsheimPro-Regular",
+							}}
+						>
 							Мої фото
 						</Text>
 						<TouchableOpacity style={styles.addPhotoButt}>
 							<ICONS.ImageIcon />
-							<Text>Додати фото</Text>
+							<Text
+								style={{
+									fontFamily: "GTWalsheimPro-Regular",
+								}}
+							>
+								Додати фото
+							</Text>
 						</TouchableOpacity>
 					</View>
 					<MyPhoto></MyPhoto>
 				</View>
 				<View style={styles.container2}>
-					<Text style={{ fontWeight: 500, fontSize: 16 }}>
+					<Text
+						style={{
+							fontWeight: 500,
+							fontSize: 16,
+							fontFamily: "GTWalsheimPro-Regular",
+						}}
+					>
 						Немає ще жодного альбому
 					</Text>
 					<TouchableOpacity>

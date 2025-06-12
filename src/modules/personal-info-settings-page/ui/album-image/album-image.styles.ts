@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
 	container: {
 		width: 200,
 		height: 200,
+		marginHorizontal: 8
 	},
 	icons: {
 		flexDirection: "row",
