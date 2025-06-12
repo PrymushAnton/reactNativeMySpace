@@ -30,7 +30,10 @@ export function FriendRequest({
 				)}
 			</View>
 			<View
-				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
 			>
 				<View style={{ alignItems: "center" }}>
 					<Text
@@ -42,7 +45,16 @@ export function FriendRequest({
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
 				</View>
 			</View>
 
@@ -120,7 +132,10 @@ export function FriendSendRequest({
 				)}
 			</View>
 			<View
-				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
 			>
 				<View style={{ alignItems: "center" }}>
 					<Text
@@ -132,15 +147,38 @@ export function FriendSendRequest({
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
 				</View>
 			</View>
-			<TouchableOpacity
-				style={[styles.button, { backgroundColor: "#543C52" }]}
-				onPress={sendRequest}
-			>
-				<ICONS.PaperPlaneIcon width={17} height={17} />
-			</TouchableOpacity>
+			<View style={{flexDirection: "row", alignItems: "center"}}>
+				<TouchableOpacity
+					style={[styles.button, { backgroundColor: "#543C52" }]}
+					onPress={sendRequest}
+				>
+					<Text style={{color: "white", fontFamily: "GTWalsheimPro-Regular", fontSize: 14,}}>Додати</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{
+							borderWidth: 1,
+							borderColor: "#543C52",
+							backgroundColor: "white",
+						},
+					]}
+				>
+					<Text style={{fontFamily: "GTWalsheimPro-Regular", fontSize: 14,}}>Видалити</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
@@ -159,7 +197,10 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 				)}
 			</View>
 			<View
-				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
 			>
 				<View style={{ alignItems: "center" }}>
 					<Text
@@ -171,10 +212,19 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
 				</View>
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", }}>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<TouchableOpacity
 					style={[
 						styles.button,

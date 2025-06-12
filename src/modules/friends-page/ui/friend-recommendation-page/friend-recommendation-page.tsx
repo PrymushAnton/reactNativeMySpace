@@ -24,9 +24,9 @@ export function FriendRecommendationPage() {
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			<ScrollView contentContainerStyle={{ alignItems: "center" }}>
+			<ScrollView contentContainerStyle={{ alignItems: "center",  }}>
 				{users.map((user) => (
-					<View key={user.id} style={{ marginBottom: 10 }}>
+					<View key={user.id} style={{ marginBottom: 10, width: "100%", alignItems: "center" }}>
 						<FriendRequest.FriendSendRequest {...user} />
 					</View>
 				))}
