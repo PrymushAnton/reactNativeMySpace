@@ -86,18 +86,15 @@ export function PersonalInfoSettingsPage() {
 	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
-		console.log("1", data);
 		const filteredData = Object.entries(data).filter(([key, value]) => {
 			return value !== "";
 		});
 		const obj: Partial<IPersonalInfoFormData> =
 			Object.fromEntries(filteredData);
 
-		console.log("1.1", obj);
 		async function sendRequest() {
 			try {
 				if (!token) {
-					console.log("lolo")
 					return
 				};
 				const res = await fetch(
@@ -113,7 +110,6 @@ export function PersonalInfoSettingsPage() {
 				);
 				const result: Response<string> = await res.json();
 				getData(token);
-				console.log("4", result);
 			} catch (error) {
 				console.log((error as Error).message);
 			}

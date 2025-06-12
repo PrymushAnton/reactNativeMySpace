@@ -19,26 +19,30 @@ export function FriendRequest({
 }) {
 	return (
 		<View style={styles.friendCard}>
-			<View style={styles.userInfo}>
+			<View>
 				{image ? (
 					<Image
 						source={{ uri: image }}
-						style={{ width: 46, height: 46, borderRadius: 20 }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
 					/>
 				) : (
-					<ICONS.AnonymousLogoIcon width={46} height={46} />
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				)}
-				<View style={{ marginLeft: 12 }}>
+			</View>
+			<View
+				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+			>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
-							fontSize: 16,
+							fontSize: 24,
 							fontWeight: "700",
 						}}
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14 }}>@{username}</Text>
+					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
 				</View>
 			</View>
 
@@ -47,11 +51,15 @@ export function FriendRequest({
 					style={[styles.button, { backgroundColor: "#543C52" }]}
 					onPress={onAccept}
 				>
-					<ICONS.CheckMarkIcon
-						width={17}
-						height={17}
-						color="#FFFFFF"
-					/>
+					<Text
+						style={{
+							color: "#FFFFFF",
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Підтвердити
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[
@@ -64,7 +72,7 @@ export function FriendRequest({
 					]}
 					onPress={onReject}
 				>
-					<ICONS.CloseIcon width={15} height={15} color="#543C52" />
+					<Text>Видалити</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -101,26 +109,30 @@ export function FriendSendRequest({
 
 	return (
 		<View style={styles.friendCard}>
-			<View style={styles.userInfo}>
+			<View>
 				{image ? (
 					<Image
 						source={{ uri: image }}
-						style={{ width: 46, height: 46, borderRadius: 20 }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
 					/>
 				) : (
-					<ICONS.AnonymousLogoIcon width={46} height={46} />
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				)}
-				<View style={{ marginLeft: 12 }}>
+			</View>
+			<View
+				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+			>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
-							fontSize: 16,
+							fontSize: 24,
 							fontWeight: "700",
 						}}
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14 }}>@{username}</Text>
+					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
 				</View>
 			</View>
 			<TouchableOpacity
@@ -133,53 +145,65 @@ export function FriendSendRequest({
 	);
 }
 
-export function FriendItem({
-	id,
-	image,
-	name,
-	surname,
-	username,
-}: FriendCard) {
+export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 	return (
 		<View style={styles.friendCard}>
-			<View style={styles.userInfo}>
+			<View>
 				{image ? (
 					<Image
 						source={{ uri: image }}
-						style={{ width: 46, height: 46, borderRadius: 20 }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
 					/>
 				) : (
-					<ICONS.AnonymousLogoIcon width={46} height={46} />
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				)}
-				<View style={{ marginLeft: 12 }}>
+			</View>
+			<View
+				style={[styles.userInfo, { alignItems: "center", paddingTop: 10}]}
+			>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
-							fontSize: 16,
+							fontSize: 24,
 							fontWeight: "700",
 						}}
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14 }}>@{username}</Text>
+					<Text style={{ fontSize: 14, paddingTop: 10, paddingBottom: 16, fontWeight: "500" }}>@{username}</Text>
 				</View>
 			</View>
-
-			<TouchableOpacity
-				style={[
-					styles.button,
-					{
-						backgroundColor: "#543C52",
-						paddingHorizontal: 12,
-						paddingVertical: 6,
-						borderRadius: 8,
-						justifyContent: "center",
-						alignItems: "center",
-					},
-				]}
-			>
-				<Text style={{ color: "#fff", fontWeight: "600" }}>Друзі</Text>
-			</TouchableOpacity>
+			<View style={{ flexDirection: "row", alignItems: "center", }}>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{
+							backgroundColor: "#543C52",
+							padding: 10,
+							borderRadius: 20,
+							justifyContent: "center",
+							alignItems: "center",
+						},
+					]}
+				>
+					<Text style={{ color: "#fff", fontWeight: "600" }}>
+						Повідомлення
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{
+							borderWidth: 1,
+							borderColor: "#543C52",
+							backgroundColor: "white",
+						},
+					]}
+				>
+					<Text>Видалити</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }

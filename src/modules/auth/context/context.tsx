@@ -193,7 +193,6 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	async function getToken() {
 		const token = await AsyncStorage.getItem("token");
 		if (!token) return;
-		console.log(token)
 		setToken(token);
 		// getData(token);
 	}

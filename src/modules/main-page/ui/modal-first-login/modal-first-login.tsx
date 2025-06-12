@@ -65,7 +65,6 @@ export function ModalFirstLogin({
 					}
 				);
 				const result: Response<string> = await res.json();
-				console.log(result)
 				if (result.status === "error") return
 				// throw new Error("Не вдалося оновити дані");
 				// await saveFirstLoginFlag(userId);
