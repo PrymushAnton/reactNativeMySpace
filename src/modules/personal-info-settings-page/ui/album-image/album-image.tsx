@@ -33,7 +33,7 @@ export function AlbumImage() {
 					<ICONS.TrashCanIcon
 						width={20}
 						height={20}
-						fill={"#543C52"}
+						// fill={"#543C52"}
 					/>
 				</TouchableOpacity>
 			</View>
