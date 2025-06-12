@@ -8,9 +8,10 @@ export const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: "#CDCED2",
 		padding: 16,
-        width: "95%",
-        borderRadius: 10
+		borderRadius: 10,
+		width: "100%", 
 	},
+
 	button: {
 		// width: 32,
 		// height: 32,
