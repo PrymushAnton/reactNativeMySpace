@@ -60,10 +60,10 @@ export function FriendRequestPage() {
 	};
 
 	return (
-		<View style={{ flex: 1 }}>
+		<View style={{ flex: 1, }}>
 			<HeaderNavigationFriendPages />
 			{requests.length === 0 ? (
-				<Text style={{ textAlign: "center", marginTop: 20 }}>
+				<Text style={{ textAlign: "center", marginTop: 20, fontFamily: "GTWalsheimPro-Regular", }}>
 					Немає вхідних запитів
 				</Text>
 			) : (
@@ -72,10 +72,10 @@ export function FriendRequestPage() {
 					keyExtractor={(item) => item.id.toString()}
 					renderItem={renderItem}
 					contentContainerStyle={{
-						padding: 16,
+						paddingLeft: 20,
 						gap: 16,
 					}}
-					style={{ width: "100%" }}
+					style={{ width: "95%" }}
 				/>
 			)}
 		</View>

@@ -97,7 +97,8 @@ export function FriendSendRequest({
 	name,
 	surname,
 	username,
-}: FriendCard) {
+	onReject,
+}: FriendCard & { onReject?: () => void }) {
 	const sendRequest = async () => {
 		const token = await AsyncStorage.getItem("token");
 		try {
@@ -159,12 +160,20 @@ export function FriendSendRequest({
 					</Text>
 				</View>
 			</View>
-			<View style={{flexDirection: "row", alignItems: "center"}}>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
 				<TouchableOpacity
 					style={[styles.button, { backgroundColor: "#543C52" }]}
 					onPress={sendRequest}
 				>
-					<Text style={{color: "white", fontFamily: "GTWalsheimPro-Regular", fontSize: 14,}}>Додати</Text>
+					<Text
+						style={{
+							color: "white",
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Додати
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[
@@ -175,8 +184,16 @@ export function FriendSendRequest({
 							backgroundColor: "white",
 						},
 					]}
+					onPress={onReject}
 				>
-					<Text style={{fontFamily: "GTWalsheimPro-Regular", fontSize: 14,}}>Видалити</Text>
+					<Text
+						style={{
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Видалити
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -184,6 +201,33 @@ export function FriendSendRequest({
 }
 
 export function FriendItem({ id, image, name, surname, username }: FriendCard) {
+	const handleDelete = async () => {
+		try {
+			const token = await AsyncStorage.getItem("token");
+			if (!token) return;
+
+			const res = await fetch("http://192.168.1.10:3011/friend/delete-friend", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ friendId: id }),
+			});
+
+			const data = await res.json();
+
+			if (data.status === "success") {
+				alert("Успіх! Друг видалений");
+			} else {
+				alert("Помилка! Щось пішло не так");
+			}
+		} catch (e) {
+			console.error("Error deleting friend", e);
+			alert("Помилка! Не вдалося видалити друга");
+		}
+	};
+
 	return (
 		<View style={styles.friendCard}>
 			<View>
@@ -242,6 +286,7 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
+					onPress={handleDelete}
 					style={[
 						styles.button,
 						{
@@ -257,6 +302,7 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 		</View>
 	);
 }
+
 
 FriendRequest.FriendSendRequest = FriendSendRequest;
 FriendRequest.FriendItem = FriendItem;

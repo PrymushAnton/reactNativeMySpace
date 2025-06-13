@@ -30,9 +30,9 @@ export function FriendMainPage() {
 		const usersJson = await usersRes.json();
 		const friendsJson = await friendsRes.json();
 
-		const filteredRequests = (requestsJson.requests as FriendRequestType[]).filter(
-			(r) => !r.isAccepted
-		);
+		const filteredRequests = (
+			requestsJson.requests as FriendRequestType[]
+		).filter((r) => !r.isAccepted);
 
 		setRequests(filteredRequests.slice(0, 2));
 		setRecommendations(usersJson.users.slice(0, 2));
@@ -66,66 +66,171 @@ export function FriendMainPage() {
 
 			<View style={styles.mainBlockView}>
 				<View style={styles.mainNavigationView}>
-					<Text style={[styles.mainNavigationText, { color: "#070A1C" }]}>Запити</Text>
+					<Text
+						style={[
+							styles.mainNavigationText,
+							{ color: "#070A1C" },
+						]}
+					>
+						Запити
+					</Text>
 					<TouchableOpacity>
-						<Text style={[styles.mainNavigationText, { color: "#543C52" }]}>Дивитись всі</Text>
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ color: "#543C52" },
+							]}
+						>
+							Дивитись всі
+						</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{width: "100%", alignItems: "center"}}>
+				<View style={{ width: "100%", alignItems: "center" }}>
 					{requests.length > 0 ? (
 						requests.map((item) => {
 							const user = item.fromUserDetails;
 							if (!user) return null;
 							return (
-								<FriendRequest
-									key={item.id.toString()}
-									id={user.id}
-									image={user.image}
-									name={user.name}
-									surname={user.surname}
-									username={user.username}
-									onAccept={() => respondRequest(item.id, true)}
-									onReject={() => respondRequest(item.id, false)}
-								/>
+								<View
+									style={{
+										width: "100%",
+										alignItems: "center",
+										marginBottom: 10,
+									}}
+								>
+									<FriendRequest
+										key={item.id.toString()}
+										id={user.id}
+										image={user.image}
+										name={user.name}
+										surname={user.surname}
+										username={user.username}
+										onAccept={() =>
+											respondRequest(item.id, true)
+										}
+										onReject={() =>
+											respondRequest(item.id, false)
+										}
+									/>
+								</View>
 							);
 						})
 					) : (
-						<Text style={[styles.mainNavigationText, { margin: 16, color: "#070A1C" }]}>У вас немає запитів</Text>
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ margin: 16, color: "#070A1C" },
+							]}
+						>
+							У вас немає запитів
+						</Text>
 					)}
 				</View>
 			</View>
 
 			<View style={styles.mainBlockView}>
 				<View style={styles.mainNavigationView}>
-					<Text style={[styles.mainNavigationText, { color: "#070A1C" }]}>Рекомендації</Text>
+					<Text
+						style={[
+							styles.mainNavigationText,
+							{ color: "#070A1C" },
+						]}
+					>
+						Рекомендації
+					</Text>
 					<TouchableOpacity>
-						<Text style={[styles.mainNavigationText, { color: "#543C52" }]}>Дивитись всі</Text>
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ color: "#543C52" },
+							]}
+						>
+							Дивитись всі
+						</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{width: "100%", alignItems: "center"}}>
-					{recommendations.length > 0 ? (recommendations.map((user) => (
-						<FriendRequest.FriendSendRequest key={user.id} {...user} />
-					))
-                ) : (
-                    <Text style={[styles.mainNavigationText, { margin: 16, color: "#070A1C" }]}>Недостатньо юзерів</Text>
-                )}
+				<View style={{ width: "100%", alignItems: "center" }}>
+					{recommendations.length > 0 ? (
+						recommendations.map((user) => (
+							<View
+								style={{
+									width: "100%",
+									alignItems: "center",
+									marginBottom: 10,
+								}}
+							>
+								<FriendRequest.FriendSendRequest
+									key={user.id}
+									{...user}
+									onReject={() =>
+										setRecommendations((prev) =>
+											prev.filter(
+												(us) => us.id !== user.id
+											)
+										)
+									}
+								/>
+							</View>
+						))
+					) : (
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ margin: 16, color: "#070A1C" },
+							]}
+						>
+							Недостатньо юзерів
+						</Text>
+					)}
 				</View>
 			</View>
 
 			<View style={styles.mainBlockView}>
 				<View style={styles.mainNavigationView}>
-					<Text style={[styles.mainNavigationText, { color: "#070A1C" }]}>Всі друзі</Text>
+					<Text
+						style={[
+							styles.mainNavigationText,
+							{ color: "#070A1C" },
+						]}
+					>
+						Всі друзі
+					</Text>
 					<TouchableOpacity>
-						<Text style={[styles.mainNavigationText, { color: "#543C52" }]}>Дивитись всі</Text>
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ color: "#543C52" },
+							]}
+						>
+							Дивитись всі
+						</Text>
 					</TouchableOpacity>
 				</View>
-				<View style={{width: "100%", alignItems: "center"}}>
+				<View style={{ width: "100%", alignItems: "center" }}>
 					{friends.length > 0 ? (
 						friends.map((friend) => (
-							<FriendRequest.FriendItem key={friend.id} {...friend} />
+							<View
+								style={{
+									width: "100%",
+									alignItems: "center",
+									marginBottom: 10,
+								}}
+							>
+								<FriendRequest.FriendItem
+									key={friend.id}
+									{...friend}
+								/>
+							</View>
 						))
 					) : (
-						<Text style={[styles.mainNavigationText, { margin: 16, color: "#070A1C" }]}>У вас немає друзів</Text>
+						<Text
+							style={[
+								styles.mainNavigationText,
+								{ margin: 16, color: "#070A1C" },
+							]}
+						>
+							У вас немає друзів
+						</Text>
 					)}
 				</View>
 			</View>
