@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-	View,
-	TouchableOpacity,
-	Text,
-	Alert,
-	TextInput,
-} from "react-native";
+import { View, TouchableOpacity, Text, Alert, TextInput } from "react-native";
 import { styles } from "./tags-custom-input.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 
@@ -36,6 +30,12 @@ export function TagsCustomInput({ value, onChange }: Props) {
 		onChange(updated);
 	};
 
+	function truncateText(text: string, maxLength: number = 15) {
+		return text.length > maxLength
+			? text.slice(0, maxLength) + "..."
+			: text;
+	}
+
 	return (
 		<View>
 			<View style={styles.mainCustomTagsTextInputView}>
@@ -50,7 +50,12 @@ export function TagsCustomInput({ value, onChange }: Props) {
 					onPress={handleAddTag}
 					style={styles.buttonAddCustomTag}
 				>
-					<Text style={{ color: "#fff", fontFamily: "GTWalsheimPro-Regular" }}>
+					<Text
+						style={{
+							color: "#fff",
+							fontFamily: "GTWalsheimPro-Regular",
+						}}
+					>
 						Додати
 					</Text>
 				</TouchableOpacity>
@@ -59,13 +64,20 @@ export function TagsCustomInput({ value, onChange }: Props) {
 			<View style={styles.mainTagsView}>
 				{value.map((tag, index) => (
 					<View key={index} style={styles.mappingTagsView}>
-						<Text style={styles.textTags}> {tag} </Text>
+						<Text style={styles.textTags}>
+							{" "}
+							{truncateText(tag)}{" "}
+						</Text>
 						<TouchableOpacity
 							onPress={() => handleRemoveTag(index)}
 							style={{ marginLeft: 13 }}
 						>
 							<View style={styles.closeIconView}>
-								<ICONS.CloseIcon color={"#FFFFFF"} width={10} height={10} />
+								<ICONS.CloseIcon
+									color={"#FFFFFF"}
+									width={10}
+									height={10}
+								/>
 							</View>
 						</TouchableOpacity>
 					</View>
