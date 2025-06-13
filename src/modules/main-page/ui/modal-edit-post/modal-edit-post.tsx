@@ -17,6 +17,7 @@ import { styles } from "./modal-edit-post.styles";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { COLORS } from "../../../../shared/constants";
 import { useAuthContext } from "../../../auth/context";
+import { LinksInput } from "../links-input";
 
 interface Props {
 	postId: number | null;
@@ -38,7 +39,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 			image: [],
 			defaultTags: [],
 			customTags: [],
-			link: "",
+			link: [],
 		},
 	});
 
@@ -65,7 +66,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 				defaultTags: post.tags || [],
 				customTags: [],
 				image: post.images || [],
-				link: post.link || "",
+				link: post.link || [],
 			};
 
 			// setPostData(formData);
@@ -126,7 +127,10 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	return (
 		<View>
 			<ModalTool isVisible={isEditVisible} onClose={closeEditModal}>
-				<ScrollView style={styles.mainModalWindow} overScrollMode="never">
+				<ScrollView
+					style={styles.mainModalWindow}
+					overScrollMode="never"
+				>
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closeEditModal}>
 							<ICONS.CloseIcon width={15} height={15} />
@@ -185,7 +189,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 							/>
 						</View>
 
-						<View style={{marginTop: 16}}>
+						<View style={{ marginTop: 16 }}>
 							<Controller
 								control={control}
 								name="defaultTags"
@@ -197,7 +201,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 								)}
 							/>
 						</View>
-						
+
 						<View>
 							<Controller
 								control={control}
@@ -221,17 +225,13 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 						>
 							Посилання
 						</Text>
-
 						<Controller
 							control={control}
 							name="link"
-							render={({ field, fieldState }) => (
-								<Input
-									placeholder="Напишіть посилання"
+							render={({ field }) => (
+								<LinksInput
 									value={field.value}
-									onChangeText={field.onChange}
-									autoCorrect={false}
-									errorMessage={fieldState.error?.message}
+									onChange={field.onChange}
 								/>
 							)}
 						/>
