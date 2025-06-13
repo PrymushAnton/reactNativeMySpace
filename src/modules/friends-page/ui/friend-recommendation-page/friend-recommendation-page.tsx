@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FriendRequest } from "../friend-component/friend-request-component";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
@@ -24,13 +24,35 @@ export function FriendRecommendationPage() {
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			<ScrollView contentContainerStyle={{ alignItems: "center" }} overScrollMode="never">
-				{users.map((user) => (
-					<View key={user.id} style={{ marginBottom: 10, width: "90%", alignItems: "center" }}>
-						<FriendRequest.FriendSendRequest {...user} />
-					</View>
-				))}
-			</ScrollView>
+			{users.length === 0 ? (
+				<Text
+					style={{
+						textAlign: "center",
+						marginTop: 20,
+						fontFamily: "GTWalsheimPro-Regular",
+					}}
+				>
+					Недостатньо юзерів
+				</Text>
+			) : (
+				<ScrollView
+					contentContainerStyle={{ alignItems: "center" }}
+					overScrollMode="never"
+				>
+					{users.map((user) => (
+						<View
+							key={user.id}
+							style={{
+								marginBottom: 10,
+								width: "90%",
+								alignItems: "center",
+							}}
+						>
+							<FriendRequest.FriendSendRequest {...user} />
+						</View>
+					))}
+				</ScrollView>
+			)}
 		</View>
 	);
 }

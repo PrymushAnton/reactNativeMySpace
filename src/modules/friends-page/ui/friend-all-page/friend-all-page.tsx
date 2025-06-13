@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
 import { FriendRequest } from "../friend-component/friend-request-component";
@@ -32,18 +32,37 @@ export function FriendAllPage() {
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			<ScrollView contentContainerStyle={{ width: "95%", alignItems: "center", paddingLeft: 24 }} overScrollMode="never">
-				{friends.map((friend) => (
-					<FriendRequest.FriendItem
-						key={friend.id}
-						id={friend.id}
-						name={friend.name}
-						surname={friend.surname}
-						username={friend.username}
-						image={friend.image}
-					/>
-				))}
-			</ScrollView>
+			{friends.length === 0 ? (
+				<Text
+					style={{
+						textAlign: "center",
+						marginTop: 20,
+						fontFamily: "GTWalsheimPro-Regular",
+					}}
+				>
+					У Вас немає друзів
+				</Text>
+			) : (
+				<ScrollView
+					contentContainerStyle={{
+						width: "95%",
+						alignItems: "center",
+						paddingLeft: 24,
+					}}
+					overScrollMode="never"
+				>
+					{friends.map((friend) => (
+						<FriendRequest.FriendItem
+							key={friend.id}
+							id={friend.id}
+							name={friend.name}
+							surname={friend.surname}
+							username={friend.username}
+							image={friend.image}
+						/>
+					))}
+				</ScrollView>
+			)}
 		</View>
 	);
 }
