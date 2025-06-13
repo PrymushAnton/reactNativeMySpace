@@ -32,7 +32,7 @@ export function FriendAllPage() {
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			<ScrollView contentContainerStyle={{ width: "95%", alignItems: "center", paddingLeft: 24 }}>
+			<ScrollView contentContainerStyle={{ width: "95%", alignItems: "center", paddingLeft: 24 }} overScrollMode="never">
 				{friends.map((friend) => (
 					<FriendRequest.FriendItem
 						key={friend.id}

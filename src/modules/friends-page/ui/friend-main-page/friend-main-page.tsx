@@ -61,7 +61,7 @@ export function FriendMainPage() {
 	}, []);
 
 	return (
-		<ScrollView>
+		<ScrollView overScrollMode="never">
 			<HeaderNavigationFriendPages />
 
 			<View style={styles.mainBlockView}>

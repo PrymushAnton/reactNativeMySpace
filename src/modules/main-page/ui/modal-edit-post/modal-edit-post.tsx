@@ -126,7 +126,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	return (
 		<View>
 			<ModalTool isVisible={isEditVisible} onClose={closeEditModal}>
-				<ScrollView style={styles.mainModalWindow}>
+				<ScrollView style={styles.mainModalWindow} overScrollMode="never">
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closeEditModal}>
 							<ICONS.CloseIcon width={15} height={15} />

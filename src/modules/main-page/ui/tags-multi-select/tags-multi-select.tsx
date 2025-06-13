@@ -122,6 +122,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 							style={{ maxHeight: 150, paddingHorizontal: 10 }}
 							keyboardShouldPersistTaps="handled"
 							nestedScrollEnabled={true}
+							overScrollMode="never"
 						>
 							{filteredTags.map((tag) => {
 								const isSelected = tempSelected.includes(

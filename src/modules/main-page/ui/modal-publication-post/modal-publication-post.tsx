@@ -124,7 +124,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	return (
 		<View>
 			<ModalTool isVisible={isCreateVisible} onClose={closingModal}>
-				<ScrollView style={styles.mainModalWindow}>
+				<ScrollView style={styles.mainModalWindow} overScrollMode="never">
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closingModal}>
 							<ICONS.CloseIcon width={15} height={15} />
