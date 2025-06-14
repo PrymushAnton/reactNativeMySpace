@@ -36,6 +36,10 @@ export function LinksInput({ value, onChange }: Props) {
 		onChange(updated);
 	};
 
+	function truncateText(text: string, maxLength: number = 15) {
+		return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+	}
+
 	return (
 		<View>
 			<View style={styles.inputRow}>
@@ -55,9 +59,7 @@ export function LinksInput({ value, onChange }: Props) {
 				{value.map((link, index) => (
 					<View key={index} style={styles.linkTag}>
 						<Text numberOfLines={1} style={styles.linkText}>
-							{link.length > 30
-								? link.slice(0, 15) + "..." + link.slice(-10)
-								: link}
+							{truncateText(link)}
 						</Text>
 						<TouchableOpacity
 							onPress={() => handleRemoveLink(index)}

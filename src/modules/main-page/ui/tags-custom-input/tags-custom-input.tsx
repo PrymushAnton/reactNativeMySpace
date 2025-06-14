@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, TouchableOpacity, Text, Alert, TextInput } from "react-native";
+import { View, TouchableOpacity, Text, TextInput } from "react-native";
 import { styles } from "./tags-custom-input.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 
@@ -15,7 +15,7 @@ export function TagsCustomInput({ value, onChange }: Props) {
 		if (!customTag.trim()) return;
 
 		if (value.length >= 10) {
-			Alert.alert("Обмеження", "Можна додати не більше 10 тегів");
+			alert("Обмеження! Можна додати не більше 10 тегів");
 			return;
 		}
 

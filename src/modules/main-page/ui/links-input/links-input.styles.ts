@@ -45,6 +45,7 @@ export const styles = StyleSheet.create({
 		justifyContent: "center",
 		textAlign: "center",
 		maxWidth: 200,
+		paddingLeft: 15,
 	},
 	linkText: {
 		fontFamily: "GTWalsheimPro-Regular",

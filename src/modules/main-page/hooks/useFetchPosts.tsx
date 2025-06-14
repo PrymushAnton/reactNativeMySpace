@@ -17,7 +17,7 @@ export function useFetchPosts(userId?: number) {
 		image: Array.isArray(post.images) ? post.images : [],
 		likes: post.likes ?? 0,
 		views: post.views ?? 0,
-		link: post.link ?? "",
+		link: post.link ?? [],
 		userId: post.userId,
 		user: post.user,
 	});
