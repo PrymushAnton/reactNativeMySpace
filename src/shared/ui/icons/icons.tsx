@@ -38,6 +38,9 @@ import { NotWatchedIcon } from "./not-watched-icon";
 import { WatchedIcon } from "./watched-icon";
 import { SearchIcon } from "./search-icon";
 import { ReturnIcon } from "./return-icon";
+import { PaperPlaneIcon } from "./paper-plane-icon"
+import { PlusWithoutBorder } from "./plus-without-border";
+
 
 export const ICONS = {
 	DateIcon,
@@ -80,4 +83,5 @@ export const ICONS = {
 	NotWatchedIcon,
 	SearchIcon,
 	ReturnIcon,
+	PlusWithoutBorder
 };

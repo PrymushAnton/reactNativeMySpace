@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, FlatList, ListRenderItem } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
 import { FriendRequestType } from "../../types/friend-info";
@@ -11,7 +11,7 @@ export function FriendRequestPage() {
 	const loadRequests = async () => {
 		const token = await AsyncStorage.getItem("token");
 		const res = await fetch(
-			"http://192.168.1.10:3011/friend/pending-requests",
+			"http://192.168.3.11:3011/friend/pending-requests",
 			{
 				headers: { Authorization: `Bearer ${token}` },
 			}
@@ -28,8 +28,8 @@ export function FriendRequestPage() {
 	const respondRequest = async (id: number, accept: boolean) => {
 		const token = await AsyncStorage.getItem("token");
 		const url = accept
-			? `http://192.168.1.10:3011/friend/accept-request`
-			: `http://192.168.1.10:3011/friend/reject-request`;
+			? `http://192.168.3.11:3011/friend/accept-request`
+			: `http://192.168.3.11:3011/friend/reject-request`;
 
 		await fetch(url, {
 			method: "POST",
@@ -42,26 +42,42 @@ export function FriendRequestPage() {
 		loadRequests();
 	};
 
+	const renderItem: ListRenderItem<FriendRequestType> = ({ item }) => {
+		const user = item.fromUserDetails;
+		if (!user) return null;
+
+		return (
+			<FriendRequest
+				id={user.id}
+				image={user.image}
+				name={user.name}
+				surname={user.surname}
+				username={user.username}
+				onAccept={() => respondRequest(item.id, true)}
+				onReject={() => respondRequest(item.id, false)}
+			/>
+		);
+	};
+
 	return (
-		<View style={{ alignItems: "center" }}>
+		<View style={{ flex: 1, }}>
 			<HeaderNavigationFriendPages />
-			{requests.length === 0 && <Text>Немає вхідних запитів</Text>}
-			{requests.map((item) => {
-				const user = item.fromUserDetails;
-				if (!user) return null;
-				return (
-					<FriendRequest
-						key={item.id.toString()}
-						id={user.id}
-						image={user.image}
-						name={user.name}
-						surname={user.surname}
-						username={user.username}
-						onAccept={() => respondRequest(item.id, true)}
-						onReject={() => respondRequest(item.id, false)}
-					/>
-				);
-			})}
+			{requests.length === 0 ? (
+				<Text style={{ textAlign: "center", marginTop: 20, fontFamily: "GTWalsheimPro-Regular", }}>
+					Немає вхідних запитів
+				</Text>
+			) : (
+				<FlatList
+					data={requests}
+					keyExtractor={(item) => item.id.toString()}
+					renderItem={renderItem}
+					contentContainerStyle={{
+						paddingLeft: 20,
+						gap: 16,
+					}}
+					style={{ width: "95%" }}
+				/>
+			)}
 		</View>
 	);
 }

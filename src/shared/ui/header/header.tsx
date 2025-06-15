@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { ICONS } from "../icons";
 import { useAuthContext } from "../../../modules/auth/context";
 import { useModal } from "../../../modules/auth/context";
@@ -37,9 +37,9 @@ export function Header(props: IHeaderProps) {
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
 					<ICONS.LogoutIcon/>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 		</View>
 	);

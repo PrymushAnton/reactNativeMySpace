@@ -8,7 +8,7 @@ interface PostPayload {
 	existingTags: string[];
 	newTags: string[];
 	images: string[];
-	link: string;
+	link: string[];
 }
 
 interface UpdatePayload extends PostPayload {
@@ -16,7 +16,7 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-	const BASE_URL = "http://192.168.1.10:3011";
+	const BASE_URL = "http://192.168.3.11:3011";
 
 	async function getToken() {
 		return await AsyncStorage.getItem("token");

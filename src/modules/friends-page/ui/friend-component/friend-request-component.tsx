@@ -19,26 +19,42 @@ export function FriendRequest({
 }) {
 	return (
 		<View style={styles.friendCard}>
-			<View style={styles.userInfo}>
+			<View>
 				{image ? (
 					<Image
 						source={{ uri: image }}
-						style={{ width: 46, height: 46, borderRadius: 20 }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
 					/>
 				) : (
-					<ICONS.AnonymousLogoIcon width={46} height={46} />
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				)}
-				<View style={{ marginLeft: 12 }}>
+			</View>
+			<View
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
+			>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
-							fontSize: 16,
+							fontSize: 24,
 							fontWeight: "700",
 						}}
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14 }}>@{username}</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
 				</View>
 			</View>
 
@@ -47,11 +63,15 @@ export function FriendRequest({
 					style={[styles.button, { backgroundColor: "#543C52" }]}
 					onPress={onAccept}
 				>
-					<ICONS.CheckMarkIcon
-						width={17}
-						height={17}
-						color="#FFFFFF"
-					/>
+					<Text
+						style={{
+							color: "#FFFFFF",
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Підтвердити
+					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[
@@ -64,7 +84,7 @@ export function FriendRequest({
 					]}
 					onPress={onReject}
 				>
-					<ICONS.CloseIcon width={15} height={15} color="#543C52" />
+					<Text>Видалити</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
@@ -77,12 +97,13 @@ export function FriendSendRequest({
 	name,
 	surname,
 	username,
-}: FriendCard) {
+	onReject,
+}: FriendCard & { onReject?: () => void }) {
 	const sendRequest = async () => {
 		const token = await AsyncStorage.getItem("token");
 		try {
 			const res = await fetch(
-				"http://192.168.1.10:3011/friend/send-friend-request",
+				"http://192.168.3.11:3011/friend/send-friend-request",
 				{
 					method: "POST",
 					headers: {
@@ -101,36 +122,187 @@ export function FriendSendRequest({
 
 	return (
 		<View style={styles.friendCard}>
-			<View style={styles.userInfo}>
+			<View>
 				{image ? (
 					<Image
 						source={{ uri: image }}
-						style={{ width: 46, height: 46, borderRadius: 20 }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
 					/>
 				) : (
-					<ICONS.AnonymousLogoIcon width={46} height={46} />
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				)}
-				<View style={{ marginLeft: 12 }}>
+			</View>
+			<View
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
+			>
+				<View style={{ alignItems: "center" }}>
 					<Text
 						style={{
 							fontFamily: "GTWalsheimPro-Regular",
-							fontSize: 16,
+							fontSize: 24,
 							fontWeight: "700",
 						}}
 					>
 						{name} {surname}
 					</Text>
-					<Text style={{ fontSize: 14 }}>@{username}</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
 				</View>
 			</View>
-			<TouchableOpacity
-				style={[styles.button, { backgroundColor: "#543C52" }]}
-				onPress={sendRequest}
-			>
-				<ICONS.PaperPlaneIcon width={17} height={17} />
-			</TouchableOpacity>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<TouchableOpacity
+					style={[styles.button, { backgroundColor: "#543C52" }]}
+					onPress={sendRequest}
+				>
+					<Text
+						style={{
+							color: "white",
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Додати
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{
+							borderWidth: 1,
+							borderColor: "#543C52",
+							backgroundColor: "white",
+						},
+					]}
+					onPress={onReject}
+				>
+					<Text
+						style={{
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 14,
+						}}
+					>
+						Видалити
+					</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
 
+export function FriendItem({ id, image, name, surname, username }: FriendCard) {
+	const handleDelete = async () => {
+		try {
+			const token = await AsyncStorage.getItem("token");
+			if (!token) return;
+
+			const res = await fetch("http://192.168.1.10:3011/friend/delete-friend", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ friendId: id }),
+			});
+
+			const data = await res.json();
+
+			if (data.status === "success") {
+				alert("Успіх! Друг видалений");
+			} else {
+				alert("Помилка! Щось пішло не так");
+			}
+		} catch (e) {
+			console.error("Error deleting friend", e);
+			alert("Помилка! Не вдалося видалити друга");
+		}
+	};
+
+	return (
+		<View style={styles.friendCard}>
+			<View>
+				{image ? (
+					<Image
+						source={{ uri: image }}
+						style={{ width: 96, height: 96, borderRadius: 20 }}
+					/>
+				) : (
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
+				)}
+			</View>
+			<View
+				style={[
+					styles.userInfo,
+					{ alignItems: "center", paddingTop: 10 },
+				]}
+			>
+				<View style={{ alignItems: "center" }}>
+					<Text
+						style={{
+							fontFamily: "GTWalsheimPro-Regular",
+							fontSize: 24,
+							fontWeight: "700",
+						}}
+					>
+						{name} {surname}
+					</Text>
+					<Text
+						style={{
+							fontSize: 14,
+							paddingTop: 10,
+							paddingBottom: 16,
+							fontWeight: "500",
+						}}
+					>
+						@{username}
+					</Text>
+				</View>
+			</View>
+			<View style={{ flexDirection: "row", alignItems: "center" }}>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{
+							backgroundColor: "#543C52",
+							padding: 10,
+							borderRadius: 20,
+							justifyContent: "center",
+							alignItems: "center",
+						},
+					]}
+				>
+					<Text style={{ color: "#fff", fontWeight: "600" }}>
+						Повідомлення
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress={handleDelete}
+					style={[
+						styles.button,
+						{
+							borderWidth: 1,
+							borderColor: "#543C52",
+							backgroundColor: "white",
+						},
+					]}
+				>
+					<Text>Видалити</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
+}
+
+
 FriendRequest.FriendSendRequest = FriendSendRequest;
+FriendRequest.FriendItem = FriendItem;
