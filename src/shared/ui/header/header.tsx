@@ -37,9 +37,9 @@ export function Header(props: IHeaderProps) {
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
+				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
 					<ICONS.LogoutIcon/>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 		</View>
 	);

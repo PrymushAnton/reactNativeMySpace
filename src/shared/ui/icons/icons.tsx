@@ -33,8 +33,8 @@ import { AnonymousLogoIcon } from "./anonymous-logo-icon";
 import { PlusAvatarIcon } from "./plus-avatar-icon";
 import { EyeIconWithoutFill } from "./eye-icon-without-fill";
 import { TrashCanIconWithoutFill } from "./trash-icon-without-fill";
-
 import { PaperPlaneIcon } from "./paper-plane-icon"
+import { PlusWithoutBorder } from "./plus-without-border";
 
 export const ICONS = {
 	DateIcon,
@@ -73,5 +73,6 @@ export const ICONS = {
 	PaperPlaneIcon,
 	EyeIconWithoutFill,
 	TrashCanIconWithoutFill,
+	PlusWithoutBorder
 };
 

@@ -9,6 +9,7 @@ export default function RootLayout() {
 				screenOptions={{
 					headerShown: false,
 					contentStyle: { backgroundColor: "#E9E5EE" },
+					
 					// header: (props) => <Header {...props} />,
 				}}
 			>

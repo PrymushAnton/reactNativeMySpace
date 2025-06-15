@@ -2,10 +2,6 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { ModalTool } from "../../../../shared/modal";
 import { styles } from "./modal-first-login.styles";
 import { useEffect } from "react";
-// import {
-// 	saveFirstLoginFlag,
-// 	checkFirstLoginFlag,
-// } from "../../utils/firstLoginStorage";
 import { Controller, useForm } from "react-hook-form";
 import { Input } from "../../../../shared/ui/input";
 import { IUserAdditionalInfo } from "../../types/post";
@@ -15,16 +11,12 @@ import { Response } from "../../../../shared/types";
 
 interface ModalFirstLoginProps {
 	isVisible: boolean;
-	// setIsVisible: (visible: boolean) => void;
 	onRefresh?: () => void;
 	setJustRegistered: (value: boolean) => void;
-	// userId: number;
 }
 
 export function ModalFirstLogin({
 	isVisible,
-	// setIsVisible,
-	// userId,
 	onRefresh,
 	setJustRegistered,
 }: ModalFirstLoginProps) {
@@ -43,18 +35,12 @@ export function ModalFirstLogin({
 
 	const { token, getData } = useAuthContext();
 
-	// useEffect(() => {
-	// 	checkFirstLoginFlag(userId).then((alreadyShown) => {
-	// 		if (alreadyShown) setIsVisible(false);
-	// 	});
-	// }, [userId]);
-
 	function onSubmit(data: IUserAdditionalInfo) {
 		async function sendRequest() {
 			try {
 				if (!token) return
 				const res = await fetch(
-					"http://192.168.1.10:3011/user/update",
+					"http://192.168.3.11:3011/user/update-first-login",
 					{
 						method: "POST",
 						headers: {
@@ -67,9 +53,6 @@ export function ModalFirstLogin({
 				const result: Response<string> = await res.json();
 				console.log(result)
 				if (result.status === "error") return
-				// throw new Error("Не вдалося оновити дані");
-				// await saveFirstLoginFlag(userId);
-				// setIsVisible(false);
 				setJustRegistered(false);
 				getData(token)
 				onRefresh?.();
@@ -85,7 +68,6 @@ export function ModalFirstLogin({
 			<ModalTool
 				isVisible={isVisible}
 				onClose={() => {
-					// setIsVisible(false)
 					setJustRegistered(false);
 				}}
 				animationIn="fadeIn"
@@ -95,7 +77,6 @@ export function ModalFirstLogin({
 					<View style={{ alignSelf: "flex-end" }}>
 						<TouchableOpacity
 							onPress={() => {
-								// setIsVisible(false)
 								setJustRegistered(false);
 							}}
 						>
