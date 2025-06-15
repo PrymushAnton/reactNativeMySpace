@@ -82,7 +82,7 @@ export function FriendSendRequest({
 		const token = await AsyncStorage.getItem("token");
 		try {
 			const res = await fetch(
-				"http://192.168.1.10:3011/friend/send-friend-request",
+				"http://192.168.3.11:3011/friend/send-friend-request",
 				{
 					method: "POST",
 					headers: {

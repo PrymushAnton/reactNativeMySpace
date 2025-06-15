@@ -10,7 +10,7 @@ export default function Profile() {
             <Text style={{color: "white"}}>{user?.surname}</Text>
             <Text style={{color: "white"}}>{user?.email}</Text>
             <Text style={{color: "white"}}>{user?.phoneNumber}</Text>
-            <Text style={{color: "white"}}>{user?.birthDate}</Text>
+            {/* <Text style={{color: "white"}}>{user?.birthDate}</Text> */}
             <Text style={{color: "white"}}>@{user?.username}</Text>
             
             <TouchableOpacity style={{backgroundColor: "white", width: "30%"}} onPress={() => {logout()}}>

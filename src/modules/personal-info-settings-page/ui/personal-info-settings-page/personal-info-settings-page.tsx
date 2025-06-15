@@ -25,14 +25,15 @@ import parsePhoneNumberFromString, {
 } from "libphonenumber-js";
 import { format } from "date-fns";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { ButtonEdit } from "../buttonEdit";
 
 interface IPersonalInfoFormData {
 	name: string;
 	surname: string;
-	username: string;
+	// username: string;
 	email: string;
 	phoneNumber: string;
-	birthDate: Date;
+	birthDate: Date | null;
 }
 
 export function PersonalInfoSettingsPage() {
@@ -41,7 +42,9 @@ export function PersonalInfoSettingsPage() {
 
 	const [editable, setEditable] = useState<boolean>(false);
 
+
 	const [show, setShow] = useState(false);
+
 	function showDatepicker() {
 		setShow(true);
 	}
@@ -55,10 +58,10 @@ export function PersonalInfoSettingsPage() {
 			defaultValues: {
 				name: "",
 				surname: "",
-				birthDate: new Date(),
+				birthDate: null,
 				email: "",
 				phoneNumber: "",
-				username: "",
+				// username: "",
 			},
 		});
 
@@ -66,14 +69,12 @@ export function PersonalInfoSettingsPage() {
 		if (user) {
 			setValue("name", user.name ? user.name : "");
 			setValue("surname", user.surname ? user.surname : "");
-			// setValue(
-			// 	"birthDate",
-			// 	user.birthDate
-			// 		? format(new Date(user.birthDate), "dd.MM.yyyy")
-			// 		: ""
-			// );
+			setValue(
+				"birthDate",
+				user.birthDate ? new Date(user.birthDate) : null
+			);
 			setValue("email", user.email ? user.email : "");
-			setValue("username", user.username ? user.username : "");
+			// setValue("username", user.username ? user.username : "");
 			setValue(
 				"phoneNumber",
 				user.phoneNumber
@@ -87,32 +88,27 @@ export function PersonalInfoSettingsPage() {
 
 	function onSubmit(data: IPersonalInfoFormData) {
 		console.log("1", data);
-		const filteredData = Object.entries(data).filter(([key, value]) => {
-			return value !== "";
-		});
-		const obj: Partial<IPersonalInfoFormData> =
-			Object.fromEntries(filteredData);
 
-		console.log("1.1", obj);
 		async function sendRequest() {
 			try {
 				if (!token) {
-					console.log("lolo")
-					return
-				};
+					console.log("lolo");
+					return;
+				}
 				const res = await fetch(
-					"http://192.168.1.10:3011/user/update",
+					"http://192.168.3.11:3011/user/update",
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${token}`,
 						},
-						body: JSON.stringify(obj),
+						body: JSON.stringify(data),
 					}
 				);
 				const result: Response<string> = await res.json();
 				getData(token);
+				setEditable(false);
 				console.log("4", result);
 			} catch (error) {
 				console.log((error as Error).message);
@@ -125,19 +121,7 @@ export function PersonalInfoSettingsPage() {
 		<ScrollView style={styles.personalInfoSettings} overScrollMode="never">
 			<HeaderNavigationSettingsPages />
 			<View>
-				<View style={styles.profileCard}>
-					<View style={styles.profileCardTop}>
-						<Text
-							style={{
-								fontWeight: "700",
-								fontFamily: "GTWalsheimPro-Regular",
-							}}
-						>
-							Картка профілю
-						</Text>
-					</View>
-					<Avatar image={user.image} />
-				</View>
+				<Avatar />
 
 				<View style={styles.personalInfo}>
 					<View style={styles.personalInfoTop}>
@@ -149,22 +133,17 @@ export function PersonalInfoSettingsPage() {
 						>
 							Особиста інформація
 						</Text>
-						<TouchableOpacity
-							style={{
-								borderWidth: 1,
-								borderColor: "#543C52",
-								borderRadius: 50,
-								padding: 10,
-							}}
+						<ButtonEdit
+							editable={editable}
 							onPress={() => {
 								if (editable) {
 									handleSubmit(onSubmit)();
+								} else{
+									setEditable(true)
 								}
-								setEditable(!editable);
+								
 							}}
-						>
-							<ICONS.PencilIcon width={15} height={15} />
-						</TouchableOpacity>
+						/>
 					</View>
 
 					<Controller
@@ -175,9 +154,8 @@ export function PersonalInfoSettingsPage() {
 								placeholder={
 									user.name ? undefined : "Не вказано :("
 								}
-								bottomText="Ім'я"
+								label="Ім'я"
 								type="text"
-								// defaultValue={user.name}
 								editable={editable}
 								value={field.value}
 								onChangeText={field.onChange}
@@ -194,71 +172,31 @@ export function PersonalInfoSettingsPage() {
 								placeholder={
 									user.surname ? undefined : "Не вказано :("
 								}
-								bottomText="Прізвище"
+								label="Прізвище"
 								type="text"
 								editable={editable}
-								// defaultValue={user.surname}
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
 							/>
 						)}
 					/>
-
-					<Controller
-						control={control}
-						name="username"
-						render={({ field, fieldState }) => (
-							<ProfileCard
-								placeholder={
-									user.username ? undefined : "Не вказано :("
-								}
-								bottomText="Нікнейм"
-								type="text"
-								editable={editable}
-								// defaultValue={user.username}
-								value={field.value}
-								onChangeText={field.onChange}
-								errorMessage={fieldState.error?.message}
-							/>
-						)}
-					/>
-					{/* 
-					<Controller
-						control={control}
-						name="birthDate"
-						render={({ field, fieldState }) => (
-							<ProfileCard
-								placeholder={
-									user.birthDate ? undefined : "Не вказано :("
-								}
-								bottomText="Дата народження"
-								type="date"
-								editable={editable}
-								// defaultValue={
-								// 	user.birthDate
-								// 		? String(user.birthDate)
-								// 		: undefined
-								// }
-								value={field.value}
-								onChangeText={field.onChange}
-								errorMessage={fieldState.error?.message}
-							/>
-						)}
-					/> */}
 
 					<Controller
 						control={control}
 						name="email"
+						rules={{
+							required: {value: true, message: "Пошта не може бути порожньою!"},
+							
+						}}
 						render={({ field, fieldState }) => (
 							<ProfileCard
 								placeholder={
 									user.email ? undefined : "Не вказано :("
 								}
-								bottomText="Електронна пошта"
+								label="Електронна пошта"
 								type="email"
 								editable={editable}
-								// defaultValue={user.email}
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
@@ -284,20 +222,9 @@ export function PersonalInfoSettingsPage() {
 										? undefined
 										: "Не вказано :("
 								}
-								bottomText="Мобільний (з кодом країни)"
+								label="Мобільний (з кодом країни)"
 								type="tel"
 								editable={editable}
-								// defaultValue={
-								// 	user.phoneNumber?.slice(0, 4) +
-								// 	" " +
-								// 	user.phoneNumber?.slice(4, 6) +
-								// 	" " +
-								// 	user.phoneNumber?.slice(6, 9) +
-								// 	" " +
-								// 	user.phoneNumber?.slice(9, 11) +
-								// 	" " +
-								// 	user.phoneNumber?.slice(11, 13)
-								// }
 								value={field.value}
 								onChangeText={field.onChange}
 								errorMessage={fieldState.error?.message}
@@ -319,16 +246,19 @@ export function PersonalInfoSettingsPage() {
 										}
 									>
 										<ProfileCard
-											bottomText="Дата народження"
-											value={field.value?.toLocaleDateString()}
-											editable={false}
+											label="Дата народження"
+											value={
+												field.value
+													? field.value.toLocaleDateString()
+													: "Оберіть дату народження"
+											}
+											editable={editable}
 											type="date"
-											// pointerEvents="none"
 										/>
 									</Pressable>
 									{show && (
 										<DateTimePicker
-											value={field.value}
+											value={field.value ?? new Date()}
 											mode="date"
 											display={
 												Platform.OS === "ios"
@@ -338,6 +268,10 @@ export function PersonalInfoSettingsPage() {
 											onChange={(event, selectedDate) => {
 												setShow(Platform.OS === "ios");
 												if (!selectedDate) return;
+												console.log(
+													"onChange",
+													selectedDate
+												);
 												field.onChange(selectedDate);
 											}}
 											maximumDate={new Date()}

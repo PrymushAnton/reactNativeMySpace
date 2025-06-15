@@ -1,12 +1,12 @@
 import { Stack } from "expo-router";
-import { Header } from "../../shared/ui/header";
+import { Header } from "../../../shared/ui/header";
 
 export default function RootLayout() {
     return (
         <Stack screenOptions={{
-            headerShown: true,
+            headerShown: false,
             contentStyle: { backgroundColor: "#FFFFFF" },
-            header: () => <Header isOnSettings={false}/>,
+            // header: () => <Header isOnSettings={false}/>,
         }}>
 
         </Stack>

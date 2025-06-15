@@ -7,7 +7,6 @@ import { useFetchPosts } from "../../hooks/useFetchPosts";
 import { useState, useEffect } from "react";
 import { ModalFirstLogin } from "../modal-first-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { checkFirstLoginFlag } from "../../utils/firstLoginStorage";
 
 export function MainPage() {
 	const { isCreateVisible, closeCreateModal, openEditModal, closeEditModal } =
