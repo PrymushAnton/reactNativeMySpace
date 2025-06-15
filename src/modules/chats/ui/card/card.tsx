@@ -1,4 +1,4 @@
-import { View, Image, Text, Touchable, TouchableOpacity } from "react-native";
+import { View, Image, Text, TouchableOpacity } from "react-native";
 import { IContactCard } from "../../types/chat-info";
 import { styles } from "./card.styles";
 
@@ -39,6 +39,7 @@ function Message({ image, name, surname, text, date }: IContactCard) {
 					<Text style={styles.contactName}>
 						{name} {surname}
 					</Text>
+					{/* тут треба дата, хз як її зробити */}
 					<Text>9:41</Text>
 				</View>
 				<Text>{text}</Text>

@@ -37,6 +37,7 @@ import { PaperPlaneIcon } from "./paper-plane-icon";
 import { NotWatchedIcon } from "./not-watched-icon";
 import { WatchedIcon } from "./watched-icon";
 import { SearchIcon } from "./search-icon";
+import { ReturnIcon } from "./return-icon";
 
 export const ICONS = {
 	DateIcon,
@@ -78,4 +79,5 @@ export const ICONS = {
 	WatchedIcon,
 	NotWatchedIcon,
 	SearchIcon,
+	ReturnIcon,
 };
