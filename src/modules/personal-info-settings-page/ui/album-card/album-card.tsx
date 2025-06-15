@@ -49,7 +49,7 @@ export function AlbumCard() {
 			</View>
 			<Text style={{ fontWeight: 500, fontSize: 16 }}>Фотографії</Text>
 			<ScrollView horizontal={true} overScrollMode="never">
-				<View
+				<TouchableOpacity
 					style={{
 						width: 200,
 						height: 200,
@@ -58,10 +58,11 @@ export function AlbumCard() {
 						borderStyle: "dashed",
 						alignItems: "center",
 						justifyContent: "center",
+						marginHorizontal: 8,
 					}}
 				>
 					<ICONS.PlusIcon></ICONS.PlusIcon>
-				</View>
+				</TouchableOpacity>
 				<AlbumImage></AlbumImage>
 				<AlbumImage></AlbumImage>
 				<AlbumImage></AlbumImage>
