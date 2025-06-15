@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import { FriendProfilePage } from "../../modules/user-profile-page/ui"
+import { UserProfilePage } from "../../modules/profile-page/ui/user-profile-page"
 
 export default function UserProfile() {
     return (
         <View style={{flex: 1}}>
-            <FriendProfilePage/>
+            <UserProfilePage/>
         </View>
     );
 }

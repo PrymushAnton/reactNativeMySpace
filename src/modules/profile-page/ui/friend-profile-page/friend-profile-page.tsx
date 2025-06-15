@@ -1,12 +1,19 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, Alert } from "react-native";
+import {
+	View,
+	Text,
+	Image,
+	ScrollView,
+	TouchableOpacity,
+	Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAuthContext } from "../../auth/context";
-import { useFetchPosts } from "../../main-page/hooks/useFetchPosts";
-import { PublicatedPost } from "../../main-page/ui/post";
-import { ICONS } from "../../../shared/ui/icons";
-import { styles } from "./user-profile-page.styles";
+import { useAuthContext } from "../../../auth/context";
+import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
+import { PublicatedPost } from "../../../main-page/ui/post";
+import { ICONS } from "../../../../shared/ui/icons";
+import { styles } from "./friend-profile-page.styles";
 
-export function FriendProfilePage() {
+export function FrinedProfilePage() {
 	const { user } = useAuthContext();
 	const { posts, fetchPosts } = useFetchPosts(user?.id);
 
@@ -17,14 +24,17 @@ export function FriendProfilePage() {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch("http://192.168.1.10:3011/friend/delete-friend", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
-				},
-				body: JSON.stringify({ friendId: user.id }),
-			});
+			const res = await fetch(
+				"http://192.168.1.10:3011/friend/delete-friend",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify({ friendId: user.id }),
+				}
+			);
 
 			const data = await res.json();
 
@@ -40,7 +50,7 @@ export function FriendProfilePage() {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
+		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
 					{user.image ? (
@@ -59,15 +69,15 @@ export function FriendProfilePage() {
 
 				<View style={styles.statsContainer}>
 					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>3</Text>
+						<Text style={styles.statNumber}>12</Text>
 						<Text style={styles.statLabel}>Дописи</Text>
 					</View>
 					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>12.1K</Text>
+						<Text style={styles.statNumber}>42</Text>
 						<Text style={styles.statLabel}>Читачі</Text>
 					</View>
 					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>222</Text>
+						<Text style={styles.statNumber}>52</Text>
 						<Text style={styles.statLabel}>Друзі</Text>
 					</View>
 				</View>
@@ -83,7 +93,10 @@ export function FriendProfilePage() {
 							Підтвердити
 						</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.deleteBtn} onPress={handleDeleteFriend}>
+					<TouchableOpacity
+						style={styles.deleteBtn}
+						onPress={handleDeleteFriend}
+					>
 						<Text style={styles.actionText}>Видалити з друзів</Text>
 					</TouchableOpacity>
 				</View>

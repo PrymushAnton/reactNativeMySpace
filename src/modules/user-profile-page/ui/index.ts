@@ -1,1 +1,0 @@
-export { FriendProfilePage } from "./user-pofile-page"

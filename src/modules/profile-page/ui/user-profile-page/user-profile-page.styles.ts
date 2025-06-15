@@ -40,7 +40,6 @@ export const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		width: "100%",
 		paddingHorizontal: 48,
-		marginBottom: 16,
 	},
 	statBlock: {
 		alignItems: "center",
@@ -53,27 +52,6 @@ export const styles = StyleSheet.create({
 		fontSize: 16,
 		color: "#7A7A7A",
 		fontWeight: "500"
-	},
-	actions: {
-		flexDirection: "row",
-		gap: 12,
-	},
-	confirmBtn: {
-		paddingHorizontal: 20,
-		paddingVertical: 12,
-		borderRadius: 30,
-		backgroundColor: "#543C52",
-	},
-	deleteBtn: {
-		paddingHorizontal: 20,
-		paddingVertical: 12,
-		borderRadius: 30,
-		borderColor: "#543C52",
-		borderWidth: 1
-	},
-	actionText: {
-		color: "#543C52",
-		fontFamily: "GTWalsheimPro-Regular",
 	},
 	albumsWrapper: {
 		padding: 16,

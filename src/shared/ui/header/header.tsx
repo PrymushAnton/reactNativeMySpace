@@ -37,9 +37,9 @@ export function Header(props: IHeaderProps) {
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => {replace("/user-profile")}}>
+				{/* <TouchableOpacity onPress={() => {replace("/user-profile")}}>
 					<Text>UserPage</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</View>
 		</View>
 	);
