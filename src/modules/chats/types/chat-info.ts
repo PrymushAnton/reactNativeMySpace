@@ -1,7 +1,7 @@
 export interface IContactCard {
 	image?: string;
 	name: string;
-	surname: string;
+	surname?: string;
 	text?: string;
 	date?: Date;
 	wasWatched?: boolean;
@@ -20,4 +20,12 @@ export interface IAnotherUserMessage {
 	text: string;
 	date: Date;
 	wasWatched: boolean;
+}
+
+export interface IGroupCard {
+	image?: string;
+	name: string;
+	text?: string;
+	date?: Date;
+	wasWatched?: boolean;
 }
