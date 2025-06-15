@@ -92,9 +92,8 @@ export function PersonalInfoSettingsPage() {
 		async function sendRequest() {
 			try {
 				if (!token) {
-					console.log("lolo");
-					return;
-				}
+					return
+				};
 				const res = await fetch(
 					"http://192.168.3.11:3011/user/update",
 					{

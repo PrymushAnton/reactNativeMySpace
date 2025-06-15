@@ -22,7 +22,7 @@ type Props = {
 };
 
 export function TagsMultiSelect({ selectedTags, onChange }: Props) {
-	const BASE_URL = "192.168.3.11:3011";
+	const BASE_URL = "192.168.1.10:3011";
 
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
@@ -85,6 +85,12 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 		setTempSelected((prev) => prev.filter((name) => name !== tagName));
 	};
 
+	function truncateText(text: string, maxLength: number = 15) {
+		return text.length > maxLength
+			? text.slice(0, maxLength) + "..."
+			: text;
+	}
+
 	return (
 		<KeyboardAvoidingView
 			behavior={Platform.OS === "ios" ? "padding" : undefined}
@@ -122,6 +128,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 							style={{ maxHeight: 150, paddingHorizontal: 10 }}
 							keyboardShouldPersistTaps="handled"
 							nestedScrollEnabled={true}
+							overScrollMode="never"
 						>
 							{filteredTags.map((tag) => {
 								const isSelected = tempSelected.includes(
@@ -182,13 +189,17 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 						return (
 							<View key={tag.id} style={styles.selectedTagView}>
 								<Text style={styles.selectedTagText}>
-									{tag.name}
+									{truncateText(tag.name)}
 								</Text>
 								<TouchableOpacity
 									onPress={() => handleRemove(tag.name)}
-									style={{marginLeft: 16}}
+									style={{ marginLeft: 16 }}
 								>
-									<View style={styles.selectedTagCloseButtonView} >
+									<View
+										style={
+											styles.selectedTagCloseButtonView
+										}
+									>
 										<ICONS.CloseIcon
 											color={"#FFFFFF"}
 											width={10}

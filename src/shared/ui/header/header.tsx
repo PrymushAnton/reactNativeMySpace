@@ -1,4 +1,4 @@
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { ICONS } from "../icons";
 import { useAuthContext } from "../../../modules/auth/context";
 import { useModal } from "../../../modules/auth/context";

@@ -48,7 +48,7 @@ export function AlbumCard() {
 				</View>
 			</View>
 			<Text style={{ fontWeight: 500, fontSize: 16 }}>Фотографії</Text>
-			<ScrollView horizontal={true}>
+			<ScrollView horizontal={true} overScrollMode="never">
 				<View
 					style={{
 						width: 200,
@@ -74,7 +74,7 @@ export function AlbumCard() {
 }
 export function MyPhoto() {
 	return (
-		<ScrollView horizontal={true}>
+		<ScrollView horizontal={true} overScrollMode="never">
 			<AlbumImage></AlbumImage>
 			<AlbumImage></AlbumImage>
 			<AlbumImage></AlbumImage>

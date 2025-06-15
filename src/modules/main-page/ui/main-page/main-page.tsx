@@ -56,46 +56,6 @@ export function MainPage() {
 						onRefresh={fetchPosts}
 					/>
 				))}
-
-				<PublicatedPost
-					name="Theme"
-					text="Інколи найкращі ідеї народжуються в тиші. Природа, книга і спокій — усе, що потрібно, аби перезавантажитись."
-					hashtags={["відпочинок", "натхнення"]}
-					photo={[]}
-					likes={140}
-					views={10}
-					user={{ id: 20000, email: "anton@gmail.com" }}
-				/>
-
-				<PublicatedPost
-					name="Theme"
-					text="Природа, книга і спокій — усе, що потрібно, аби перезавантажитись. Інколи найкращі ідеї народжуються в тиші."
-					hashtags={["натхнення"]}
-					photo={[]}
-					likes={5}
-					views={8}
-					user={{ id: 20001, email: "rinat@gmail.com" }}
-				/>
-
-				<PublicatedPost
-					name="Theme"
-					text="Буває такий настрій: просто лежиш і існуєш. Чай в одній руці, телефон в іншій, думки десь у космосі. І знаєте шо? Норм."
-					hashtags={[]}
-					photo={[]}
-					likes={4}
-					views={10}
-					user={{ id: 20003, email: "ilia@gmail.com" }}
-				/>
-
-				<PublicatedPost
-					name="Theme"
-					text="Чай в одній руці, телефон в іншій, думки десь у космосі. І знаєте шо? Норм. Буває такий настрій: просто лежиш і існуєш."
-					hashtags={["вайб"]}
-					photo={[]}
-					likes={9}
-					views={15}
-					user={{ id: 20004, email: "oleksandr@gmail.com" }}
-				/>
 			</View>
 		</View>
 	);

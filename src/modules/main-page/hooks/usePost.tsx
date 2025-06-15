@@ -8,7 +8,7 @@ interface PostPayload {
 	existingTags: string[];
 	newTags: string[];
 	images: string[];
-	link: string;
+	link: string[];
 }
 
 interface UpdatePayload extends PostPayload {

@@ -51,7 +51,6 @@ export function ModalFirstLogin({
 					}
 				);
 				const result: Response<string> = await res.json();
-				console.log(result)
 				if (result.status === "error") return
 				setJustRegistered(false);
 				getData(token)

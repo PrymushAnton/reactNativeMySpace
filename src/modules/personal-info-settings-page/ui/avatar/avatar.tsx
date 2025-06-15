@@ -67,7 +67,7 @@ export function Avatar() {
 				if (!token) return;
 
 				const res = await fetch(
-					"http://192.168.3.11:3011/user/update-avatar",
+					"http://192.168.1.10:3011/user/update-avatar",
 					{
 						method: "POST",
 						headers: {

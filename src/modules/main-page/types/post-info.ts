@@ -6,7 +6,7 @@ export interface IBackendPost{
     text: string;
     views: number;
     likes: number;
-    link: string | null;
+    link: string[] | null;
     userId: number;
     tags: string[];
     images: string[];
