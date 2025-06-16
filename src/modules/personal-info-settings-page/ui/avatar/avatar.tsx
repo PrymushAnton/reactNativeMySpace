@@ -9,6 +9,7 @@ import { Response } from "../../../../shared/types";
 import { ProfileCard } from "../../../../shared/ui/profileCard";
 import { ButtonEdit } from "../buttonEdit";
 import { Controller, useForm } from "react-hook-form";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function Avatar() {
 	const [avatar, setAvatar] = useState<string>("");
@@ -67,7 +68,7 @@ export function Avatar() {
 				if (!token) return;
 
 				const res = await fetch(
-					"http://192.168.1.10:3011/user/update-avatar",
+					`http://${HOST}:${PORT}/user/update-avatar`,
 					{
 						method: "POST",
 						headers: {

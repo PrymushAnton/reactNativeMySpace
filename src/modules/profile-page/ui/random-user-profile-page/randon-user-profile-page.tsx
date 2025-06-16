@@ -12,6 +12,7 @@ import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
 import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./random-user-profile-page.styles";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FrinedProfilePage() {
 	const { user } = useAuthContext();
@@ -25,7 +26,7 @@ export function FrinedProfilePage() {
 			if (!token) return;
 
 			const res = await fetch(
-				"http://192.168.1.10:3011/friend/delete-friend",
+				`http://${HOST}:${PORT}/friend/delete-friend`,
 				{
 					method: "POST",
 					headers: {

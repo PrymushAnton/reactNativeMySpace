@@ -26,6 +26,7 @@ import parsePhoneNumberFromString, {
 import { format } from "date-fns";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ButtonEdit } from "../buttonEdit";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 interface IPersonalInfoFormData {
 	name: string;
@@ -95,7 +96,7 @@ export function PersonalInfoSettingsPage() {
 					return
 				};
 				const res = await fetch(
-					"http://192.168.1.10:3011/user/update",
+					`http://${HOST}:${PORT}/user/update`,
 					{
 						method: "POST",
 						headers: {

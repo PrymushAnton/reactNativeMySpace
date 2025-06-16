@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
 import { FriendRequestType } from "../../types/friend-info";
 import { FriendRequest } from "../friend-component/friend-request-component";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FriendRequestPage() {
 	const [requests, setRequests] = useState<FriendRequestType[]>([]);
@@ -11,7 +12,7 @@ export function FriendRequestPage() {
 	const loadRequests = async () => {
 		const token = await AsyncStorage.getItem("token");
 		const res = await fetch(
-			"http://192.168.1.10:3011/friend/pending-requests",
+			`http://${HOST}:${PORT}/friend/pending-requests`,
 			{
 				headers: { Authorization: `Bearer ${token}` },
 			}
@@ -28,8 +29,8 @@ export function FriendRequestPage() {
 	const respondRequest = async (id: number, accept: boolean) => {
 		const token = await AsyncStorage.getItem("token");
 		const url = accept
-			? `http://192.168.1.10:3011/friend/accept-request`
-			: `http://192.168.1.10:3011/friend/reject-request`;
+			? `http://${HOST}:${PORT}/friend/accept-request`
+			: `http://${HOST}:${PORT}/friend/reject-request`;
 
 		await fetch(url, {
 			method: "POST",

@@ -8,6 +8,7 @@ import { IUserAdditionalInfo } from "../../types/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { useAuthContext } from "../../../auth/context";
 import { Response } from "../../../../shared/types";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 interface ModalFirstLoginProps {
 	isVisible: boolean;
@@ -40,7 +41,7 @@ export function ModalFirstLogin({
 			try {
 				if (!token) return
 				const res = await fetch(
-					"http://192.168.1.10:3011/user/update-first-login",
+					`http://${HOST}:${PORT}/user/update-first-login`,
 					{
 						method: "POST",
 						headers: {

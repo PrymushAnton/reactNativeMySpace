@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IPostFromBackend, IUserPost } from "../types/post";
 import { Response } from "../../../shared/types";
+import { HOST, PORT } from "../../../shared/base-url";
 
 interface PostPayload {
 	title: string;
@@ -16,7 +17,6 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-	const BASE_URL = "http://192.168.1.10:3011";
 
 	async function getToken() {
 		return await AsyncStorage.getItem("token");
@@ -40,7 +40,7 @@ export function usePost() {
 		const payload = transformToPayload(post);
 
 		try {
-			const res = await fetch(`${BASE_URL}/post/create`, {
+			const res = await fetch(`http://${HOST}:${PORT}/post/create`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -66,7 +66,7 @@ export function usePost() {
 		};
 
 		try {
-			const res = await fetch(`${BASE_URL}/post/update`, {
+			const res = await fetch(`http://${HOST}:${PORT}/post/update`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -87,7 +87,7 @@ export function usePost() {
 		if (!token) return "";
 
 		try {
-			const res = await fetch(`${BASE_URL}/post/delete`, {
+			const res = await fetch(`http://${HOST}:${PORT}/post/delete`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -105,7 +105,7 @@ export function usePost() {
 
 	async function getAllPosts() {
 		try {
-			const res = await fetch(`${BASE_URL}/post/find-all-posts`);
+			const res = await fetch(`http://${HOST}:${PORT}/post/find-all-posts`);
 			return await res.json();
 		} catch (error) {
 			console.error(error);
@@ -116,7 +116,7 @@ export function usePost() {
 	async function getPostsByUserId(userId: number) {
 		try {
 			const res = await fetch(
-				`${BASE_URL}/post/find-posts-by-user-id/${userId}`
+				`http://${HOST}:${PORT}/post/find-posts-by-user-id/${userId}`
 			);
 			return await res.json();
 		} catch (error) {
@@ -127,7 +127,7 @@ export function usePost() {
 
 	async function getAllTags() {
 		try {
-			const res = await fetch(`${BASE_URL}/post/find-all-tags`);
+			const res = await fetch(`http://${HOST}:${PORT}/post/find-all-tags`);
 			return await res.json();
 		} catch (error) {
 			console.error(error);
@@ -137,7 +137,7 @@ export function usePost() {
 
 	async function getPostById(postId: number): Promise<Response <IPostFromBackend>> {
 		try {
-			const res = await fetch(`${BASE_URL}/post/find-post-by-id/${postId}`, {"method": "GET"});
+			const res = await fetch(`http://${HOST}:${PORT}/post/find-post-by-id/${postId}`, {"method": "GET"});
 			const data = await res.json();
 			return data
 		} catch (error) {

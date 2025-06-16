@@ -4,21 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
 import { FriendRequest } from "../friend-component/friend-request-component";
 import { FriendCard } from "../../types/friend-info";
-
-// interface Friend {
-// 	id: string;
-// 	name: string;
-// 	surname: string ;
-// 	username: string ;
-// 	image: string;
-// }
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FriendAllPage() {
 	const [friends, setFriends] = useState<FriendCard[]>([]);
 
 	const fetchFriends = async () => {
 		const token = await AsyncStorage.getItem("token");
-		const res = await fetch("http://192.168.1.10:3011/friend/all-friends", {
+		const res = await fetch(`http://${HOST}:${PORT}/friend/all-friends`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		const data = await res.json();
