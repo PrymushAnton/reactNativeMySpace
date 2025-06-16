@@ -39,33 +39,29 @@ const messages: IContactCard[] = [
 
 export function MessagesPage() {
 	return (
-		<View>
-			<ScrollView >
-				<View style={styles.container}>
-					<View style={styles.messagesTop}>
-						<ICONS.ChatIcon width={20} height={20}></ICONS.ChatIcon>
-						<Text
-							style={{
-								color: "#81818D",
-								fontSize: 20,
-								fontWeight: 500,
-							}}
-						>
-							Повідомлення
-						</Text>
-					</View>
-
-					<View>
-						<FlatList
-							data={messages}
-							keyExtractor={(_, index) => index.toString()}
-							renderItem={({ item }) => (
-								<Card.Message {...item} />
-							)}
-						/>
-					</View>
-				</View>
-			</ScrollView>
-		</View>
+			<View style={styles.container}>
+				<FlatList
+					data={messages}
+					keyExtractor={(_, index) => index.toString()}
+					renderItem={({ item }) => <Card.Message {...item} />}
+					ListHeaderComponent={
+						<View style={styles.container}>
+							<View style={styles.messagesTop}>
+								<ICONS.ChatIcon width={20} height={20} />
+								<Text
+									style={{
+										color: "#81818D",
+										fontSize: 20,
+										fontWeight: "500",
+									}}
+								>
+									Повідомлення
+								</Text>
+							</View>
+						</View>
+					}
+					contentContainerStyle={{ paddingBottom: 80 }}
+				/>
+			</View>
 	);
 }

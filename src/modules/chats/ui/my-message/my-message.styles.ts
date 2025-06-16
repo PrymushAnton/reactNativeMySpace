@@ -6,14 +6,18 @@ export const styles = StyleSheet.create({
 		padding: 10,
 		gap: 10,
 		backgroundColor: "#CDCED2",
-		flexDirection: "row",
-		alignSelf: "flex-end"
+		alignSelf: "flex-end",
+		alignItems: "flex-end",
+		maxWidth: "95%",
+		flexDirection: "column",
+		marginBottom: 10,
 	},
 	messageText: {
-		color: "#81818D",
+		color: "#070A1C",
 	},
 	infoCont: {
-		justifyContent: "space-between",
 		flexDirection: "row",
+		alignItems: "flex-end",
+		justifyContent: "space-between",
 	},
 });
