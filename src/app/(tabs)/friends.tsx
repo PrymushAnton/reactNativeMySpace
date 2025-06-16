@@ -8,5 +8,5 @@ export default function Friends() {
     //         <FriendRequestPage/>
     //     </ScrollView>
     // );
-    return <Redirect href={"/friend-request"}/>
+    return <Redirect href={"/friend-main"}/>
 }

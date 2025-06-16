@@ -1,9 +1,13 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./chats-page-header.styles";
-import { navigate } from "expo-router/build/global-state/routing";
+import { useRouter } from "expo-router";
+// import { navigate } from "expo-router/build/global-state/routing";
+
 
 export function ChatsPageHeader() {
+
+	const router = useRouter()
 	return (
 		<View
 			style={{
@@ -16,7 +20,7 @@ export function ChatsPageHeader() {
 			<TouchableOpacity
 				style={styles.container}
 				onPress={() => {
-					navigate("/contacts");
+					router.replace("/contacts");
 				}}
 			>
 				<ICONS.FriendsIcon width={20} height={20}></ICONS.FriendsIcon>
@@ -25,7 +29,7 @@ export function ChatsPageHeader() {
 			<TouchableOpacity
 				style={styles.container}
 				onPress={() => {
-					navigate("/messages");
+					router.replace("/messages");
 				}}
 			>
 				<ICONS.ChatIcon width={20} height={20}></ICONS.ChatIcon>
@@ -34,7 +38,7 @@ export function ChatsPageHeader() {
 			<TouchableOpacity
 				style={styles.container}
 				onPress={() => {
-					navigate("/group-chats");
+					router.replace("/group-chats");
 				}}
 			>
 				<ICONS.ChatIcon width={20} height={20}></ICONS.ChatIcon>

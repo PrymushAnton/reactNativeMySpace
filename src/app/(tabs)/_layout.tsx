@@ -58,6 +58,15 @@ export default function TabsLayout() {
 				}}
 				
 			/>
+
+			<Tabs.Screen
+				name="(chats)"
+				options={{
+					tabBarIcon: () => <ICONS.ChatIcon />,
+					href: null
+				}}
+				
+			/>
 		</Tabs>
 	);
 }

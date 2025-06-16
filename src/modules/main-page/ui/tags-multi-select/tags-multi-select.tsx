@@ -22,7 +22,7 @@ type Props = {
 };
 
 export function TagsMultiSelect({ selectedTags, onChange }: Props) {
-	const BASE_URL = "192.168.1.10:3011";
+	const BASE_URL = "192.168.3.11:3011";
 
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [filteredTags, setFilteredTags] = useState<Tag[]>([]);
