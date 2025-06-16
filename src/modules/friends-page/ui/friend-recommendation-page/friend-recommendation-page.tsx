@@ -10,7 +10,7 @@ export function FriendRecommendationPage() {
 
 	const fetchUsers = async () => {
 		const token = await AsyncStorage.getItem("token");
-		const res = await fetch("http://192.168.3.11:3011/friend/all-users", {
+		const res = await fetch("http://192.168.1.10:3011/friend/all-users", {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		const data = await res.json();
@@ -19,7 +19,7 @@ export function FriendRecommendationPage() {
 
 	useEffect(() => {
 		fetchUsers();
-	}, []);
+	}, [users]);
 
 	return (
 		<View style={{ flex: 1 }}>

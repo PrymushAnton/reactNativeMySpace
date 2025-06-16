@@ -103,7 +103,7 @@ export function FriendSendRequest({
 		const token = await AsyncStorage.getItem("token");
 		try {
 			const res = await fetch(
-				"http://192.168.3.11:3011/friend/send-friend-request",
+				"http://192.168.1.10:3011/friend/send-friend-request",
 				{
 					method: "POST",
 					headers: {
@@ -206,7 +206,7 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch("http://192.168.3.11:3011/friend/delete-friend", {
+			const res = await fetch("http://192.168.1.10:3011/friend/delete-friend", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

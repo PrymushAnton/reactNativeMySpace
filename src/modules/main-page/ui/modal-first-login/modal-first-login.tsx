@@ -40,7 +40,7 @@ export function ModalFirstLogin({
 			try {
 				if (!token) return
 				const res = await fetch(
-					"http://192.168.3.11:3011/user/update-first-login",
+					"http://192.168.1.10:3011/user/update-first-login",
 					{
 						method: "POST",
 						headers: {

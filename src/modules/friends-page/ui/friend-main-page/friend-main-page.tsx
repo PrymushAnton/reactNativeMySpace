@@ -15,13 +15,13 @@ export function FriendMainPage() {
 		const token = await AsyncStorage.getItem("token");
 
 		const [requestsRes, usersRes, friendsRes] = await Promise.all([
-			fetch("http://192.168.3.11:3011/friend/pending-requests", {
+			fetch("http://192.168.1.10:3011/friend/pending-requests", {
 				headers: { Authorization: `Bearer ${token}` },
 			}),
-			fetch("http://192.168.3.11:3011/friend/all-users", {
+			fetch("http://192.168.1.10:3011/friend/all-users", {
 				headers: { Authorization: `Bearer ${token}` },
 			}),
-			fetch("http://192.168.3.11:3011/friend/all-friends", {
+			fetch("http://192.168.1.10:3011/friend/all-friends", {
 				headers: { Authorization: `Bearer ${token}` },
 			}),
 		]);
@@ -42,8 +42,8 @@ export function FriendMainPage() {
 	const respondRequest = async (id: number, accept: boolean) => {
 		const token = await AsyncStorage.getItem("token");
 		const url = accept
-			? `http://192.168.3.11:3011/friend/accept-request`
-			: `http://192.168.3.11:3011/friend/reject-request`;
+			? `http://192.168.1.10:3011/friend/accept-request`
+			: `http://192.168.1.10:3011/friend/reject-request`;
 
 		await fetch(url, {
 			method: "POST",
@@ -58,7 +58,7 @@ export function FriendMainPage() {
 
 	useEffect(() => {
 		loadData();
-	}, []);
+	}, [friends, recommendations, requests]);
 
 	return (
 		<ScrollView overScrollMode="never">

@@ -11,7 +11,7 @@ export function MyPostsPage() {
 
 	useEffect(() => {
 		fetchPosts(); 
-	}, [user?.id]);
+	}, [posts]);
 
 	return (
 		<View>

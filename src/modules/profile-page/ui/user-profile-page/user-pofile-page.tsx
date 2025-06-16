@@ -17,7 +17,7 @@ export function UserProfilePage() {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch("http://192.168.3.11:3011/friend/delete-friend", {
+			const res = await fetch("http://192.168.1.10:3011/friend/delete-friend", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

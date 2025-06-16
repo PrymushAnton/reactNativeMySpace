@@ -11,7 +11,7 @@ export function FriendRequestPage() {
 	const loadRequests = async () => {
 		const token = await AsyncStorage.getItem("token");
 		const res = await fetch(
-			"http://192.168.3.11:3011/friend/pending-requests",
+			"http://192.168.1.10:3011/friend/pending-requests",
 			{
 				headers: { Authorization: `Bearer ${token}` },
 			}
@@ -23,13 +23,13 @@ export function FriendRequestPage() {
 
 	useEffect(() => {
 		loadRequests();
-	}, []);
+	}, [requests]);
 
 	const respondRequest = async (id: number, accept: boolean) => {
 		const token = await AsyncStorage.getItem("token");
 		const url = accept
-			? `http://192.168.3.11:3011/friend/accept-request`
-			: `http://192.168.3.11:3011/friend/reject-request`;
+			? `http://192.168.1.10:3011/friend/accept-request`
+			: `http://192.168.1.10:3011/friend/reject-request`;
 
 		await fetch(url, {
 			method: "POST",
