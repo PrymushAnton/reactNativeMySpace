@@ -11,7 +11,7 @@ export default function TabsLayout() {
                 height: 56
             },
             tabBarActiveTintColor: "black",
-
+			
         }}>
 			<Tabs.Screen
 				name="main"
@@ -39,6 +39,33 @@ export default function TabsLayout() {
 				options={{
 					tabBarIcon: () => <ICONS.ChatIcon />,
 				}}
+			/>
+
+			<Tabs.Screen
+				name="(settings)"
+				options={{
+					tabBarIcon: () => <ICONS.ChatIcon />,
+					href: null
+				}}
+				
+			/>
+
+			<Tabs.Screen
+				name="(friends)"
+				options={{
+					tabBarIcon: () => <ICONS.ChatIcon />,
+					href: null
+				}}
+				
+			/>
+
+			<Tabs.Screen
+				name="(chats)"
+				options={{
+					tabBarIcon: () => <ICONS.ChatIcon />,
+					href: null
+				}}
+				
 			/>
 		</Tabs>
 	);

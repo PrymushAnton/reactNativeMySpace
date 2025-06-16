@@ -9,7 +9,7 @@ export interface IUserPost {
 	image: string[];
 	defaultTags: string[];
 	customTags: string[];
-	link: string;
+	link: string[];
 
 	// avatar?: string;
 	likes?: number;
@@ -39,7 +39,7 @@ export interface IPostFromBackend {
 	text: string;
 	views: number;
 	likes: number;
-	link: string | null;
+	link: string[] | null;
 	tags: string[];
 	images: string[];
 	user: IUserFromBackend;

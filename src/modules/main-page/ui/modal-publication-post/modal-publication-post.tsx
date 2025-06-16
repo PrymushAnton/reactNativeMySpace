@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { styles } from "./modal-publication-post.styles";
 import { TagsMultiSelect } from "../tags-multi-select";
 import { COLORS } from "../../../../shared/constants";
+import { LinksInput } from "../links-input";
 
 interface ModalPublicationPostProps {
 	onRefresh?: () => void;
@@ -46,7 +47,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 		image: yup.array().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
-		link: yup.string().default(""),
+		link: yup.array().required("Додайте хочаб одне посилання"),
 	});
 
 	const { handleSubmit, control, formState, setValue, setError } =
@@ -57,7 +58,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 				image: [],
 				defaultTags: [],
 				customTags: [],
-				link: "",
+				link: [],
 			},
 			resolver: yupResolver(schema),
 		});
@@ -75,7 +76,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 		setValue("image", []);
 		setValue("defaultTags", []);
 		setValue("customTags", []);
-		setValue("link", "");
+		setValue("link", []);
 	}
 
 	function removeImage(index: number) {
@@ -124,7 +125,10 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	return (
 		<View>
 			<ModalTool isVisible={isCreateVisible} onClose={closingModal}>
-				<ScrollView style={styles.mainModalWindow}>
+				<ScrollView
+					style={styles.mainModalWindow}
+					overScrollMode="never"
+				>
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closingModal}>
 							<ICONS.CloseIcon width={15} height={15} />
@@ -228,20 +232,15 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 						<Controller
 							control={control}
 							name="link"
-							render={({ field, fieldState }) => {
-								return (
-									<Input
-										placeholder="Напишіть посилання"
-										onChange={field.onChange}
-										onChangeText={field.onChange}
-										value={field.value}
-										autoCorrect={false}
-										errorMessage={fieldState.error?.message}
-									/>
-								);
-							}}
+							render={({ field }) => (
+								<LinksInput
+									value={field.value}
+									onChange={field.onChange}
+								/>
+							)}
 						/>
 					</View>
+
 					{images.length > 0 && (
 						<View
 							style={{
