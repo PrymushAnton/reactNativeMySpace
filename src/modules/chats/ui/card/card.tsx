@@ -2,6 +2,7 @@ import { View, Image, Text, TouchableOpacity } from "react-native";
 import { IContactCard } from "../../types/chat-info";
 import { styles } from "./card.styles";
 import { useRouter } from "expo-router";
+import { ICONS } from "../../../../shared/ui/icons";
 
 const router = useRouter();
 
@@ -85,8 +86,51 @@ function Group({ image, name, surname, text, date }: IContactCard) {
 	);
 }
 
+function GroupAdd({ image, name, surname }: IContactCard) {
+	return (
+		<View style={styles.card3}>
+			<View style={styles.groupAddInfo}>
+				<Image
+					source={{ uri: image }}
+					style={styles.contactImage}
+				></Image>
+				<Text style={styles.contactName}>
+					{name} {surname}
+				</Text>
+			</View>
+			<TouchableOpacity>
+				<ICONS.UncheckedCheckbox
+					width={20}
+					height={20}
+				></ICONS.UncheckedCheckbox>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
+function GroupDelete({ image, name, surname }: IContactCard) {
+	return (
+		<View style={styles.card3}>
+			<View style={styles.groupAddInfo}>
+				<Image
+					source={{ uri: image }}
+					style={styles.contactImage}
+				></Image>
+				<Text style={styles.contactName}>
+					{name} {surname}
+				</Text>
+			</View>
+			<TouchableOpacity>
+				<ICONS.TrashCanIcon width={20} height={20}></ICONS.TrashCanIcon>
+			</TouchableOpacity>
+		</View>
+	);
+}
+
 Card.Contact = Contact;
 Card.Message = Message;
 Card.Group = Group;
+Card.GroupAdd = GroupAdd;
+Card.GroupDelete = GroupDelete;
 
 export { Card };

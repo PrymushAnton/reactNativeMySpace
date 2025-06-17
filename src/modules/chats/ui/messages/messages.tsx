@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./messages.styles";
 import { Card } from "../card/card";
@@ -45,17 +45,25 @@ export function MessagesPage() {
 				keyExtractor={(_, index) => index.toString()}
 				renderItem={({ item }) => <Card.Message {...item} />}
 				ListHeaderComponent={
-					<View style={styles.messagesTop}>
-						<ICONS.ChatIcon width={20} height={20} />
-						<Text
-							style={{
-								color: "#81818D",
-								fontSize: 20,
-								fontWeight: 500,
-							}}
-						>
-							Повідомлення
-						</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							justifyContent: "space-between",
+						}}
+					>
+						<View style={styles.messagesTop}>
+							<ICONS.ChatIcon width={20} height={20} />
+							<Text
+								style={{
+									color: "#81818D",
+									fontSize: 20,
+									fontWeight: 500,
+								}}
+							>
+								Повідомлення
+							</Text>
+						</View>
 					</View>
 				}
 				contentContainerStyle={{ paddingBottom: 80 }}

@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { styles } from "./contacts.styles";
 import { ICONS } from "../../../../shared/ui/icons";
 import { IContactCard } from "../../types/chat-info";
@@ -78,43 +78,3 @@ export function ContactsPage() {
 		</View>
 	);
 }
-// <ScrollView>
-// 	<View style={styles.container}>
-// 		<View style={styles.contactsTop}>
-// 			<ICONS.FriendsIcon
-// 				fill={"#81818D"}
-// 				width={20}
-// 				height={20}
-// 			></ICONS.FriendsIcon>
-// 			<Text
-// 				style={{
-// 					color: "#81818D",
-// 					fontWeight: 500,
-// 					fontSize: 20,
-// 				}}
-// 			>
-// 				Контакти
-// 			</Text>
-// 		</View>
-// 		<View style={styles.search}>
-// 			<ICONS.SearchIcon
-// 				width={15}
-// 				height={15}
-// 				fill={"#070A1C"}
-// 			></ICONS.SearchIcon>
-// 			<Text
-// 				style={{
-// 					color: "#81818D",
-// 					fontSize: 16,
-// 				}}
-// 			>
-// 				Пошук
-// 			</Text>
-// 		</View>
-// 		<FlatList
-// 			data={contacts}
-// 			keyExtractor={(_, index) => index.toString()}
-// 			renderItem={({ item }) => <Card.Contact {...item} />}
-// 		/>
-// 	</View>
-// </ScrollView>
