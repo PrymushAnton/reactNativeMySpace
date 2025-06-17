@@ -17,18 +17,17 @@ interface UpdatePayload extends PostPayload {
 }
 
 export function usePost() {
-
 	async function getToken() {
 		return await AsyncStorage.getItem("token");
 	}
 
 	function transformToPayload(post: IUserPost): PostPayload {
 		return {
-			title: post.name,
-			text: post.description,
+			title: post.title,
+			text: post.text,
 			existingTags: post.defaultTags,
 			newTags: post.customTags,
-			images: post.image ,
+			images: post.images,
 			link: post.link,
 		};
 	}
@@ -48,8 +47,8 @@ export function usePost() {
 				},
 				body: JSON.stringify(payload),
 			});
-			const results = await res.json();
-			return results;
+			const result = await res.json();
+			return result;
 		} catch (error) {
 			console.error(error);
 			return "";
@@ -135,14 +134,17 @@ export function usePost() {
 		}
 	}
 
-	async function getPostById(postId: number): Promise<Response <IPostFromBackend>> {
+	async function getPostById(postId: number): Promise<Response<IPostFromBackend>> {
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/find-post-by-id/${postId}`, {"method": "GET"});
+			const res = await fetch(
+				`http://${HOST}:${PORT}/post/find-post-by-id/${postId}`,
+				{ method: "GET" }
+			);
 			const data = await res.json();
-			return data
+			return data;
 		} catch (error) {
 			console.error(error);
-			return {status: "error", message: ""};
+			return { status: "error", message: "" };
 		}
 	}
 
@@ -153,6 +155,6 @@ export function usePost() {
 		getAllPosts,
 		getPostsByUserId,
 		getAllTags,
-		getPostById
+		getPostById,
 	};
 }

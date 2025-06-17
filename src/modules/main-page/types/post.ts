@@ -4,37 +4,44 @@ export interface IUserPost {
 	id?: number;
 	userId?: number;
 
-	name: string;
-	description: string;
-	image: string[];
-	defaultTags: string[];
+	title: string;
+	text: string;
+	images: string[];
+	defaultTags: string[]; 
 	customTags: string[];
 	link: string[];
 
-	// avatar?: string;
 	likes?: number;
 	views?: number;
 	data?: any;
 }
 
-export type IUserPostWithUser = IUserPost & { user: IUser };
+export type IUserPostWithUser = IUserPost & { user: IUserFromBackend };
 
 export interface IUserFromBackend {
-	name: string | null;
 	id: number;
 	email: string;
-	surname: string | null;
-	phoneNumber: string | null;
-	birthDate: Date | null;
-	image: string | null;
+	first_name: string | null;
+	last_name: string | null;
 	username: string | null;
+	profile: {
+		dateOfBirth: string | null;
+		avatars: { url: string }[]; // или просто string[] если ты так возвращаешь
+	};
 }
 
-export type IUserAdditionalInfo = Omit<IUserFromBackend, "id" | "phoneNumber" | "birthDate" | "image" | "email">
+export type IUserAdditionalInfo = Omit<
+	IUserFromBackend,
+	"id" | "email" | "profile"
+> & {
+	profile: {
+		dateOfBirth: string | null;
+	};
+};
 
 export interface IPostFromBackend {
-	userId: number;
 	id: number;
+	userId: number;
 	title: string;
 	text: string;
 	views: number;

@@ -94,25 +94,6 @@ export function PublicatedPost(props: IPostProps) {
 		}
 	};
 
-	// useEffect(() => {
-	// 	if (!user?.id || !props.user?.id) return;
-	// 	if (user.id === props.user.id) return;
-
-	// 	const checkFriendStatus = async () => {
-	// 		try {
-	// 			const res = await fetch(
-	// 				`http://${HOST}:${PORT}/friends/check/${user.id}/${props.user.id}`
-	// 			);
-	// 			const data = await res.json();
-	// 			setIsFriend(data.isFriend);
-	// 		} catch (err) {
-	// 			console.error("Ошибка при проверке дружбы", err);
-	// 		}
-	// 	};
-
-	// 	checkFriendStatus();
-	// }, [user?.id, props.user?.id]);
-
 	return (
 		<View>
 			<ModalThreeDots
@@ -127,13 +108,13 @@ export function PublicatedPost(props: IPostProps) {
 						style={styles.userInfo}
 						onPress={handleProfilePress}
 					>
-						{props.user?.image ? (
+						{props.user?.profile?.avatars ? (
 							<Image
 								style={styles.avatar}
 								source={{
 									uri:
 										"data:image/jpeg;base64," +
-										props.user.image,
+										props.user.profile.avatars,
 								}}
 							/>
 						) : (
@@ -177,7 +158,6 @@ export function PublicatedPost(props: IPostProps) {
 							: undefined}
 					</View>
 
-					{/* Блок ссылок */}
 					{props.link && props.link.length > 0 && (
 						<View
 							style={{

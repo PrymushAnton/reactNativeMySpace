@@ -28,8 +28,8 @@ export function ModalFirstLogin({
 		setValue,
 	} = useForm<IUserAdditionalInfo>({
 		defaultValues: {
-			name: "",
-			surname: "",
+			first_name: "",
+			last_name: "",
 			username: "",
 		},
 	});
@@ -39,7 +39,7 @@ export function ModalFirstLogin({
 	function onSubmit(data: IUserAdditionalInfo) {
 		async function sendRequest() {
 			try {
-				if (!token) return
+				if (!token) return;
 				const res = await fetch(
 					`http://${HOST}:${PORT}/user/update-first-login`,
 					{
@@ -52,34 +52,28 @@ export function ModalFirstLogin({
 					}
 				);
 				const result: Response<string> = await res.json();
-				if (result.status === "error") return
+				if (result.status === "error") return;
 				setJustRegistered(false);
-				getData(token)
+				getData(token);
 				onRefresh?.();
 			} catch (error) {
 				console.log("Помилка при оновленні:", (error as Error).message);
 			}
 		}
-		sendRequest()
+		sendRequest();
 	}
 
 	return (
 		<View>
 			<ModalTool
 				isVisible={isVisible}
-				onClose={() => {
-					setJustRegistered(false);
-				}}
+				onClose={() => setJustRegistered(false)}
 				animationIn="fadeIn"
 				animationOut="fadeOut"
 			>
 				<View style={styles.containerMainView}>
 					<View style={{ alignSelf: "flex-end" }}>
-						<TouchableOpacity
-							onPress={() => {
-								setJustRegistered(false);
-							}}
-						>
+						<TouchableOpacity onPress={() => setJustRegistered(false)}>
 							<ICONS.CloseIcon width={15} height={15} />
 						</TouchableOpacity>
 					</View>
@@ -93,7 +87,7 @@ export function ModalFirstLogin({
 							<Text style={styles.inputLabelText}>Ім’я</Text>
 							<Controller
 								control={control}
-								name="name"
+								name="first_name"
 								render={({ field, fieldState }) => (
 									<Input
 										placeholder="Введіть Ваше ім’я"
@@ -109,7 +103,7 @@ export function ModalFirstLogin({
 							<Text style={styles.inputLabelText}>Прізвище</Text>
 							<Controller
 								control={control}
-								name="surname"
+								name="last_name"
 								render={({ field, fieldState }) => (
 									<Input
 										placeholder="Введіть Ваше прізвище"
@@ -122,9 +116,7 @@ export function ModalFirstLogin({
 							/>
 						</View>
 						<View style={{ paddingBottom: 16 }}>
-							<Text style={styles.inputLabelText}>
-								Нікнейм користувача
-							</Text>
+							<Text style={styles.inputLabelText}>Нікнейм користувача</Text>
 							<Controller
 								control={control}
 								name="username"
