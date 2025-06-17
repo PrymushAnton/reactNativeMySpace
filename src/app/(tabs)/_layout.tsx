@@ -67,6 +67,14 @@ export default function TabsLayout() {
 				}}
 				
 			/>
+
+			<Tabs.Screen
+				name="(user-profile)"
+				options={{
+					tabBarIcon: () => <ICONS.HouseIcon />,
+					href: null
+				}}
+			/>
 		</Tabs>
 	);
 }

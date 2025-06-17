@@ -1,4 +1,4 @@
-import { IUser } from "./user";
+import { IUser } from "../../auth/context/context.types";
 
 export interface IBackendPost{
     id: number;
@@ -20,6 +20,7 @@ export interface IPostProps  {
     text: string,
     hashtags?: string[],
     photo?: string[],
+    link?: string[],
     likes: number,
     views: number,
     user: IUser,

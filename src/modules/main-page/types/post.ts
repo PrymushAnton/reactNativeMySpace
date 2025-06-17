@@ -1,4 +1,4 @@
-import { IUser } from "./user";
+import { IUser } from "../../auth/context/context.types";
 
 export interface IUserPost {
 	id?: number;
