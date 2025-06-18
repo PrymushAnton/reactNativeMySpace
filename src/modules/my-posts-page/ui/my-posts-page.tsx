@@ -11,7 +11,7 @@ export function MyPostsPage() {
 
 	useEffect(() => {
 		fetchPosts(); 
-	}, [user?.id]);
+	}, [posts]);
 
 	return (
 		<View>
@@ -26,10 +26,10 @@ export function MyPostsPage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.name}
-						text={post.description}
+						name={post.title}
+						text={post.text}
 						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.image}
+						photo={post.images}
 						user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}

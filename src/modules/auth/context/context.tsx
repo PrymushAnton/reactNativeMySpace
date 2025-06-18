@@ -14,7 +14,7 @@ import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { IReturnError } from "../../../shared/types/response";
-
+import { HOST, PORT } from "../../../shared/base-url";
 
 const initialValue: IAuthContext = {
 	user: null,
@@ -50,15 +50,13 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	const router = useRouter();
 
-	const BASE_URL = "http://192.168.3.11:3011";
-
 	async function registerEmail(
 		email: string,
 		password: string,
 		code: number
 	) {
 		try {
-			const response = await fetch(`${BASE_URL}/user/verify-email-code`, {
+			const response = await fetch(`http://${HOST}:${PORT}/user/verify-email-code`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -101,7 +99,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getData(token: string) {
 		try {
-			const response = await fetch(`${BASE_URL}/user/me`, {
+			const response = await fetch(`http://${HOST}:${PORT}/user/me`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const result: Response<IUser> = await response.json();
@@ -119,7 +117,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch(`${BASE_URL}/user/auth`, {
+			const response = await fetch(`http://${HOST}:${PORT}/user/auth`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password }),
@@ -145,7 +143,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function register(email: string, password: string) {
 		try {
-			const response = await fetch(`${BASE_URL}/user/reg`, {
+			const response = await fetch(`http://${HOST}:${PORT}/user/reg`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -162,7 +160,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			await fetch(`${BASE_URL}/user/send-email-code`, {
+			await fetch(`http://${HOST}:${PORT}/user/send-email-code`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),

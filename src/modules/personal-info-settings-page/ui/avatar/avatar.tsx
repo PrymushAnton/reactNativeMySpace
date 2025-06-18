@@ -9,6 +9,7 @@ import { Response } from "../../../../shared/types";
 import { ProfileCard } from "../../../../shared/ui/profileCard";
 import { ButtonEdit } from "../buttonEdit";
 import { Controller, useForm } from "react-hook-form";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function Avatar() {
 	const [avatar, setAvatar] = useState<string>("");
@@ -21,7 +22,7 @@ export function Avatar() {
 		{
 			defaultValues: {
 				username: "",
-				image: "",
+				images: "",
 			},
 		}
 	);
@@ -33,8 +34,8 @@ export function Avatar() {
 	useEffect(() => {
 		if (user) {
 			setValue("username", user.username ? user.username : "");
-			setValue("image", user.image ? user.image : "");
-			setAvatar(user.image ? user.image : "");
+			setValue("images", user.images ? user.images : "");
+			setAvatar(user.images ? user.images : "");
 		}
 	}, [user]);
 
@@ -48,7 +49,7 @@ export function Avatar() {
 				if (!image) return;
 				if (!image[0].base64) return;
 				setAvatar(image[0].base64);
-				setValue("image", image[0].base64);
+				setValue("images", image[0].base64);
 			} catch (error) {
 				console.log((error as Error).message);
 			}
@@ -57,7 +58,7 @@ export function Avatar() {
 	}
 
 	function deleteAvatar() {
-		setValue("image", "");
+		setValue("images", "");
 		setAvatar("");
 	}
 
@@ -67,7 +68,7 @@ export function Avatar() {
 				if (!token) return;
 
 				const res = await fetch(
-					"http://192.168.3.11:3011/user/update-avatar",
+					`http://${HOST}:${PORT}/user/update-avatar`,
 					{
 						method: "POST",
 						headers: {
@@ -154,7 +155,7 @@ export function Avatar() {
 					)}
 
 					<Text style={styles.nameSurname}>
-						{user?.surname} {user?.name}
+						{user?.last_name} {user?.first_name}
 					</Text>
 
 					{editable ? (

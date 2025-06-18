@@ -30,13 +30,12 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	const { user } = useAuthContext();
 
 	const [images, setImages] = useState<string[]>([]);
-	// const [postData, setPostData] = useState<IUserPost | null>(null);
 
 	const { handleSubmit, control, setValue, reset } = useForm<IUserPost>({
 		defaultValues: {
-			name: "",
-			description: "",
-			image: [],
+			title: "",
+			text: "",
+			images: [],
 			defaultTags: [],
 			customTags: [],
 			link: [],
@@ -61,15 +60,14 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 			if (!post) return;
 
 			const formData: IUserPost = {
-				name: post.title || "",
-				description: post.text || "",
+				title: post.title || "",
+				text: post.text || "",
 				defaultTags: post.tags || [],
 				customTags: [],
-				image: post.images || [],
+				images: post.images || [],
 				link: post.link || [],
 			};
 
-			// setPostData(formData);
 			reset(formData);
 
 			setImages(post.images || []);
@@ -86,7 +84,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
 		setImages(updatedImages);
-		setValue("image", updatedImages);
+		setValue("images", updatedImages);
 	}
 
 	async function onSearch() {
@@ -109,7 +107,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 			const newImages = [...images, ...bases64].slice(0, 9);
 			setImages(newImages);
-			setValue("image", newImages);
+			setValue("images", newImages);
 		}
 	}
 
@@ -118,7 +116,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 		await updatePost(editPostId, {
 			...data,
-			image: images,
+			images: images,
 		});
 		onRefresh?.();
 		closeEditModal();
@@ -159,7 +157,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 							<Controller
 								control={control}
-								name="name"
+								name="title"
 								render={({ field, fieldState }) => (
 									<Input
 										placeholder="Напишіть тему публікації"
@@ -173,7 +171,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 							<Controller
 								control={control}
-								name="description"
+								name="text"
 								render={({ field, fieldState }) => (
 									<Input
 										height={140}

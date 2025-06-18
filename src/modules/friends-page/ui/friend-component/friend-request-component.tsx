@@ -4,6 +4,7 @@ import { FriendCard } from "../../types/friend-info";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./friend-request-component.styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FriendRequest({
 	id,
@@ -103,7 +104,7 @@ export function FriendSendRequest({
 		const token = await AsyncStorage.getItem("token");
 		try {
 			const res = await fetch(
-				"http://192.168.3.11:3011/friend/send-friend-request",
+				`http://${HOST}:${PORT}/friend/send-friend-request`,
 				{
 					method: "POST",
 					headers: {
@@ -206,7 +207,7 @@ export function FriendItem({ id, image, name, surname, username }: FriendCard) {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch("http://192.168.3.11:3011/friend/delete-friend", {
+			const res = await fetch(`http://${HOST}:${PORT}/friend/delete-friend`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

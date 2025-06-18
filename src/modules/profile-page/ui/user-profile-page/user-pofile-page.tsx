@@ -5,6 +5,7 @@ import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
 import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./user-profile-page.styles";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function UserProfilePage() {
 	const { user } = useAuthContext();
@@ -17,7 +18,7 @@ export function UserProfilePage() {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch("http://192.168.3.11:3011/friend/delete-friend", {
+			const res = await fetch(`http://${HOST}:${PORT}/friend/delete-friend`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -43,9 +44,9 @@ export function UserProfilePage() {
 		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.image ? (
+					{user.images ? (
 						<Image
-							source={{ uri: user.image }}
+							source={{ uri: user.images }}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
 						/>
 					) : (
@@ -53,7 +54,7 @@ export function UserProfilePage() {
 					)}
 				</View>
 				<Text style={styles.name}>
-					{user.name} {user.surname}
+					{user.first_name} {user.last_name}
 				</Text>
 				<Text style={styles.username}>@{user.username}</Text>
 
@@ -92,10 +93,10 @@ export function UserProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.name}
-						text={post.description}
+						name={post.title}
+						text={post.text}
 						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.image}
+						photo={post.images}
 						user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}

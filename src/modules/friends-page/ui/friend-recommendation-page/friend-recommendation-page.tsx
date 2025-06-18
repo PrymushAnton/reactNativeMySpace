@@ -4,13 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FriendRequest } from "../friend-component/friend-request-component";
 import { HeaderNavigationFriendPages } from "../header-navigation-friends-page";
 import { FriendCard } from "../../types/friend-info";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FriendRecommendationPage() {
 	const [users, setUsers] = useState<FriendCard[]>([]);
 
 	const fetchUsers = async () => {
 		const token = await AsyncStorage.getItem("token");
-		const res = await fetch("http://192.168.3.11:3011/friend/all-users", {
+		const res = await fetch(`http://${HOST}:${PORT}/friend/all-users`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		const data = await res.json();
@@ -19,7 +20,7 @@ export function FriendRecommendationPage() {
 
 	useEffect(() => {
 		fetchUsers();
-	}, []);
+	}, [users]);
 
 	return (
 		<View style={{ flex: 1 }}>

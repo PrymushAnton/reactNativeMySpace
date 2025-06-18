@@ -12,50 +12,43 @@ import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
 import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./random-user-profile-page.styles";
+import { HOST, PORT } from "../../../../shared/base-url";
+import { FriendCard } from "../../../friends-page/types/friend-info";
 
-export function FrinedProfilePage() {
+export function AnotherUserProfilePage() {
 	const { user } = useAuthContext();
 	const { posts, fetchPosts } = useFetchPosts(user?.id);
 
 	if (!user) return null;
 
-	const handleDeleteFriend = async () => {
-		try {
-			const token = await AsyncStorage.getItem("token");
-			if (!token) return;
-
-			const res = await fetch(
-				"http://192.168.3.11:3011/friend/delete-friend",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}`,
-					},
-					body: JSON.stringify({ friendId: user.id }),
-				}
-			);
-
-			const data = await res.json();
-
-			if (data.status === "success") {
-				Alert.alert("Успіх", "Друг видалений");
-			} else {
-				Alert.alert("Помилка", "Щось пішло не так");
-			}
-		} catch (e) {
-			console.error("Error deleting friend", e);
-			Alert.alert("Помилка", "Не вдалося видалити друга");
-		}
+	const sendRequest = async () => {
+		// const token = await AsyncStorage.getItem("token");
+		// try {
+		// 	const res = await fetch(
+		// 		`http://${HOST}:${PORT}/friend/send-friend-request`,
+		// 		{
+		// 			method: "POST",
+		// 			headers: {
+		// 				"Content-Type": "application/json",
+		// 				Authorization: `Bearer ${token}`,
+		// 			},
+		// 			body: JSON.stringify({ toUser: Number(id) }),
+		// 		}
+		// 	);
+		// 	if (res.ok) alert("Request send");
+		// 	else alert("Request send error");
+		// } catch {
+		// 	alert("Network error");
+		// }
 	};
 
 	return (
 		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.image ? (
+					{user.profile.avatars ? (
 						<Image
-							source={{ uri: user.image }}
+							// source={{ uri: user.profile.avatars }}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
 						/>
 					) : (
@@ -63,7 +56,7 @@ export function FrinedProfilePage() {
 					)}
 				</View>
 				<Text style={styles.name}>
-					{user.name} {user.surname}
+					{user.first_name} {user.last_name}
 				</Text>
 				<Text style={styles.username}>@{user.username}</Text>
 
@@ -95,7 +88,7 @@ export function FrinedProfilePage() {
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={styles.deleteBtn}
-						onPress={handleDeleteFriend}
+						onPress={sendRequest}
 					>
 						<Text style={styles.actionText}>Видалити</Text>
 					</TouchableOpacity>
@@ -121,10 +114,10 @@ export function FrinedProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.name}
-						text={post.description}
+						name={post.title}
+						text={post.text}
 						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.image}
+						photo={post.images}
 						user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}

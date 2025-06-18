@@ -2,16 +2,35 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { IPostProps } from "../../types/post-info";
 import { styles } from "./post.styles";
 import { ICONS } from "../../../../shared/ui/icons";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWindowDimensions } from "react-native";
 import { ModalThreeDots } from "../modal-three-dots/modal-three-dots";
+import { useAuthContext } from "../../../auth/context";
+import { useRouter } from "expo-router";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function PublicatedPost(props: IPostProps) {
-	const { id, name, text, hashtags, photo, likes, views, user } = props;
+	const {
+		id,
+		name,
+		text,
+		hashtags,
+		photo,
+		likes,
+		views,
+		link,
+		user: postUser,
+	} = props;
+
+	const router = useRouter();
 
 	const [isLiked, setIsLiked] = useState<boolean>(false);
 
 	const [isSettingsVisible, setSettingsVisible] = useState(false);
+
+	const [isFriend, setIsFriend] = useState(false);
+
+	const { user: currentUser } = useAuthContext();
 
 	const { width: screenWidth } = useWindowDimensions();
 
@@ -52,6 +71,29 @@ export function PublicatedPost(props: IPostProps) {
 	let photoIndex = 0;
 	const rows = photo ? getPhotosPerRow(photo.length) : [];
 
+	const handleProfilePress = async () => {
+		if (!postUser?.id || !currentUser?.id) return;
+
+		if (postUser.id === currentUser.id) {
+			router.replace("/user-profile");
+		} else {
+			try {
+				const res = await fetch(
+					`http://${HOST}:${PORT}/friend/check/${currentUser.id}/${postUser.id}`
+				);
+				const data = await res.json();
+				if (data.isFriend) {
+					router.replace("/friend-profile");
+				} else {
+					router.replace("/another-user-profile");
+				}
+			} catch (err) {
+				console.error("Ошибка при проверке дружбы", err);
+				router.push("/another-user-profile");
+			}
+		}
+	};
+
 	return (
 		<View>
 			<ModalThreeDots
@@ -62,27 +104,35 @@ export function PublicatedPost(props: IPostProps) {
 			/>
 			<View style={styles.post}>
 				<View style={styles.top}>
-					<View style={styles.userInfo}>
-						{user?.image ? (
+					<TouchableOpacity
+						style={styles.userInfo}
+						onPress={handleProfilePress}
+					>
+						{props.user?.profile?.avatars ? (
 							<Image
 								style={styles.avatar}
-								source={{ uri: user.image }}
+								source={{
+									uri:
+										"data:image/jpeg;base64," +
+										props.user.profile.avatars,
+								}}
 							/>
 						) : (
 							<ICONS.AnonymousLogoIcon width={36} height={36} />
 						)}
+
 						<Text style={styles.name}>
-							{user?.username ??
-								user?.email?.split("@")[0] ??
+							{props.user?.username ??
+								props.user?.email?.split("@")[0] ??
 								"Анонім"}
 						</Text>
-					</View>
+					</TouchableOpacity>
 					<TouchableOpacity
 						ref={dotsRef}
 						onPress={() => {
 							dotsRef.current?.measureInWindow((x, y) => {
 								setModalPosition({
-									top: y - 40,
+									top: y - 20,
 									left: x - 330 + 20,
 								});
 								setSettingsVisible(true);
@@ -107,6 +157,51 @@ export function PublicatedPost(props: IPostProps) {
 							  ))
 							: undefined}
 					</View>
+
+					{props.link && props.link.length > 0 && (
+						<View
+							style={{
+								flexDirection: "row",
+								flexWrap: "wrap",
+								gap: 8,
+								marginTop: 12,
+							}}
+						>
+							{props.link.map((url, index) => (
+								<TouchableOpacity
+									key={index}
+									onPress={() => {
+										// Открываем ссылку
+										// Лучше использовать Linking API от React Native
+										import("react-native").then(
+											({ Linking }) =>
+												Linking.openURL(url)
+										);
+									}}
+									style={{
+										paddingVertical: 6,
+										paddingHorizontal: 12,
+										borderRadius: 12,
+										borderWidth: 1,
+										borderColor: "#543C52",
+										backgroundColor: "white",
+									}}
+								>
+									<Text
+										style={{
+											color: "#543C52",
+											fontSize: 14,
+										}}
+										numberOfLines={1}
+									>
+										{url.length > 30
+											? url.slice(0, 30) + "..."
+											: url}
+									</Text>
+								</TouchableOpacity>
+							))}
+						</View>
+					)}
 
 					{photo ? (
 						<View style={{ gap: GAP }}>

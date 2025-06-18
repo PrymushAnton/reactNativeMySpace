@@ -12,6 +12,7 @@ import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
 import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./friend-profile-page.styles";
+import { HOST, PORT } from "../../../../shared/base-url";
 
 export function FrinedProfilePage() {
 	const { user } = useAuthContext();
@@ -25,7 +26,7 @@ export function FrinedProfilePage() {
 			if (!token) return;
 
 			const res = await fetch(
-				"http://192.168.3.11:3011/friend/delete-friend",
+				`http://${HOST}:${PORT}/friend/delete-friend`,
 				{
 					method: "POST",
 					headers: {
@@ -53,9 +54,9 @@ export function FrinedProfilePage() {
 		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.image ? (
+					{user.profile.avatars ? (
 						<Image
-							source={{ uri: user.image }}
+							// source={{ uri: user.profile.avatars }}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
 						/>
 					) : (
@@ -63,7 +64,7 @@ export function FrinedProfilePage() {
 					)}
 				</View>
 				<Text style={styles.name}>
-					{user.name} {user.surname}
+					{user.first_name} {user.last_name}
 				</Text>
 				<Text style={styles.username}>@{user.username}</Text>
 
@@ -121,10 +122,10 @@ export function FrinedProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.name}
-						text={post.description}
+						name={post.text}
+						text={post.title}
 						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.image}
+						photo={post.images}
 						user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
