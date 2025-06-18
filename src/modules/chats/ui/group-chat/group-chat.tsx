@@ -6,10 +6,18 @@ import { AnotherUserMessage } from "../another-user-message/another-user-message
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { NewMessages } from "../new-messages/new-messages";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { AdminModal } from "../modals/ui/admin-modal/admin-modal";
+import { RedactingGroupModal } from "../modals/ui/redacting-group-modal/redacting-group-modal";
+import { AddingGroupModal } from "../modals/ui/adding-group-modal/adding-group-modal";
 
 export function GroupChatPage() {
+	const [isAdminModalVisible, setIsAdminModalVisible] = useState(false);
+	const [isRedactingModalVisible, setIsRedactingModalVisible] =
+		useState(false);
+	const [isAddingModalVisible, setIsAddingModalVisible] = useState(false);
 	const insets = useSafeAreaInsets();
-	const router = useRouter()
+	const router = useRouter();
 	return (
 		<View style={[styles.container, { paddingBottom: insets.bottom + 80 }]}>
 			<View style={styles.header}>
@@ -20,10 +28,11 @@ export function GroupChatPage() {
 						alignItems: "center",
 					}}
 				>
-					<TouchableOpacity onPress={()=>{
-						router.replace("/group-chats")
-					}}>
-
+					<TouchableOpacity
+						onPress={() => {
+							router.replace("/group-chats");
+						}}
+					>
 						<ICONS.ReturnIcon
 							width={15}
 							height={15}
@@ -59,9 +68,37 @@ export function GroupChatPage() {
 					</View>
 				</View>
 
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => setIsAdminModalVisible(true)}>
 					<ICONS.DotsIcon></ICONS.DotsIcon>
 				</TouchableOpacity>
+				<AdminModal
+					visible={isAdminModalVisible}
+					onClose={() => setIsAdminModalVisible(false)}
+					onNext={() => {
+						setIsAdminModalVisible(false);
+						setIsRedactingModalVisible(true);
+					}}
+				/>
+				<RedactingGroupModal
+					visible={isRedactingModalVisible}
+					onClose={() => setIsRedactingModalVisible(false)}
+					onBack={() => {
+						setIsRedactingModalVisible(false);
+						setIsAdminModalVisible(true);
+					}}
+					onAdd={() => {
+						setIsRedactingModalVisible(false);
+						setIsAddingModalVisible(true);
+					}}
+				/>
+				<AddingGroupModal
+					visible={isAddingModalVisible}
+					onClose={() => setIsAddingModalVisible(false)}
+					onNext={() => {
+						setIsAddingModalVisible(false);
+						setIsRedactingModalVisible(true);
+					}}
+				/>
 			</View>
 			<ScrollView overScrollMode="never">
 				<MyMessage
