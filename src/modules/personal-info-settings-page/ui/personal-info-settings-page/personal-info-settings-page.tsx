@@ -29,12 +29,12 @@ import { ButtonEdit } from "../buttonEdit";
 import { HOST, PORT } from "../../../../shared/base-url";
 
 interface IPersonalInfoFormData {
-	name: string;
-	surname: string;
+	first_name: string;
+	last_name: string;
 	// username: string;
 	email: string;
-	phoneNumber: string;
-	birthDate: Date | null;
+	// phoneNumber: string;
+	dateOfBirth: Date | null;
 }
 
 export function PersonalInfoSettingsPage() {
@@ -42,7 +42,6 @@ export function PersonalInfoSettingsPage() {
 	const { user, token, getData } = useAuthContext();
 
 	const [editable, setEditable] = useState<boolean>(false);
-
 
 	const [show, setShow] = useState(false);
 
@@ -57,33 +56,35 @@ export function PersonalInfoSettingsPage() {
 	const { control, handleSubmit, setValue, getValues } =
 		useForm<IPersonalInfoFormData>({
 			defaultValues: {
-				name: "",
-				surname: "",
-				birthDate: null,
+				first_name: "",
+				last_name: "",
+				dateOfBirth: null,
 				email: "",
-				phoneNumber: "",
+				// phoneNumber: "",
 				// username: "",
 			},
 		});
 
 	useEffect(() => {
 		if (user) {
-			setValue("name", user.name ? user.name : "");
-			setValue("surname", user.surname ? user.surname : "");
+			setValue("first_name", user.first_name ? user.first_name : "");
+			setValue("last_name", user.last_name ? user.last_name : "");
 			setValue(
-				"birthDate",
-				user.birthDate ? new Date(user.birthDate) : null
+				"dateOfBirth",
+				user.profile?.dateOfBirth
+					? new Date(user.profile.dateOfBirth)
+					: null
 			);
 			setValue("email", user.email ? user.email : "");
 			// setValue("username", user.username ? user.username : "");
-			setValue(
-				"phoneNumber",
-				user.phoneNumber
-					? parsePhoneNumberFromString(
-							user.phoneNumber
-					  )!.formatInternational()
-					: ""
-			);
+			// setValue(
+			// 	"phoneNumber",
+			// 	user.phoneNumber
+			// 		? parsePhoneNumberFromString(
+			// 				user.phoneNumber
+			// 		  )!.formatInternational()
+			// 		: ""
+			// );
 		}
 	}, [user]);
 
@@ -93,19 +94,16 @@ export function PersonalInfoSettingsPage() {
 		async function sendRequest() {
 			try {
 				if (!token) {
-					return
-				};
-				const res = await fetch(
-					`http://${HOST}:${PORT}/user/update`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`,
-						},
-						body: JSON.stringify(data),
-					}
-				);
+					return;
+				}
+				const res = await fetch(`http://${HOST}:${PORT}/user/update`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+					body: JSON.stringify(data),
+				});
 				const result: Response<string> = await res.json();
 				getData(token);
 				setEditable(false);
@@ -138,21 +136,22 @@ export function PersonalInfoSettingsPage() {
 							onPress={() => {
 								if (editable) {
 									handleSubmit(onSubmit)();
-								} else{
-									setEditable(true)
+								} else {
+									setEditable(true);
 								}
-								
 							}}
 						/>
 					</View>
 
 					<Controller
 						control={control}
-						name="name"
+						name="first_name"
 						render={({ field, fieldState }) => (
 							<ProfileCard
 								placeholder={
-									user.name ? undefined : "Не вказано :("
+									user.first_name
+										? undefined
+										: "Не вказано :("
 								}
 								label="Ім'я"
 								type="text"
@@ -166,11 +165,11 @@ export function PersonalInfoSettingsPage() {
 
 					<Controller
 						control={control}
-						name="surname"
+						name="last_name"
 						render={({ field, fieldState }) => (
 							<ProfileCard
 								placeholder={
-									user.surname ? undefined : "Не вказано :("
+									user.last_name ? undefined : "Не вказано :("
 								}
 								label="Прізвище"
 								type="text"
@@ -186,8 +185,10 @@ export function PersonalInfoSettingsPage() {
 						control={control}
 						name="email"
 						rules={{
-							required: {value: true, message: "Пошта не може бути порожньою!"},
-							
+							required: {
+								value: true,
+								message: "Пошта не може бути порожньою!",
+							},
 						}}
 						render={({ field, fieldState }) => (
 							<ProfileCard
@@ -204,7 +205,7 @@ export function PersonalInfoSettingsPage() {
 						)}
 					/>
 
-					<Controller
+					{/* <Controller
 						control={control}
 						name="phoneNumber"
 						rules={{
@@ -230,11 +231,11 @@ export function PersonalInfoSettingsPage() {
 								errorMessage={fieldState.error?.message}
 							/>
 						)}
-					/>
+					/> */}
 
 					<Controller
 						control={control}
-						name="birthDate"
+						name="dateOfBirth"
 						render={({ field }) => {
 							return (
 								<>

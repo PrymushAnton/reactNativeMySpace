@@ -42,9 +42,9 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	} = usePost();
 
 	const schema = yup.object().shape({
-		name: yup.string().required("Це поле обов'язкове"),
-		description: yup.string().required("Це поле обов'язкове"),
-		image: yup.array().required("Додайте хоча б одне зображення"),
+		title: yup.string().required("Це поле обов'язкове"),
+		text: yup.string().required("Це поле обов'язкове"),
+		images: yup.array().required("Додайте хоча б одне зображення"),
 		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
 		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
 		link: yup.array().required("Додайте хочаб одне посилання"),
@@ -53,9 +53,9 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	const { handleSubmit, control, formState, setValue, setError } =
 		useForm<IUserPost>({
 			defaultValues: {
-				name: "",
-				description: "",
-				image: [],
+				title: "",
+				text: "",
+				images: [],
 				defaultTags: [],
 				customTags: [],
 				link: [],
@@ -70,10 +70,10 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 
 	async function closingModal() {
 		closeCreateModal();
-		setValue("name", "");
-		setValue("description", "");
+		setValue("title", "");
+		setValue("text", "");
 		setImages([]);
-		setValue("image", []);
+		setValue("images", []);
 		setValue("defaultTags", []);
 		setValue("customTags", []);
 		setValue("link", []);
@@ -82,7 +82,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);
 		setImages(updatedImages);
-		setValue("image", updatedImages);
+		setValue("images", updatedImages);
 	}
 
 	async function onSearch() {
@@ -108,7 +108,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 				}
 
 				setImages(bases64);
-				setValue("image", bases64);
+				setValue("images", bases64);
 			}
 		}
 	}
@@ -154,7 +154,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 							</Text>
 							<Controller
 								control={control}
-								name="name"
+								name="title"
 								render={({ field, fieldState }) => {
 									return (
 										<Input
@@ -172,7 +172,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 							/>
 							<Controller
 								control={control}
-								name="description"
+								name="text"
 								render={({ field, fieldState }) => {
 									return (
 										<Input
