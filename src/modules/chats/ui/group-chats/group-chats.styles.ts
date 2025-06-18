@@ -15,5 +15,6 @@ export const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		color: "#070A1C",
+		marginBottom: 16,
 	},
 });
