@@ -10,16 +10,20 @@ import { useRouter } from "expo-router";
 import { HOST, PORT } from "../../../../shared/base-url";
 
 export function PublicatedPost(props: IPostProps) {
+	useEffect(() => {
+		console.log(JSON.stringify(props, null, 4));
+	}, []);
 	const {
 		id,
-		name,
-		text,
-		hashtags,
-		photo,
+		title,
+		content,
+		tags,
+		images,
 		likes,
 		views,
-		link,
-		user: postUser,
+		links,
+		author,
+		author_id,
 	} = props;
 
 	const router = useRouter();
@@ -69,17 +73,17 @@ export function PublicatedPost(props: IPostProps) {
 	const dotsRef = useRef<View>(null);
 
 	let photoIndex = 0;
-	const rows = photo ? getPhotosPerRow(photo.length) : [];
+	const rows = images ? getPhotosPerRow(images.length) : [];
 
 	const handleProfilePress = async () => {
-		if (!postUser?.id || !currentUser?.id) return;
+		if (!author.user?.id || !currentUser?.id) return;
 
-		if (postUser.id === currentUser.id) {
+		if (author.user.id === currentUser.id) {
 			router.replace("/user-profile");
 		} else {
 			try {
 				const res = await fetch(
-					`http://${HOST}:${PORT}/friend/check/${currentUser.id}/${postUser.id}`
+					`http://${HOST}:${PORT}/friend/check/${currentUser.id}/${author.user.id}`
 				);
 				const data = await res.json();
 				if (data.isFriend) {
@@ -108,13 +112,12 @@ export function PublicatedPost(props: IPostProps) {
 						style={styles.userInfo}
 						onPress={handleProfilePress}
 					>
-						{props.user?.profile?.avatars ? (
+						{author.user?.profile?.avatars?.length &&
+						author.user.profile.avatars.length > 0 ? (
 							<Image
 								style={styles.avatar}
 								source={{
-									uri:
-										"data:image/jpeg;base64," +
-										props.user.profile.avatars,
+									uri: author.user.profile.avatars[0].image,
 								}}
 							/>
 						) : (
@@ -122,8 +125,8 @@ export function PublicatedPost(props: IPostProps) {
 						)}
 
 						<Text style={styles.name}>
-							{props.user?.username ??
-								props.user?.email?.split("@")[0] ??
+							{author.user?.username ??
+								author.user?.email?.split("@")[0] ??
 								"Анонім"}
 						</Text>
 					</TouchableOpacity>
@@ -146,11 +149,11 @@ export function PublicatedPost(props: IPostProps) {
 				</View>
 
 				<View style={styles.content}>
-					<Text style={styles.name}>{name}</Text>
-					<Text style={styles.text}>{text}</Text>
+					<Text style={styles.name}>{title}</Text>
+					<Text style={styles.text}>{content}</Text>
 					<View style={styles.hashtags}>
-						{hashtags
-							? hashtags.map((tag, i) => (
+						{tags
+							? tags.map((tag, i) => (
 									<Text key={i} style={styles.hashtag}>
 										#{tag}
 									</Text>
@@ -158,7 +161,7 @@ export function PublicatedPost(props: IPostProps) {
 							: undefined}
 					</View>
 
-					{props.link && props.link.length > 0 && (
+					{links && links.length > 0 && (
 						<View
 							style={{
 								flexDirection: "row",
@@ -167,7 +170,7 @@ export function PublicatedPost(props: IPostProps) {
 								marginTop: 12,
 							}}
 						>
-							{props.link.map((url, index) => (
+							{links.map((url, index) => (
 								<TouchableOpacity
 									key={index}
 									onPress={() => {
@@ -203,10 +206,10 @@ export function PublicatedPost(props: IPostProps) {
 						</View>
 					)}
 
-					{photo ? (
+					{images ? (
 						<View style={{ gap: GAP }}>
 							{rows.map((countInRow, rowIdx) => {
-								const photosInRow = photo.slice(
+								const photosInRow = images.slice(
 									photoIndex,
 									photoIndex + countInRow
 								);
@@ -235,9 +238,7 @@ export function PublicatedPost(props: IPostProps) {
 												<Image
 													key={i}
 													source={{
-														uri:
-															"data:image/jpeg;base64," +
-															url,
+														uri: url,
 													}}
 													style={{
 														width,

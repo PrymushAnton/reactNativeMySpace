@@ -46,14 +46,17 @@ export function MainPage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.title}
-						text={post.text}
-						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.images}
-						user={post.user}
+						title={post.title}
+						tags={post.tags}
+						images={post.images}
+						author={post.author}
+						// user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
-						onRefresh={fetchPosts}
+						links={post.links}
+						author_id={post.author_id}
+						content={post.content}
+						// onRefresh={fetchPosts}
 					/>
 				))}
 			</View>

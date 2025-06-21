@@ -105,7 +105,8 @@ export function usePost() {
 	async function getAllPosts() {
 		try {
 			const res = await fetch(`http://${HOST}:${PORT}/post/find-all-posts`);
-			return await res.json();
+			const result = await res.json();
+			return result
 		} catch (error) {
 			console.error(error);
 			return "";
