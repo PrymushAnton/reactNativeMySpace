@@ -11,7 +11,7 @@ export function FriendRecommendationPage() {
 
 	const fetchUsers = async () => {
 		const token = await AsyncStorage.getItem("token");
-		const res = await fetch(`http://${HOST}:${PORT}/friend/all-users`, {
+		const res = await fetch(`http://${HOST}/friend/all-users`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		const data = await res.json();
@@ -20,12 +20,16 @@ export function FriendRecommendationPage() {
 
 	useEffect(() => {
 		fetchUsers();
-	}, [users]);
+	}, []);
+
+	// useEffect(() => {
+	// 	console.log(users[0]?.avatars);
+	// }, [users]);
 
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			{users.length === 0 ? (
+			{users && users.length === 0 ? (
 				<Text
 					style={{
 						textAlign: "center",
@@ -40,7 +44,7 @@ export function FriendRecommendationPage() {
 					contentContainerStyle={{ alignItems: "center" }}
 					overScrollMode="never"
 				>
-					{users.map((user) => (
+					{users && users.map((user) => (
 						<View
 							key={user.id}
 							style={{
@@ -49,7 +53,10 @@ export function FriendRecommendationPage() {
 								alignItems: "center",
 							}}
 						>
-							<FriendRequest.FriendSendRequest {...user} />
+							<FriendRequest.FriendSendRequest
+								{...user}
+								onRefresh={() => {fetchUsers()}}
+							/>
 						</View>
 					))}
 				</ScrollView>

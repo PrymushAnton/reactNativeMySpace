@@ -2,13 +2,13 @@ import { IUser } from "../../auth/context/context.types";
 
 export interface IUserPost {
 	id?: number;
-	userId?: number;
+	author_id?: number;
 
 	title: string;
-	text: string;
+	content: string;
 	images: string[];
-	defaultTags: string[]; 
-	customTags: string[];
+	existingTags: string[]; 
+	newTags: string[];
 	link: string[];
 
 	likes?: number;

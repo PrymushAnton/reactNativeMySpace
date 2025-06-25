@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
 	contactImage: {
 		height: 50,
 		width: 50,
+		borderRadius: 50
 	},
 	contactName: {
 		color: "#070A1C",

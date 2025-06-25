@@ -11,21 +11,25 @@ export function FriendAllPage() {
 
 	const fetchFriends = async () => {
 		const token = await AsyncStorage.getItem("token");
-		const res = await fetch(`http://${HOST}:${PORT}/friend/all-friends`, {
+		const res = await fetch(`http://${HOST}/friend/all-friends`, {
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		const data = await res.json();
 		setFriends(data.friends);
 	};
 
+	// useEffect(() => {
+	// 	console.log(friends)
+	// }, [friends])
+
 	useEffect(() => {
 		fetchFriends();
-	}, [friends]);
+	}, []);
 
 	return (
 		<View style={{ flex: 1 }}>
 			<HeaderNavigationFriendPages />
-			{friends.length === 0 ? (
+			{friends && friends.length === 0 ? (
 				<Text
 					style={{
 						textAlign: "center",
@@ -44,14 +48,11 @@ export function FriendAllPage() {
 					}}
 					overScrollMode="never"
 				>
-					{friends.map((friend) => (
+					{friends && friends.map((friend) => (
 						<FriendRequest.FriendItem
 							key={friend.id}
-							id={friend.id}
-							name={friend.name}
-							surname={friend.surname}
-							username={friend.username}
-							image={friend.image}
+							{...friend}
+							onRefresh={fetchFriends}
 						/>
 					))}
 				</ScrollView>

@@ -18,7 +18,7 @@ export function UserProfilePage() {
 			const token = await AsyncStorage.getItem("token");
 			if (!token) return;
 
-			const res = await fetch(`http://${HOST}:${PORT}/friend/delete-friend`, {
+			const res = await fetch(`http://${HOST}/friend/delete-friend`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

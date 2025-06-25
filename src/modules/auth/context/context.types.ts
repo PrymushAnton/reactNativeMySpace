@@ -14,8 +14,23 @@ export interface IUser {
 	images?: string
 }
 
+export interface IUserWithMinimalProfile {
+	id: number;
+	first_name: string;
+	last_name: string;
+	email: string;
+	username: string;
+	password: string;
+	profile: {
+		date_of_birth: Date;
+		avatars: {
+			image: string;
+		}[];
+	} | null;
+};
+
 export interface IAuthContext {
-	user: IUser | null;
+	user: IUserWithMinimalProfile | null;
 	token: string | null;
 	justRegistered: boolean;
 	setJustRegistered: (value: boolean) => void;

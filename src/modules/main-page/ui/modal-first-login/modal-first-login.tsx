@@ -37,11 +37,12 @@ export function ModalFirstLogin({
 	const { token, getData } = useAuthContext();
 
 	function onSubmit(data: IUserAdditionalInfo) {
+		// console.log(data)
 		async function sendRequest() {
 			try {
 				if (!token) return;
 				const res = await fetch(
-					`http://${HOST}:${PORT}/user/update-first-login`,
+					`http://${HOST}/user/update-first-login`,
 					{
 						method: "POST",
 						headers: {

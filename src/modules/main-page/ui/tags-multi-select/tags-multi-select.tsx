@@ -33,7 +33,7 @@ export function TagsMultiSelect({ selectedTags, onChange }: Props) {
 		const fetchTags = async () => {
 			try {
 				const response = await fetch(
-					`http://${HOST}:${PORT}/post/find-all-tags`
+					`http://${HOST}/post/find-all-tags`
 				);
 				if (!response.ok)
 					throw new Error(`HTTP error! status: ${response.status}`);

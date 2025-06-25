@@ -21,39 +21,53 @@ export function Header(props: IHeaderProps) {
 				<ICONS.LogoIcon />
 			</TouchableOpacity>
 			<View style={styles.icons}>
+				{props.page === "posts" ? (
+					<TouchableOpacity
+						onPress={() => {
+							openCreateModal();
+						}}
+					>
+						<ICONS.PlusIcon />
+					</TouchableOpacity>
+				) : undefined}
+
+				{props.page === "chats" ? (
+					<TouchableOpacity
+						onPress={() => {
+							// openCreateModal();
+							console.log("Create a chat");
+						}}
+					>
+						<ICONS.PlusIcon />
+					</TouchableOpacity>
+				) : undefined}
+{/* 
 				<TouchableOpacity
 					onPress={() => {
-						props.isOnSettings ? null : openCreateModal();
+						replace("/_sitemap");
 					}}
-					disabled={props.isOnSettings}
 				>
-					<ICONS.PlusIcon />
-				</TouchableOpacity>
-
-				{/* 
-				<TouchableOpacity onPress={() => {replace("/_sitemap")}}>
-					<ICONS.AnonymousLogoIcon width={41} height={40}/>
+					<ICONS.AnonymousLogoIcon width={41} height={40} />
 				</TouchableOpacity> */}
 
-				<TouchableOpacity
-					disabled={props.isOnSettings}
-					onPress={() => {
-						replace("/personal-info");
-					}}
-				>
-					{props.isOnSettings ? (
-						<ICONS.SettingsIcon fill={"#E9E5EE"} />
-					) : (
-						<ICONS.SettingsIcon />
-					)}
-				</TouchableOpacity>
+				{props.page !== "chats" ? (
+					<TouchableOpacity
+						disabled={props.page === "settings"}
+						onPress={() => {
+							replace("/personal-info");
+						}}
+					>
+						{props.page === "settings" ? (
+							<ICONS.SettingsIcon fill={"#E9E5EE"} />
+						) : (
+							<ICONS.SettingsIcon />
+						)}
+					</TouchableOpacity>
+				) : undefined}
 
 				<TouchableOpacity onPress={logout}>
 					<ICONS.LogoutIcon />
 				</TouchableOpacity>
-				{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
-					<ICONS.LogoutIcon/>
-				</TouchableOpacity> */}
 			</View>
 		</View>
 	);
@@ -65,8 +79,12 @@ export function HeaderAuth() {
 	return (
 		<View style={styles.headerAuth}>
 			<ICONS.LogoIcon width={145} height={18} />
-			{/* <TouchableOpacity onPress={() => {replace("/_sitemap")}}>
-				<ICONS.AnonymousLogoIcon width={41} height={40}/>
+			{/* <TouchableOpacity
+				onPress={() => {
+					replace("/_sitemap");
+				}}
+			>
+				<ICONS.AnonymousLogoIcon width={41} height={40} />
 			</TouchableOpacity> */}
 		</View>
 	);

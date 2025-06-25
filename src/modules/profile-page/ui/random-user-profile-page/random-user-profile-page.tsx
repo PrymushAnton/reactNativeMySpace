@@ -25,7 +25,7 @@ export function AnotherUserProfilePage() {
 		// const token = await AsyncStorage.getItem("token");
 		// try {
 		// 	const res = await fetch(
-		// 		`http://${HOST}:${PORT}/friend/send-friend-request`,
+		// 		`http://${HOST}/friend/send-friend-request`,
 		// 		{
 		// 			method: "POST",
 		// 			headers: {

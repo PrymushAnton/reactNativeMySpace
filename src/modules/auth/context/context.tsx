@@ -9,6 +9,7 @@ import {
 	IUser,
 	IAuthContext,
 	IAuthContextProviderProps,
+	IUserWithMinimalProfile,
 } from "./context.types";
 import { Response } from "../../../shared/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,9 +45,18 @@ export function useAuthContext() {
 }
 
 export function AuthContextProvider(props: IAuthContextProviderProps) {
-	const [user, setUser] = useState<IUser | null>(null);
+	const [user, setUser] = useState<IUserWithMinimalProfile | null>(null);
 	const [token, setToken] = useState<string | null>(null);
 	const [justRegistered, setJustRegistered] = useState<boolean>(false);
+
+	// useEffect(() => {
+	// 	console.log(user)
+	// }, [user])
+
+	
+	// useEffect(() => {
+	// 	console.log(token)
+	// }, [token])
 
 	const router = useRouter();
 
@@ -56,7 +66,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		code: number
 	) {
 		try {
-			const response = await fetch(`http://${HOST}:${PORT}/user/verify-email-code`, {
+			const response = await fetch(`http://${HOST}/user/verify-email-code`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -73,16 +83,6 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 			await AsyncStorage.setItem("token", result.data);
 
-			// const meResponse = await fetch(`${BASE_URL}/user/me`, {
-			// 	headers: { Authorization: `Bearer ${result.data}` },
-			// });
-			// const meResult: Response<IUser> = await meResponse.json();
-
-			// if (meResult.status === "success") {
-			// 	const userData = meResult.data;
-			// 	await AsyncStorage.setItem("user", JSON.stringify(userData));
-			// 	setUser(userData);
-			// }
 			await getData(result.data);
 			await getToken()
 			setJustRegistered(true);
@@ -99,10 +99,10 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function getData(token: string) {
 		try {
-			const response = await fetch(`http://${HOST}:${PORT}/user/me`, {
+			const response = await fetch(`http://${HOST}/user/me`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-			const result: Response<IUser> = await response.json();
+			const result: Response<IUserWithMinimalProfile> = await response.json();
 			if (
 				result.status === "error" ||
 				result.status === "error-validation"
@@ -117,7 +117,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function login(email: string, password: string) {
 		try {
-			const response = await fetch(`http://${HOST}:${PORT}/user/auth`, {
+			const response = await fetch(`http://${HOST}/user/auth`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email, password }),
@@ -143,7 +143,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function register(email: string, password: string) {
 		try {
-			const response = await fetch(`http://${HOST}:${PORT}/user/reg`, {
+			const response = await fetch(`http://${HOST}/user/reg`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
@@ -160,7 +160,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				return result.data;
 			}
 
-			await fetch(`http://${HOST}:${PORT}/user/send-email-code`, {
+			await fetch(`http://${HOST}/user/send-email-code`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ email }),

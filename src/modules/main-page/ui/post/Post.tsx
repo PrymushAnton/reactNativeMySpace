@@ -8,11 +8,11 @@ import { ModalThreeDots } from "../modal-three-dots/modal-three-dots";
 import { useAuthContext } from "../../../auth/context";
 import { useRouter } from "expo-router";
 import { HOST, PORT } from "../../../../shared/base-url";
+import { useFetchPosts } from "../../hooks/useFetchPosts";
+import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
 
-export function PublicatedPost(props: IPostProps) {
-	useEffect(() => {
-		console.log(JSON.stringify(props, null, 4));
-	}, []);
+export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
+
 	const {
 		id,
 		title,
@@ -83,7 +83,7 @@ export function PublicatedPost(props: IPostProps) {
 		} else {
 			try {
 				const res = await fetch(
-					`http://${HOST}:${PORT}/friend/check/${currentUser.id}/${author.user.id}`
+					`http://${HOST}/friend/check/${currentUser.id}/${author.user.id}`
 				);
 				const data = await res.json();
 				if (data.isFriend) {
@@ -105,6 +105,7 @@ export function PublicatedPost(props: IPostProps) {
 				isVisible={isSettingsVisible}
 				setIsVisible={setSettingsVisible}
 				modalPosition={modalPosition}
+				onRefresh={props.onRefresh}
 			/>
 			<View style={styles.post}>
 				<View style={styles.top}>
@@ -117,7 +118,7 @@ export function PublicatedPost(props: IPostProps) {
 							<Image
 								style={styles.avatar}
 								source={{
-									uri: author.user.profile.avatars[0].image,
+									uri: HTTPS_HOST + "/media/" + author.user.profile.avatars[0].image,
 								}}
 							/>
 						) : (
@@ -167,15 +168,13 @@ export function PublicatedPost(props: IPostProps) {
 								flexDirection: "row",
 								flexWrap: "wrap",
 								gap: 8,
-								marginTop: 12,
+								// marginTop: 12,
 							}}
 						>
 							{links.map((url, index) => (
 								<TouchableOpacity
 									key={index}
 									onPress={() => {
-										// Открываем ссылку
-										// Лучше использовать Linking API от React Native
 										import("react-native").then(
 											({ Linking }) =>
 												Linking.openURL(url)
@@ -233,12 +232,11 @@ export function PublicatedPost(props: IPostProps) {
 													totalGap) /
 												countInRow;
 											const aspectRatio = 167.5 / 203; // расчитываем размер исходя из размера экрана
-
 											return (
 												<Image
 													key={i}
 													source={{
-														uri: url,
+														uri: HTTPS_HOST + url.split("3011")[1],
 													}}
 													style={{
 														width,

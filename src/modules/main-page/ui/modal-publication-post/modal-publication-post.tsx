@@ -43,10 +43,10 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 
 	const schema = yup.object().shape({
 		title: yup.string().required("Це поле обов'язкове"),
-		text: yup.string().required("Це поле обов'язкове"),
+		content: yup.string().required("Це поле обов'язкове"),
 		images: yup.array().required("Додайте хоча б одне зображення"),
-		defaultTags: yup.array().required("Додайте хоча б дефолтний один тег"),
-		customTags: yup.array().required("Додайте хоча б кастомний один тег"),
+		existingTags: yup.array().required("Додайте хоча б дефолтний один тег"),
+		newTags: yup.array().required("Додайте хоча б кастомний один тег"),
 		link: yup.array().required("Додайте хочаб одне посилання"),
 	});
 
@@ -54,10 +54,10 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 		useForm<IUserPost>({
 			defaultValues: {
 				title: "",
-				text: "",
+				content: "",
 				images: [],
-				defaultTags: [],
-				customTags: [],
+				existingTags: [],
+				newTags: [],
 				link: [],
 			},
 			resolver: yupResolver(schema),
@@ -71,11 +71,11 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	async function closingModal() {
 		closeCreateModal();
 		setValue("title", "");
-		setValue("text", "");
+		setValue("content", "");
 		setImages([]);
 		setValue("images", []);
-		setValue("defaultTags", []);
-		setValue("customTags", []);
+		setValue("existingTags", []);
+		setValue("newTags", []);
 		setValue("link", []);
 	}
 
@@ -114,11 +114,21 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	}
 
 	function onSubmit(data: IUserPost) {
+		const imagesWithPrefix = data.images.map(
+			(img) => `data:image/jpeg;base64,${img}`
+		);
+		const dataWithPrefixedImages = {
+			...data,
+			images: imagesWithPrefix,
+		};
+
+
 		async function request() {
-			const response = await createPost(data);
+			const response = await createPost(dataWithPrefixedImages);
 			onRefresh?.();
 			closingModal();
 		}
+
 		request();
 	}
 
@@ -128,6 +138,9 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 				<ScrollView
 					style={styles.mainModalWindow}
 					overScrollMode="never"
+					contentContainerStyle={{
+						paddingBottom: images.length > 0 ? 44 : 0,
+					}}
 				>
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closingModal}>
@@ -172,7 +185,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 							/>
 							<Controller
 								control={control}
-								name="text"
+								name="content"
 								render={({ field, fieldState }) => {
 									return (
 										<Input
@@ -196,7 +209,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 						<View style={{ marginTop: 16 }}>
 							<Controller
 								control={control}
-								name="defaultTags"
+								name="existingTags"
 								render={({ field }) => (
 									<TagsMultiSelect
 										selectedTags={field.value}
@@ -209,7 +222,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 						<View>
 							<Controller
 								control={control}
-								name="customTags"
+								name="newTags"
 								render={({ field }) => (
 									<TagsCustomInput
 										value={field.value}

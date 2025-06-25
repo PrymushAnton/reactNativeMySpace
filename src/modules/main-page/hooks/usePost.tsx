@@ -5,7 +5,7 @@ import { HOST, PORT } from "../../../shared/base-url";
 
 interface PostPayload {
 	title: string;
-	text: string;
+	content: string;
 	existingTags: string[];
 	newTags: string[];
 	images: string[];
@@ -21,31 +21,31 @@ export function usePost() {
 		return await AsyncStorage.getItem("token");
 	}
 
-	function transformToPayload(post: IUserPost): PostPayload {
-		return {
-			title: post.title,
-			text: post.text,
-			existingTags: post.defaultTags,
-			newTags: post.customTags,
-			images: post.images,
-			link: post.link,
-		};
-	}
+	// function transformToPayload(post: IUserPost): PostPayload {
+	// 	return {
+	// 		title: post.title,
+	// 		content: post.content,
+	// 		existingTags: post.existingTags,
+	// 		newTags: post.newTags,
+	// 		images: post.images,
+	// 		link: post.link,
+	// 	};
+	// }
 
 	async function createPost(post: IUserPost) {
 		const token = await getToken();
 		if (!token) return "";
 
-		const payload = transformToPayload(post);
+		// const payload = transformToPayload(post);
 
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/create`, {
+			const res = await fetch(`http://${HOST}/post/create`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify(payload),
+				body: JSON.stringify(post),
 			});
 			const result = await res.json();
 			return result;
@@ -55,23 +55,23 @@ export function usePost() {
 		}
 	}
 
-	async function updatePost(id: number, post: IUserPost) {
+	async function updatePost(id: number, post: any) {
 		const token = await getToken();
 		if (!token) return "";
 
-		const payload: UpdatePayload = {
-			...transformToPayload(post),
-			id,
-		};
+		// const payload: UpdatePayload = {
+		// 	...transformToPayload(post),
+		// 	id,
+		// };
 
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/update`, {
+			const res = await fetch(`http://${HOST}/post/update`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify(payload),
+				body: JSON.stringify({...post, id}),
 			});
 
 			return await res.json();
@@ -86,7 +86,7 @@ export function usePost() {
 		if (!token) return "";
 
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/delete`, {
+			const res = await fetch(`http://${HOST}/post/delete`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -104,7 +104,7 @@ export function usePost() {
 
 	async function getAllPosts() {
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/find-all-posts`);
+			const res = await fetch(`http://${HOST}/post/find-all-posts`);
 			const result = await res.json();
 			return result
 		} catch (error) {
@@ -116,7 +116,7 @@ export function usePost() {
 	async function getPostsByUserId(userId: number) {
 		try {
 			const res = await fetch(
-				`http://${HOST}:${PORT}/post/find-posts-by-user-id/${userId}`
+				`http://${HOST}/post/find-posts-by-user-id/${userId}`
 			);
 			return await res.json();
 		} catch (error) {
@@ -127,18 +127,18 @@ export function usePost() {
 
 	async function getAllTags() {
 		try {
-			const res = await fetch(`http://${HOST}:${PORT}/post/find-all-tags`);
+			const res = await fetch(`http://${HOST}/post/find-all-tags`);
 			return await res.json();
 		} catch (error) {
 			console.error(error);
 			return "";
 		}
 	}
-
-	async function getPostById(postId: number): Promise<Response<IPostFromBackend>> {
+// : Promise<Response<IUserPost>>
+	async function getPostById(postId: number) {
 		try {
 			const res = await fetch(
-				`http://${HOST}:${PORT}/post/find-post-by-id/${postId}`,
+				`http://${HOST}/post/find-post-by-id/${postId}`,
 				{ method: "GET" }
 			);
 			const data = await res.json();

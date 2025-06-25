@@ -27,6 +27,7 @@ import { format } from "date-fns";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { ButtonEdit } from "../buttonEdit";
 import { HOST, PORT } from "../../../../shared/base-url";
+import { ChangePassword } from "../change-password";
 
 interface IPersonalInfoFormData {
 	first_name: string;
@@ -34,7 +35,7 @@ interface IPersonalInfoFormData {
 	// username: string;
 	email: string;
 	// phoneNumber: string;
-	dateOfBirth: Date | null;
+	date_of_birth: Date | null;
 }
 
 export function PersonalInfoSettingsPage() {
@@ -58,10 +59,8 @@ export function PersonalInfoSettingsPage() {
 			defaultValues: {
 				first_name: "",
 				last_name: "",
-				dateOfBirth: null,
-				email: "",
-				// phoneNumber: "",
-				// username: "",
+				date_of_birth: null,
+				email: ""
 			},
 		});
 
@@ -70,33 +69,23 @@ export function PersonalInfoSettingsPage() {
 			setValue("first_name", user.first_name ? user.first_name : "");
 			setValue("last_name", user.last_name ? user.last_name : "");
 			setValue(
-				"dateOfBirth",
-				user.profile?.dateOfBirth
-					? new Date(user.profile.dateOfBirth)
+				"date_of_birth",
+				user.profile?.date_of_birth
+					? new Date(user.profile.date_of_birth)
 					: null
 			);
 			setValue("email", user.email ? user.email : "");
-			// setValue("username", user.username ? user.username : "");
-			// setValue(
-			// 	"phoneNumber",
-			// 	user.phoneNumber
-			// 		? parsePhoneNumberFromString(
-			// 				user.phoneNumber
-			// 		  )!.formatInternational()
-			// 		: ""
-			// );
 		}
 	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
-		console.log("1", data);
 
 		async function sendRequest() {
 			try {
 				if (!token) {
 					return;
 				}
-				const res = await fetch(`http://${HOST}:${PORT}/user/update`, {
+				const res = await fetch(`http://${HOST}/user/update`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -107,7 +96,6 @@ export function PersonalInfoSettingsPage() {
 				const result: Response<string> = await res.json();
 				getData(token);
 				setEditable(false);
-				console.log("4", result);
 			} catch (error) {
 				console.log((error as Error).message);
 			}
@@ -205,37 +193,9 @@ export function PersonalInfoSettingsPage() {
 						)}
 					/>
 
-					{/* <Controller
-						control={control}
-						name="phoneNumber"
-						rules={{
-							validate: (value) => {
-								if (value === "") return true;
-								if (!isValidPhoneNumber(value))
-									return "Невалідний номер телефона";
-								return true;
-							},
-						}}
-						render={({ field, fieldState }) => (
-							<ProfileCard
-								placeholder={
-									user.phoneNumber
-										? undefined
-										: "Не вказано :("
-								}
-								label="Мобільний (з кодом країни)"
-								type="tel"
-								editable={editable}
-								value={field.value}
-								onChangeText={field.onChange}
-								errorMessage={fieldState.error?.message}
-							/>
-						)}
-					/> */}
-
 					<Controller
 						control={control}
-						name="dateOfBirth"
+						name="date_of_birth"
 						render={({ field }) => {
 							return (
 								<>
@@ -269,10 +229,6 @@ export function PersonalInfoSettingsPage() {
 											onChange={(event, selectedDate) => {
 												setShow(Platform.OS === "ios");
 												if (!selectedDate) return;
-												console.log(
-													"onChange",
-													selectedDate
-												);
 												field.onChange(selectedDate);
 											}}
 											maximumDate={new Date()}
@@ -284,6 +240,8 @@ export function PersonalInfoSettingsPage() {
 						}}
 					/>
 				</View>
+				<ChangePassword/>
+
 			</View>
 		</ScrollView>
 	);

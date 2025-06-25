@@ -3,6 +3,11 @@ import { IContactCard } from "../../types/chat-info";
 import { styles } from "./card.styles";
 import { useRouter } from "expo-router";
 import { ICONS } from "../../../../shared/ui/icons";
+import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
+import { IMessage } from "../messages/messages.types";
+import { useEffect, useState } from "react";
+import Checkbox from "expo-checkbox";
+import { FriendCard } from "../../../friends-page/types/friend-info";
 
 const router = useRouter();
 
@@ -20,7 +25,10 @@ function Card({ image, name, surname }: IContactCard) {
 function Contact({ image, name, surname }: IContactCard) {
 	return (
 		<TouchableOpacity style={styles.card1}>
-			<Image source={{ uri: image }} style={styles.contactImage}></Image>
+			<Image
+				source={{ uri: HTTPS_HOST + "/media/" + image }}
+				style={styles.contactImage}
+			></Image>
 			<Text style={styles.contactName}>
 				{name} {surname}
 			</Text>
@@ -28,30 +36,59 @@ function Contact({ image, name, surname }: IContactCard) {
 	);
 }
 
-function Message({ image, name, surname, text, date }: IContactCard) {
+function Message(props: IMessage) {
+	const [date, setDate] = useState<Date | null>(null);
+
+	useEffect(() => {
+		setDate(props.messages[0] ? new Date(props.messages[0].sent_at) : null);
+	}, [props]);
+
 	return (
 		<TouchableOpacity
 			style={styles.card2}
 			onPress={() => {
-				router.replace("personal-chat");
+				// router.replace("personal-chat");
+				router.replace({
+					pathname: "/personal-chat/",
+					params: {
+						avatar: props.members[0].profile.avatars[0].image,
+						chatId: props.id,
+						email: props.members[0].profile.user.email,
+						first_name: props.members[0].profile.user.first_name,
+						last_name: props.members[0].profile.user.last_name,
+						username: props.members[0].profile.user.username,
+						userId: props.members[0].profile.user.id,
+					},
+				});
 			}}
 		>
-			<Image source={{ uri: image }} style={styles.contactImage}></Image>
-			<View>
+			<Image
+				source={{
+					uri:
+						HTTPS_HOST +
+						"/media/" +
+						props.members[0].profile.avatars[0].image,
+				}}
+				style={styles.contactImage}
+			></Image>
+			<View style={{ flex: 1 }}>
 				<View
 					style={{
 						flexDirection: "row",
 						justifyContent: "space-between",
-						width: "85%",
+						flex: 1,
+						flexShrink: 1,
 					}}
 				>
 					<Text style={styles.contactName}>
-						{name} {surname}
+						{props.members[0].profile.user.first_name}{" "}
+						{props.members[0].profile.user.last_name}
 					</Text>
-					{/* тут треба дата, хз як її зробити */}
-					<Text>9:41</Text>
+					<Text>{date?.toLocaleDateString()}</Text>
 				</View>
-				<Text>{text}</Text>
+				<Text>
+					{props.messages[0] ? props.messages[0].content : null}
+				</Text>
 			</View>
 		</TouchableOpacity>
 	);
@@ -86,41 +123,92 @@ function Group({ image, name, surname, text, date }: IContactCard) {
 	);
 }
 
-function GroupAdd({ image, name, surname }: IContactCard) {
+function GroupAdd(props: {
+	friend: FriendCard;
+	setTotalSelected: (value: number) => void;
+	totalSelected: number;
+	setSelectedFriends: (value: FriendCard[]) => void;
+	selectedFriends: FriendCard[];
+}) {
+	const [toggleCheckBox, setToggleCheckBox] = useState(() =>
+		props.selectedFriends.some((f) => f.id === props.friend.id)
+	);
+
 	return (
 		<View style={styles.card3}>
 			<View style={styles.groupAddInfo}>
 				<Image
-					source={{ uri: image }}
+					source={{
+						uri:
+							HTTPS_HOST +
+							"/media/" +
+							props.friend.avatars[0].image,
+					}}
 					style={styles.contactImage}
 				></Image>
 				<Text style={styles.contactName}>
-					{name} {surname}
+					{props.friend.user.first_name} {props.friend.user.last_name}
 				</Text>
 			</View>
-			<TouchableOpacity>
-				<ICONS.UncheckedCheckbox
-					width={20}
-					height={20}
-				></ICONS.UncheckedCheckbox>
-			</TouchableOpacity>
+			<Checkbox
+				disabled={false}
+				value={toggleCheckBox}
+				onValueChange={(newValue) => {
+					setToggleCheckBox(newValue);
+					if (newValue) {
+						props.setTotalSelected(props.totalSelected + 1);
+						props.setSelectedFriends([
+							...props.selectedFriends,
+							props.friend,
+						]);
+					} else {
+						props.setTotalSelected(props.totalSelected - 1);
+						props.setSelectedFriends(
+							props.selectedFriends.filter((friend) => {
+								return !(friend.id === props.friend.id);
+							})
+						);
+					}
+				}}
+				color={"#543C52"}
+			/>
 		</View>
 	);
 }
 
-function GroupDelete({ image, name, surname }: IContactCard) {
+function GroupDelete(props: {
+	friend: FriendCard;
+	setTotalSelected: (value: number) => void;
+	totalSelected: number;
+	setSelectedFriends: (value: FriendCard[]) => void;
+	selectedFriends: FriendCard[];
+}) {
 	return (
 		<View style={styles.card3}>
 			<View style={styles.groupAddInfo}>
 				<Image
-					source={{ uri: image }}
+					source={{
+						uri:
+							HTTPS_HOST +
+							"/media/" +
+							props.friend.avatars[0].image,
+					}}
 					style={styles.contactImage}
 				></Image>
 				<Text style={styles.contactName}>
-					{name} {surname}
+					{props.friend.user.first_name} {props.friend.user.last_name}
 				</Text>
 			</View>
-			<TouchableOpacity>
+			<TouchableOpacity
+				onPress={() => {
+					props.setSelectedFriends(
+						props.selectedFriends.filter((friend) => {
+							return !(friend.id === props.friend.id);
+						})
+					);
+					props.setTotalSelected(props.totalSelected - 1);
+				}}
+			>
 				<ICONS.TrashCanIcon width={20} height={20}></ICONS.TrashCanIcon>
 			</TouchableOpacity>
 		</View>

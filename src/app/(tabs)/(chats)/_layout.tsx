@@ -7,7 +7,6 @@ export default function RootLayout() {
 			screenOptions={{
 				headerShown: false,
 				contentStyle: { backgroundColor: "#FAF8FF" },
-				// header: () => <Header isOnSettings={false} />,
 			}}
 		></Stack>
 	);

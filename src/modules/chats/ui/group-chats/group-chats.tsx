@@ -6,6 +6,7 @@ import { IGroupCard } from "../../types/chat-info";
 import { useState } from "react";
 import { NewGroupModalOne } from "../modals/ui/new-group-modal-one/new-group-modal-one";
 import { NewGroupModalTwo } from "../modals/ui/new-group-modal-two/new-group-modal-two";
+import { FriendCard } from "../../../friends-page/types/friend-info";
 
 const groups: IGroupCard[] = [
 	{
@@ -77,6 +78,8 @@ const groups: IGroupCard[] = [
 
 export function GroupChatsPage() {
 	let [step, setStep] = useState<"none" | "one" | "two">("none");
+	const [selectedFriends, setSelectedFriends] = useState<FriendCard[]>([]);
+	const [totalSelected, setTotalSelected] = useState<number>(0);
 
 	return (
 		<View style={styles.container}>
@@ -112,11 +115,19 @@ export function GroupChatsPage() {
 								visible={step === "one"}
 								onClose={() => setStep("none")}
 								onNext={() => setStep("two")}
+								selectedFriends={selectedFriends}
+								setSelectedFriends={setSelectedFriends}
+								totalSelected={totalSelected}
+								setTotalSelected={setTotalSelected}
 							/>
 							<NewGroupModalTwo
 								visible={step === "two"}
 								onClose={() => setStep("none")}
 								onBack={() => setStep("one")}
+								selectedFriends={selectedFriends}
+								setSelectedFriends={setSelectedFriends}
+								totalSelected={totalSelected}
+								setTotalSelected={setTotalSelected}
 							/>
 						</View>
 					</View>

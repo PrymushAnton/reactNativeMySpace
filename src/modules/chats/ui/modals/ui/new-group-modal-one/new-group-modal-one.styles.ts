@@ -2,13 +2,14 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	container: {
-		width: 350,
+		width: "90%",
 		height: "80%",
 		backgroundColor: "white",
 		borderRadius: 20,
 		paddingTop: 24,
-		paddingHorizontal: 44,
+		paddingRight: 16,
 		paddingBottom: 44,
+		paddingLeft: 16,
 		gap: 24,
 	},
 	search: {
@@ -36,7 +37,7 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	topText: {
-		fontSize: 34,
+		fontSize: 28,
 		fontWeight: 500,
 		marginBottom: 10,
 		alignSelf: "center",

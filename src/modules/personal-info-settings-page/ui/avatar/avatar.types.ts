@@ -7,5 +7,5 @@ export interface IAvatarProps{
 
 export interface IAvatarForm {
     username: string
-    images: string
+    avatar: string
 }

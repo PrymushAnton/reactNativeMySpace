@@ -26,7 +26,7 @@ export function FrinedProfilePage() {
 			if (!token) return;
 
 			const res = await fetch(
-				`http://${HOST}:${PORT}/friend/delete-friend`,
+				`http://${HOST}/friend/delete-friend`,
 				{
 					method: "POST",
 					headers: {

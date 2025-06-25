@@ -14,6 +14,9 @@ import { HOST, PORT } from "../../../../shared/base-url";
 export function Avatar() {
 	const [avatar, setAvatar] = useState<string>("");
 
+	// useEffect(() => {
+	// 	console.log(avatar);
+	// }, [avatar]);
 	const { token, getData, user } = useAuthContext();
 
 	const [editable, setEditable] = useState<boolean>(false);
@@ -22,7 +25,7 @@ export function Avatar() {
 		{
 			defaultValues: {
 				username: "",
-				images: "",
+				avatar: "",
 			},
 		}
 	);
@@ -34,8 +37,14 @@ export function Avatar() {
 	useEffect(() => {
 		if (user) {
 			setValue("username", user.username ? user.username : "");
-			setValue("images", user.images ? user.images : "");
-			setAvatar(user.images ? user.images : "");
+			const avatarPath = user.profile?.avatars?.[0]?.image;
+
+			const avatarUrl = avatarPath
+				? `http://${HOST}/media/${avatarPath}`
+				: "";
+
+			setValue("avatar", avatarUrl);
+			setAvatar(avatarUrl);
 		}
 	}, [user]);
 
@@ -48,8 +57,15 @@ export function Avatar() {
 				});
 				if (!image) return;
 				if (!image[0].base64) return;
-				setAvatar(image[0].base64);
-				setValue("images", image[0].base64);
+				const mimeType =
+					image[0].mimeType ||
+					(image[0].uri?.endsWith(".png")
+						? "image/png"
+						: "image/jpeg");
+				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
+
+				setAvatar(base64WithPrefix);
+				setValue("avatar", base64WithPrefix);
 			} catch (error) {
 				console.log((error as Error).message);
 			}
@@ -58,7 +74,7 @@ export function Avatar() {
 	}
 
 	function deleteAvatar() {
-		setValue("images", "");
+		setValue("avatar", "");
 		setAvatar("");
 	}
 
@@ -68,7 +84,7 @@ export function Avatar() {
 				if (!token) return;
 
 				const res = await fetch(
-					`http://${HOST}:${PORT}/user/update-avatar`,
+					`http://${HOST}/user/update-avatar`,
 					{
 						method: "POST",
 						headers: {
@@ -110,7 +126,11 @@ export function Avatar() {
 				/>
 			</View>
 			<View style={styles.avatar}>
-				{editable && <Text style={styles.topText}>Оберіть або завантажте фото профілю</Text>}
+				{editable && (
+					<Text style={styles.topText}>
+						Оберіть або завантажте фото профілю
+					</Text>
+				)}
 
 				<View style={styles.view}>
 					{avatar ? (
@@ -120,7 +140,7 @@ export function Avatar() {
 								width: 150,
 								borderRadius: 150,
 							}}
-							source={{ uri: "data:image/jpeg;base64," + avatar }}
+							source={{ uri: avatar }}
 						/>
 					) : (
 						<ICONS.AnonymousLogoIcon width={160} height={160} />
@@ -134,7 +154,10 @@ export function Avatar() {
 									pickImageHandler();
 								}}
 							>
-								<ICONS.PlusWithoutBorder width={17} height={17} />
+								<ICONS.PlusWithoutBorder
+									width={17}
+									height={17}
+								/>
 								<Text style={styles.textAvatar}>
 									Додати фото
 								</Text>

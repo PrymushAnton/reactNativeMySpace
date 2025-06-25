@@ -50,13 +50,12 @@ export function MainPage() {
 						tags={post.tags}
 						images={post.images}
 						author={post.author}
-						// user={post.user}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
 						links={post.links}
 						author_id={post.author_id}
 						content={post.content}
-						// onRefresh={fetchPosts}
+						onRefresh={fetchPosts}
 					/>
 				))}
 			</View>

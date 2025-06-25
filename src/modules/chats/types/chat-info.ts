@@ -3,7 +3,7 @@ export interface IContactCard {
 	name?: string;
 	surname?: string;
 	text?: string;
-	date?: Date;
+	date?: string;
 	wasWatched?: boolean;
 }
 

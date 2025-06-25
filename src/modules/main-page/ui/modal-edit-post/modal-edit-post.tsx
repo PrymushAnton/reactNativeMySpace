@@ -34,16 +34,33 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	const { handleSubmit, control, setValue, reset } = useForm<IUserPost>({
 		defaultValues: {
 			title: "",
-			text: "",
+			content: "",
 			images: [],
-			defaultTags: [],
-			customTags: [],
+			existingTags: [],
+			newTags: [],
 			link: [],
 		},
 	});
 
 	useEffect(() => {
 		if (!isEditVisible || editPostId === null) return;
+
+		async function fetchBase64Images(urls: string[]) {
+			const promises = urls.map(async (url) => {
+				try {
+					const encodedUrl = encodeURIComponent(url);
+					const response = await fetch(
+						`http://192.168.3.11:3011/post/get-base64-from-url/${encodedUrl}`
+					);
+					const data = await response.json();
+					return data.base64 as string;
+				} catch {
+					return null;
+				}
+			});
+			const results = await Promise.all(promises);
+			return results.filter((x): x is string => !!x);
+		}
 
 		async function fetchData() {
 			if (!user) return;
@@ -59,23 +76,28 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 			const post = response.data;
 			if (!post) return;
 
+			const base64Images = await fetchBase64Images(post.images || []);
+
 			const formData: IUserPost = {
 				title: post.title || "",
-				text: post.text || "",
-				defaultTags: post.tags || [],
-				customTags: [],
-				images: post.images || [],
-				link: post.link || [],
+				content: post.content || "",
+				existingTags: post.tags || [],
+				newTags: [],
+				images: base64Images,
+				link: post.links || [],
 			};
 
 			reset(formData);
 
-			setImages(post.images || []);
+			setImages(base64Images);
 		}
 
 		fetchData();
 	}, [isEditVisible, editPostId]);
 
+	// useEffect(() => {
+	// 	console.log(images.map((image) => {return image.slice(0, 15)}))
+	// }, [images])
 	const shouldAddMarginBottom =
 		images.length >= 4 ||
 		control._formValues.defaultTags?.length > 0 ||
@@ -99,13 +121,13 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 		});
 
 		if (selected.assets && selected.assets.length > 0) {
-			const bases64 = selected.assets
+			const bases64WithPrefix = selected.assets
 				.map((asset) => asset.base64)
-				.filter((b): b is string => !!b);
+				.filter((b): b is string => !!b)
+				.map((base64) => `data:image/jpeg;base64,${base64}`);
+			if (bases64WithPrefix.length === 0) return;
 
-			if (bases64.length === 0) return;
-
-			const newImages = [...images, ...bases64].slice(0, 9);
+			const newImages = [...images, ...bases64WithPrefix].slice(0, 9);
 			setImages(newImages);
 			setValue("images", newImages);
 		}
@@ -114,10 +136,8 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	async function onSubmit(data: IUserPost) {
 		if (editPostId == null) return;
 
-		await updatePost(editPostId, {
-			...data,
-			images: images,
-		});
+		// console.log(data);
+		await updatePost(editPostId, { ...data, id: postId, images: images });
 		onRefresh?.();
 		closeEditModal();
 	}
@@ -128,6 +148,9 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 				<ScrollView
 					style={styles.mainModalWindow}
 					overScrollMode="never"
+					contentContainerStyle={{
+						paddingBottom: images.length > 0 ? 44 : 0,
+					}}
 				>
 					<View style={styles.closeModalButton}>
 						<TouchableOpacity onPress={closeEditModal}>
@@ -171,7 +194,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 							<Controller
 								control={control}
-								name="text"
+								name="content"
 								render={({ field, fieldState }) => (
 									<Input
 										height={140}
@@ -190,7 +213,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 						<View style={{ marginTop: 16 }}>
 							<Controller
 								control={control}
-								name="defaultTags"
+								name="existingTags"
 								render={({ field }) => (
 									<TagsMultiSelect
 										selectedTags={field.value}
@@ -203,7 +226,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 						<View>
 							<Controller
 								control={control}
-								name="customTags"
+								name="newTags"
 								render={({ field }) => (
 									<TagsCustomInput
 										value={field.value}
@@ -254,8 +277,7 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 								>
 									<Image
 										source={{
-											uri:
-												"data:image/jpeg;base64," + uri,
+											uri: uri,
 										}}
 										style={{
 											width: 100,
