@@ -7,23 +7,16 @@ import { useEffect, useState } from "react";
 import { FriendCard } from "../../../../../friends-page/types/friend-info";
 import { useAuthContext } from "../../../../../auth/context";
 import { HOST } from "../../../../../../shared/base-url";
+import { useCreateGroupChatContext } from "../../../../context/create-group-chat.context";
 
 export function NewGroupModalOne({
 	visible,
 	onClose,
 	onNext,
-	setSelectedFriends,
-	selectedFriends,
-	setTotalSelected,
-	totalSelected,
 }: {
 	visible: boolean;
 	onClose: () => void;
 	onNext: () => void;
-	setSelectedFriends: (value: FriendCard[]) => void;
-	selectedFriends: FriendCard[];
-	setTotalSelected: (value: number) => void;
-	totalSelected: number;
 }) {
 	const { token } = useAuthContext();
 	const [friends, setFriends] = useState<FriendCard[]>([]);
@@ -40,6 +33,15 @@ export function NewGroupModalOne({
 		fetchFriends();
 	}, []);
 
+	const {
+		setSelectedFriends,
+		selectedFriends,
+		setAvatar,
+		totalSelected,
+		setTotalSelected,
+		setValue,
+	} = useCreateGroupChatContext();
+
 	return (
 		<Modal visible={visible} transparent={true} animationType="fade">
 			<View style={styles.main}>
@@ -49,6 +51,8 @@ export function NewGroupModalOne({
 							onClose();
 							setTotalSelected(0);
 							setSelectedFriends([]);
+							setAvatar("");
+							setValue("name", "");
 						}}
 						style={{ alignSelf: "flex-end" }}
 					>
@@ -88,6 +92,8 @@ export function NewGroupModalOne({
 								onClose();
 								setTotalSelected(0);
 								setSelectedFriends([]);
+								setAvatar("");
+								setValue("name", "");
 							}}
 							style={styles.butt1}
 						>

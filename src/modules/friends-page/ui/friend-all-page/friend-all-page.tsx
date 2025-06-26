@@ -45,6 +45,7 @@ export function FriendAllPage() {
 						width: "95%",
 						alignItems: "center",
 						paddingLeft: 24,
+						gap: 12
 					}}
 					overScrollMode="never"
 				>

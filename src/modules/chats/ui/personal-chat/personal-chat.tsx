@@ -75,9 +75,7 @@ export function PersonalChatPage() {
 			);
 		});
 
-		socket?.emit("joinChat", { chatId: params.chatId }, () => {
-			console.log("joined chat");
-		});
+		socket?.emit("joinChat", { chatId: params.chatId });
 		getMessages();
 		return () => {
 			socket?.emit("leaveChat", { chatId: Number(params.chatId) });
@@ -152,6 +150,7 @@ export function PersonalChatPage() {
 					}}
 				>
 					<FlatList
+						overScrollMode="never"
 						ref={flatListRef}
 						onContentSizeChange={() =>
 							flatListRef.current?.scrollToEnd({ animated: true })
@@ -227,12 +226,14 @@ export function PersonalChatPage() {
 								backgroundColor: "#543C52",
 							}}
 							onPress={() => {
-								socket?.emit("sendMessage", {
-									message: value,
-									chatId: Number(params.chatId),
-								});
-								setValue("");
-								Keyboard.dismiss();
+								if (value !== "") {
+									socket?.emit("sendMessage", {
+										message: value,
+										chatId: Number(params.chatId),
+									});
+									setValue("");
+									Keyboard.dismiss();
+								}
 							}}
 						>
 							<ICONS.PaperPlaneIcon width={21} height={20} />

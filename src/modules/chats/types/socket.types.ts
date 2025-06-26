@@ -5,7 +5,7 @@ export interface IServerEvents {
 }
 
 export interface IClientEvents {
-	joinChat: (data: any, callback: any) => void;
+	joinChat: (data: any) => void;
 	leaveChat: (data: any) => void;
     sendMessage: (
         data: any

@@ -85,10 +85,39 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 		setValue("images", updatedImages);
 	}
 
-	async function onSearch() {
-		const result = await requestMediaLibraryPermissionsAsync();
+	// async function onSearch() {
+	// 	const result = await requestMediaLibraryPermissionsAsync();
 
-		if (result.status === "granted") {
+	// 	if (result.status === "granted") {
+	// 		const selected = await launchImageLibraryAsync({
+	// 			mediaTypes: "images",
+	// 			allowsMultipleSelection: true,
+	// 			selectionLimit: 9,
+	// 			base64: true,
+	// 		});
+
+	// 		if (selected.assets) {
+	// 			const bases64 = selected.assets
+	// 				.map((asset) => asset.base64)
+	// 				.filter(
+	// 					(base64): base64 is string => typeof base64 === "string"
+	// 				);
+
+	// 			if (bases64.length === 0) {
+	// 				return 0;
+	// 			}
+
+	// 			setImages(bases64);
+	// 			setValue("images", bases64);
+	// 		}
+	// 	}
+	// }
+	async function onSearch() {
+		try {
+			const result = await requestMediaLibraryPermissionsAsync();
+
+			if (result.status !== "granted") return;
+
 			const selected = await launchImageLibraryAsync({
 				mediaTypes: "images",
 				allowsMultipleSelection: true,
@@ -96,20 +125,31 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 				base64: true,
 			});
 
-			if (selected.assets) {
-				const bases64 = selected.assets
-					.map((asset) => asset.base64)
-					.filter(
-						(base64): base64 is string => typeof base64 === "string"
-					);
+			if (!selected.assets) return;
 
-				if (bases64.length === 0) {
-					return 0;
-				}
+			const base64WithMime = selected.assets
+				.map((asset) => {
+					if (!asset.base64) return null;
 
-				setImages(bases64);
-				setValue("images", bases64);
-			}
+					let mimeType = asset.mimeType;
+
+					// fallback if mimeType is missing or "image/"
+					if (mimeType === "image/") {
+						mimeType = "image/jpeg"
+					}
+
+					return `data:${mimeType};base64,${asset.base64}`;
+				})
+				.filter(
+					(base64): base64 is string => typeof base64 === "string"
+				);
+
+			if (base64WithMime.length === 0) return;
+
+			setImages(base64WithMime);
+			setValue("images", base64WithMime);
+		} catch (error) {
+			console.log((error as Error).message);
 		}
 	}
 
@@ -121,7 +161,6 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 			...data,
 			images: imagesWithPrefix,
 		};
-
 
 		async function request() {
 			const response = await createPost(dataWithPrefixedImages);

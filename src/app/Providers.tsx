@@ -6,6 +6,8 @@ import { AuthContextProvider } from "../modules/auth/context";
 import { customMainFonts } from "../shared/tools/customMainFont";
 import { ModalProvider } from "../modules/auth/context";
 import { SocketContextProvider } from "../modules/chats/context/socket.context";
+import { CreateGroupChatContextProvider } from "../modules/chats/context/create-group-chat.context";
+import { UpdateGroupChatContextProvider } from "../modules/chats/context/update-group-chat.context";
 
 export function Providers({ children }: { children: ReactNode }) {
 	const [fontsLoaded] = customMainFonts();
@@ -16,13 +18,21 @@ export function Providers({ children }: { children: ReactNode }) {
 			<AuthContextProvider>
 				<SocketContextProvider>
 					<ModalProvider>
-						<StatusBar style="auto" />
-						{/* #E9E5EE */}
-						<SafeAreaView
-							style={{ flex: 1, backgroundColor: "white" }}
-						>
-							{children}
-						</SafeAreaView>
+						<CreateGroupChatContextProvider>
+							<UpdateGroupChatContextProvider>
+								<StatusBar style="auto" />
+								{/* #E9E5EE */}
+								<SafeAreaView
+									style={{
+										flex: 1,
+										backgroundColor: "white",
+									}}
+									edges={["bottom", "top"]}
+								>
+									{children}
+								</SafeAreaView>
+							</UpdateGroupChatContextProvider>
+						</CreateGroupChatContextProvider>
 					</ModalProvider>
 				</SocketContextProvider>
 			</AuthContextProvider>

@@ -4,7 +4,7 @@ import { styles } from "./card.styles";
 import { useRouter } from "expo-router";
 import { ICONS } from "../../../../shared/ui/icons";
 import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
-import { IMessage } from "../messages/messages.types";
+import { IGroupChat, IMessage } from "../messages/messages.types";
 import { useEffect, useState } from "react";
 import Checkbox from "expo-checkbox";
 import { FriendCard } from "../../../friends-page/types/friend-info";
@@ -47,7 +47,6 @@ function Message(props: IMessage) {
 		<TouchableOpacity
 			style={styles.card2}
 			onPress={() => {
-				// router.replace("personal-chat");
 				router.replace({
 					pathname: "/personal-chat/",
 					params: {
@@ -70,7 +69,7 @@ function Message(props: IMessage) {
 						props.members[0].profile.avatars[0].image,
 				}}
 				style={styles.contactImage}
-			></Image>
+			/>
 			<View style={{ flex: 1 }}>
 				<View
 					style={{
@@ -87,22 +86,44 @@ function Message(props: IMessage) {
 					<Text>{date?.toLocaleDateString()}</Text>
 				</View>
 				<Text>
-					{props.messages[0] ? props.messages[0].content : null}
+					{props.messages[0]
+						? props.messages[0].content
+						: "Немає повідомлень"}
 				</Text>
 			</View>
 		</TouchableOpacity>
 	);
 }
 
-function Group({ image, name, surname, text, date }: IContactCard) {
+function Group(props: IGroupChat) {
+	const [date, setDate] = useState<Date | null>(null);
+
 	return (
 		<TouchableOpacity
 			style={styles.card2}
 			onPress={() => {
-				router.replace("group-chat");
+				router.replace({
+					pathname: "group-chat",
+					params: {
+						avatar: props.avatar,
+						chatId: props.id,
+						name: props.name,
+						membersAmount: String(props.members.length + 1)
+					},
+				});
 			}}
 		>
-			<Image source={{ uri: image }} style={styles.contactImage}></Image>
+			{props.avatar ? (
+				<Image
+					source={{
+						uri: HTTPS_HOST + "/media/" + props.avatar,
+					}}
+					style={styles.contactImage}
+				/>
+			) : (
+				<ICONS.ChatDefaultLogoIcon width={50} height={50} />
+			)}
+
 			<View>
 				<View
 					style={{
@@ -111,13 +132,14 @@ function Group({ image, name, surname, text, date }: IContactCard) {
 						width: "85%",
 					}}
 				>
-					<Text style={styles.contactName}>
-						{name} {surname}
-					</Text>
-					{/* тут треба дата, хз як її зробити */}
-					<Text>9:41</Text>
+					<Text style={styles.contactName}>{props.name}</Text>
+					<Text>{date?.toLocaleDateString()}</Text>
 				</View>
-				<Text>{text}</Text>
+				<Text>
+					{props.messages[0]
+						? props.messages[0].content
+						: "Немає повідомлень"}
+				</Text>
 			</View>
 		</TouchableOpacity>
 	);

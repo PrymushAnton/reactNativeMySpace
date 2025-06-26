@@ -29,4 +29,24 @@ export interface IGroupCard {
 	date?: Date;
 	wasWatched?: boolean;
 }
-
+export interface IChatInfo{
+	name: string
+	avatar?: string
+	members: {
+		profile_id: number
+		profile: {
+			user: {
+				id: number
+				username: string
+				first_name: string
+				last_name: string
+				email: string
+			},
+			avatars: [
+				{
+					image: string
+				}
+			]
+		}
+	}[]
+}

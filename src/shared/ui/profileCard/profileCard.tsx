@@ -13,9 +13,10 @@ export function ProfileCard(props: IProfileCardProps) {
 		type,
 		value,
 		errorMessage,
+		isHidden,
+		setIsHidden
 	} = props;
 
-	const [isHidden, setIsHidden] = useState<boolean>(true);
 
 	// useEffect(() => {
 	// 	console.log("component",value)
@@ -36,7 +37,7 @@ export function ProfileCard(props: IProfileCardProps) {
 			{type === "password" ? (
 				<View
 					style={{
-						width: "100%",
+						// width: "100%",
 						flexDirection: "row",
 						justifyContent: "center",
 						alignItems: "center",
@@ -49,6 +50,7 @@ export function ProfileCard(props: IProfileCardProps) {
 							editable
 								? styles.inputActive
 								: styles.inputDisabled,
+							{flex: 1, flexShrink: 1}
 						]}
 						editable={editable}
 						placeholder={placeholder}
@@ -58,7 +60,7 @@ export function ProfileCard(props: IProfileCardProps) {
 					/>
 					<TouchableOpacity
 						onPress={() => {
-							if (editable) setIsHidden(!isHidden);
+							if (editable) setIsHidden?.(!isHidden);
 						}}
 					>
 						{isHidden ? (

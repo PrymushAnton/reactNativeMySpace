@@ -54,24 +54,24 @@ export function Avatar() {
 				const image = await pickImage({
 					allowsMultipleSelection: false,
 					base64: true,
+					
 				});
-				if (!image) return;
-				if (!image[0].base64) return;
-				const mimeType =
-					image[0].mimeType ||
-					(image[0].uri?.endsWith(".png")
-						? "image/png"
-						: "image/jpeg");
-				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
 
+				if (!image || !image[0].base64) return;
+
+				let mimeType = image[0].mimeType
+				if (mimeType === "image/") {
+					mimeType = "image/jpeg"
+				}
+				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
 				setAvatar(base64WithPrefix);
-				setValue("avatar", base64WithPrefix);
 			} catch (error) {
 				console.log((error as Error).message);
 			}
 		}
 		pickImageAsync();
 	}
+
 
 	function deleteAvatar() {
 		setValue("avatar", "");

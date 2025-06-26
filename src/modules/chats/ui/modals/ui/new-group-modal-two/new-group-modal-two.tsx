@@ -5,6 +5,7 @@ import {
 	Text,
 	FlatList,
 	Image,
+	TextInput,
 } from "react-native";
 import { IContactCard } from "../../../../types/chat-info";
 import { useState } from "react";
@@ -13,25 +14,38 @@ import { ICONS } from "../../../../../../shared/ui/icons";
 import { Card } from "../../../card/card";
 import { FriendCard } from "../../../../../friends-page/types/friend-info";
 import { pickImage } from "../../../../../../shared/tools";
+import { HTTPS_HOST } from "../../../../../../shared/base-url/base-url";
+import { useAuthContext } from "../../../../../auth/context";
+import { Controller, useForm } from "react-hook-form";
+import { Input } from "../../../../../../shared/ui/input";
+import { useCreateGroupChatContext } from "../../../../context/create-group-chat.context";
+import { getInfoAsync } from "expo-file-system";
+
 
 export function NewGroupModalTwo({
 	visible,
 	onClose,
 	onBack,
-	setSelectedFriends,
-	selectedFriends,
-	setTotalSelected,
-	totalSelected,
+	onRefresh,
 }: {
 	visible: boolean;
 	onClose: () => void;
 	onBack: () => void;
-	setSelectedFriends: (value: FriendCard[]) => void;
-	selectedFriends: FriendCard[];
-	setTotalSelected: (value: number) => void;
-	totalSelected: number;
+	onRefresh: () => void;
 }) {
-	const [avatar, setAvatar] = useState<string>("");
+	const { token } = useAuthContext();
+
+	const {
+		setSelectedFriends,
+		selectedFriends,
+		setAvatar,
+		avatar,
+		totalSelected,
+		setTotalSelected,
+		setValue,
+		handleSubmit,
+		control,
+	} = useCreateGroupChatContext();
 
 	function pickImageHandler() {
 		async function pickImageAsync() {
@@ -39,16 +53,16 @@ export function NewGroupModalTwo({
 				const image = await pickImage({
 					allowsMultipleSelection: false,
 					base64: true,
+					
 				});
-				if (!image) return;
-				if (!image[0].base64) return;
-				const mimeType =
-					image[0].mimeType ||
-					(image[0].uri?.endsWith(".png")
-						? "image/png"
-						: "image/jpeg");
-				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
 
+				if (!image || !image[0].base64) return;
+
+				let mimeType = image[0].mimeType
+				if (mimeType === "image/") {
+					mimeType = "image/jpeg"
+				}
+				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
 				setAvatar(base64WithPrefix);
 			} catch (error) {
 				console.log((error as Error).message);
@@ -57,12 +71,43 @@ export function NewGroupModalTwo({
 		pickImageAsync();
 	}
 
+	async function sendRequest(data: { name: string }) {
+		console.log(HTTPS_HOST + "/chat/create-group-chat");
+		const response = await fetch(HTTPS_HOST + "/chat/create-group-chat", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				name: data.name,
+				avatar: avatar,
+				participants: selectedFriends.map((friend) => {
+					return friend.id;
+				}),
+			}),
+		});
+		const result = await response.json();
+		onClose();
+		setSelectedFriends([]);
+		setTotalSelected(0);
+		setAvatar("");
+		setValue("name", "");
+		onRefresh();
+	}
+
 	return (
 		<Modal visible={visible} transparent={true} animationType="slide">
 			<View style={styles.main}>
 				<View style={styles.container}>
 					<TouchableOpacity
-						onPress={onClose}
+						onPress={() => {
+							onClose();
+							setSelectedFriends([]);
+							setTotalSelected(0);
+							setAvatar("");
+							setValue("name", "");
+						}}
 						style={{ alignSelf: "flex-end" }}
 					>
 						<ICONS.CloseIcon width={20} height={20} />
@@ -70,11 +115,22 @@ export function NewGroupModalTwo({
 					<Text style={styles.topText}>Нова група</Text>
 					<View style={{ gap: 6 }}>
 						<Text>Назва</Text>
-						<View style={styles.input}>
-							<Text style={{ color: "#81818D", fontSize: 16 }}>
-								Введіть назву
-							</Text>
-						</View>
+
+						<Controller
+							control={control}
+							name="name"
+							render={({ field, fieldState }) => {
+								return (
+									<Input
+										onChange={field.onChange}
+										onChangeText={field.onChange}
+										value={field.value}
+										placeholder="Введіть назву"
+										height={42}
+									/>
+								);
+							}}
+						/>
 					</View>
 
 					<View style={{ gap: 12, alignItems: "center" }}>
@@ -117,7 +173,7 @@ export function NewGroupModalTwo({
 									gap: 8,
 								}}
 								onPress={() => {
-									setAvatar("")
+									setAvatar("");
 								}}
 							>
 								<ICONS.TrashCanIcon
@@ -137,22 +193,8 @@ export function NewGroupModalTwo({
 							}}
 						>
 							<Text>Учасники</Text>
-							<TouchableOpacity
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									gap: 8,
-								}}
-							>
-								<ICONS.PlusWithoutBorder
-									width={15}
-									height={15}
-								></ICONS.PlusWithoutBorder>
-								<Text>Додайте учасника</Text>
-							</TouchableOpacity>
 						</View>
-						
-						
+
 						<FlatList
 							overScrollMode="never"
 							data={selectedFriends}
@@ -174,7 +216,12 @@ export function NewGroupModalTwo({
 								Назад
 							</Text>
 						</TouchableOpacity>
-						<TouchableOpacity style={styles.butt2}>
+						<TouchableOpacity
+							style={styles.butt2}
+							onPress={() => {
+								handleSubmit(sendRequest)();
+							}}
+						>
 							<Text style={{ color: "#FFFFFF" }}>
 								Створити групу
 							</Text>

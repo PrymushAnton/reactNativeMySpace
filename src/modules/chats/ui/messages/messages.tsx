@@ -17,28 +17,29 @@ export function MessagesPage() {
 		const response = await fetch(HTTPS_HOST + "/chat/personal-chats", {
 			headers: {
 				Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
 			},
 		});
 
-		const result = await response.json()
+		const result = await response.json();
 
 		if (result.status === "success") {
-			setMessages(result.chats)
+			setMessages(result.chats);
 		} else {
-			alert("Помилка завантаження чатів")
+			alert("Помилка завантаження чатів");
 		}
 	}
 
 	useEffect(() => {
-		getMessages()
-	}, [])
+		getMessages();
+	}, []);
 
 	return (
 		<View style={styles.container}>
 			<FlatList
 				data={messages}
 				keyExtractor={(_, index) => index.toString()}
-				renderItem={({ item }) => <Card.Message {...item} />}
+				renderItem={({ item }) => <Card.Message {...item}/>}
 				ListHeaderComponent={
 					<View
 						style={{
@@ -61,7 +62,6 @@ export function MessagesPage() {
 						</View>
 					</View>
 				}
-				// contentContainerStyle={{ paddingBottom: 80 }}
 			/>
 		</View>
 	);

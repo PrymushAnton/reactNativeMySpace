@@ -5,11 +5,13 @@ import { useModal } from "../../../modules/auth/context";
 import { Redirect, useRouter } from "expo-router";
 import { IHeaderProps } from "./header.types";
 import { styles } from "./header.styles";
+import { useCreateGroupChatContext } from "../../../modules/chats/context/create-group-chat.context";
 
 export function Header(props: IHeaderProps) {
 	const { logout } = useAuthContext();
 	const { openCreateModal } = useModal();
 	const { replace } = useRouter();
+	const {step, setStep} = useCreateGroupChatContext()
 
 	return (
 		<View style={styles.header}>
@@ -35,7 +37,8 @@ export function Header(props: IHeaderProps) {
 					<TouchableOpacity
 						onPress={() => {
 							// openCreateModal();
-							console.log("Create a chat");
+							// console.log("Create a chat");
+							setStep("one")
 						}}
 					>
 						<ICONS.PlusIcon />

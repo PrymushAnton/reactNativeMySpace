@@ -109,27 +109,68 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 		setValue("images", updatedImages);
 	}
 
+	// async function onSearch() {
+	// 	const permission = await requestMediaLibraryPermissionsAsync();
+	// 	if (permission.status !== "granted") return;
+
+	// 	const selected = await launchImageLibraryAsync({
+	// 		mediaTypes: "images",
+	// 		allowsMultipleSelection: true,
+	// 		selectionLimit: 9,
+	// 		base64: true,
+	// 	});
+
+	// 	if (selected.assets && selected.assets.length > 0) {
+	// 		const bases64WithPrefix = selected.assets
+	// 			.map((asset) => asset.base64)
+	// 			.filter((b): b is string => !!b)
+	// 			.map((base64) => `data:image/jpeg;base64,${base64}`);
+	// 		if (bases64WithPrefix.length === 0) return;
+
+	// 		const newImages = [...images, ...bases64WithPrefix].slice(0, 9);
+	// 		setImages(newImages);
+	// 		setValue("images", newImages);
+	// 	}
+	// }
+
 	async function onSearch() {
-		const permission = await requestMediaLibraryPermissionsAsync();
-		if (permission.status !== "granted") return;
+		try {
+			const result = await requestMediaLibraryPermissionsAsync();
 
-		const selected = await launchImageLibraryAsync({
-			mediaTypes: "images",
-			allowsMultipleSelection: true,
-			selectionLimit: 9,
-			base64: true,
-		});
+			if (result.status !== "granted") return;
 
-		if (selected.assets && selected.assets.length > 0) {
-			const bases64WithPrefix = selected.assets
-				.map((asset) => asset.base64)
-				.filter((b): b is string => !!b)
-				.map((base64) => `data:image/jpeg;base64,${base64}`);
-			if (bases64WithPrefix.length === 0) return;
+			const selected = await launchImageLibraryAsync({
+				mediaTypes: "images",
+				allowsMultipleSelection: true,
+				selectionLimit: 9,
+				base64: true,
+			});
 
-			const newImages = [...images, ...bases64WithPrefix].slice(0, 9);
-			setImages(newImages);
-			setValue("images", newImages);
+			if (!selected.assets) return;
+
+			const base64WithMime = selected.assets
+				.map((asset) => {
+					if (!asset.base64) return null;
+
+					let mimeType = asset.mimeType;
+
+					// fallback if mimeType is missing or "image/"
+					if (mimeType === "image/") {
+						mimeType = "image/jpeg";
+					}
+
+					return `data:${mimeType};base64,${asset.base64}`;
+				})
+				.filter(
+					(base64): base64 is string => typeof base64 === "string"
+				);
+
+			if (base64WithMime.length === 0) return;
+
+			setImages(base64WithMime);
+			setValue("images", base64WithMime);
+		} catch (error) {
+			console.log((error as Error).message);
 		}
 	}
 

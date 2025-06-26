@@ -60,19 +60,19 @@ export function SocketContextProvider({
 			// alert("Socket disconnected");
 		});
 
-		newSocket.on("chatUpdate", (data) => {
-			setUnreadCounts((prev) => {
-				const updated = {
-					...prev,
-					[data.chatId]: ((prev && prev[data.chatId]) || 0) + 1,
-				};
+		// newSocket.on("chatUpdate", (data) => {
+		// 	setUnreadCounts((prev) => {
+		// 		const updated = {
+		// 			...prev,
+		// 			[data.chatId]: ((prev && prev[data.chatId]) || 0) + 1,
+		// 		};
 
-				setTotalUnreadCount(
-					Object.values(updated).reduce((a, b) => a + b, 0)
-				);
-				return updated;
-			});
-		});
+		// 		setTotalUnreadCount(
+		// 			Object.values(updated).reduce((a, b) => a + b, 0)
+		// 		);
+		// 		return updated;
+		// 	});
+		// });
 
 		setSocket(newSocket);
 		return () => {

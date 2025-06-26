@@ -7,4 +7,6 @@ export interface IProfileCardProps {
 	value: string,
 	onChangeText?: (text: string) => void
 	errorMessage?: string
+	isHidden?:boolean
+	setIsHidden?: (value: boolean) => void
 }

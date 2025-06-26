@@ -2,13 +2,14 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
 	container: {
-		width: 350,
+		width: "90%",
 		height: "80%",
 		backgroundColor: "white",
 		borderRadius: 20,
 		paddingTop: 24,
-		paddingHorizontal: 44,
-		paddingBottom: 44,
+		paddingRight: 16,
+		paddingBottom: 24,
+		paddingLeft: 16,
 		gap: 24,
 	},
 	search: {

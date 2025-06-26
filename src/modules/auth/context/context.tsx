@@ -35,7 +35,7 @@ const initialValue: IAuthContext = {
 	registerEmail: async (email: string, password: string, code: number) => {
 		return "";
 	},
-	getData: async (token: string) => {}
+	getData: async (token: string) => {},
 };
 
 const authContext = createContext<IAuthContext>(initialValue);
@@ -48,17 +48,29 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 	const [user, setUser] = useState<IUserWithMinimalProfile | null>(null);
 	const [token, setToken] = useState<string | null>(null);
 	const [justRegistered, setJustRegistered] = useState<boolean>(false);
+	const router = useRouter();
+
+	useEffect(() => {
+		async function checkIsAuthenticated() {
+			const token = await AsyncStorage.getItem("token");
+			if (!token) {
+				router.replace("login")
+			} else {
+				setToken(token)
+				getData(token)
+				router.replace("main")
+			}
+		}
+		checkIsAuthenticated()
+	}, []);
 
 	// useEffect(() => {
 	// 	console.log(user)
 	// }, [user])
 
-	
 	// useEffect(() => {
 	// 	console.log(token)
 	// }, [token])
-
-	const router = useRouter();
 
 	async function registerEmail(
 		email: string,
@@ -66,15 +78,18 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		code: number
 	) {
 		try {
-			const response = await fetch(`http://${HOST}/user/verify-email-code`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					email: email,
-					password: password,
-					code: code,
-				}),
-			});
+			const response = await fetch(
+				`http://${HOST}/user/verify-email-code`,
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						email: email,
+						password: password,
+						code: code,
+					}),
+				}
+			);
 
 			const result = await response.json();
 			if (result.status === "error") {
@@ -84,10 +99,8 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await AsyncStorage.setItem("token", result.data);
 
 			await getData(result.data);
-			await getToken()
+			await getToken();
 			setJustRegistered(true);
-
-			
 
 			router.replace("/main/");
 			return "";
@@ -102,7 +115,8 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			const response = await fetch(`http://${HOST}/user/me`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-			const result: Response<IUserWithMinimalProfile> = await response.json();
+			const result: Response<IUserWithMinimalProfile> =
+				await response.json();
 			if (
 				result.status === "error" ||
 				result.status === "error-validation"
@@ -132,7 +146,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			await AsyncStorage.setItem("token", result.data);
 			// await AsyncStorage.setItem("userEmail", email);
 			await getData(result.data);
-			await getToken()
+			await getToken();
 			router.replace("/main/");
 			return "";
 		} catch (error) {
@@ -194,7 +208,6 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 		setToken(token);
 	}
 
-
 	return (
 		<authContext.Provider
 			value={{
@@ -207,7 +220,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 				isAuthenticated,
 				logout,
 				registerEmail,
-				getData, 
+				getData,
 			}}
 		>
 			{props.children}
