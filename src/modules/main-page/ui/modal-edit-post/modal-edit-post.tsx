@@ -307,10 +307,11 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 							flexDirection: "row",
 							justifyContent: "flex-end",
 							gap: 10,
-							width: 343,
+							width: "100%",
 							height: 40,
 							marginTop: images.length >= 1 ? 0 : 20,
 							marginBottom: shouldAddMarginBottom ? 40 : 10,
+							paddingBottom: images.length >= 1 ? 0 : 75
 						}}
 					>
 						<TouchableOpacity onPress={onSearch}>

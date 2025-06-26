@@ -4,9 +4,11 @@ export const styles = StyleSheet.create({
     personalInfoSettingsTop:{
         flexDirection: "row",
         marginVertical: 16,
-        justifyContent: "center"
+        justifyContent: "space-between",
+        marginLeft: 24,
+        marginRight: 24
     },
     personalInfoSettingsTopEl:{
-        marginHorizontal: 16,
+        
     },
 })

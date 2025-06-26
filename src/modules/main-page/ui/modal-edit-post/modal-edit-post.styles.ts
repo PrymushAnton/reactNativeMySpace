@@ -3,7 +3,7 @@ import { COLORS } from "../../../../shared/constants";
 
 export const styles = StyleSheet.create({
     mainModalWindow: {
-        width: 375,
+        width: "100%",
         minHeight: 523,
         backgroundColor: COLORS.WHITE,
         borderRadius: 20,
@@ -14,17 +14,17 @@ export const styles = StyleSheet.create({
     },
     closeModalButton: {
         alignItems: "flex-end",
-        width: 343,
+        width: "100%",
         height: 20,
     },
     mainModalInputsFrame: {
-        width: 343,
+        width: "100%",
         minHeight: 368,
         paddingTop: 24,
         paddingBottom: 24,
     },
     themeModalInputFrame: {
-        width: 343,
+        width: "100%",
         minHeight: 66,
         gap: 6,
     },
