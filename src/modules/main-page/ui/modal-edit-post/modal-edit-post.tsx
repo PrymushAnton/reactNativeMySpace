@@ -101,7 +101,8 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 	const shouldAddMarginBottom =
 		images.length >= 4 ||
 		control._formValues.defaultTags?.length > 0 ||
-		control._formValues.customTags?.length > 0;
+		control._formValues.customTags?.length > 0 ||
+		control._formValues.link?.length > 0;
 
 	function removeImage(index: number) {
 		const updatedImages = images.filter((_, i) => i !== index);

@@ -4,7 +4,6 @@ import {
 	Image,
 	ScrollView,
 	TouchableOpacity,
-	Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthContext } from "../../../auth/context";
@@ -13,10 +12,15 @@ import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./friend-profile-page.styles";
 import { HOST, PORT } from "../../../../shared/base-url";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message";
+import { useState } from "react";
 
 export function FrinedProfilePage() {
 	const { user } = useAuthContext();
 	const { posts, fetchPosts } = useFetchPosts(user?.id);
+
+	const [isErrorVisible, setErrorVisible] = useState(false)
+	const [isErrorDeleteFriendVisible, setErrorDeleteFriendVisible] = useState(false)
 
 	if (!user) return null;
 
@@ -40,21 +44,24 @@ export function FrinedProfilePage() {
 			const data = await res.json();
 
 			if (data.status === "success") {
-				Alert.alert("Успіх", "Друг видалений");
+				// Alert.alert("Успіх", "Друг видалений");
+				return null
 			} else {
-				Alert.alert("Помилка", "Щось пішло не так");
+				setErrorVisible(true);
 			}
 		} catch (e) {
 			console.error("Error deleting friend", e);
-			Alert.alert("Помилка", "Не вдалося видалити друга");
+			setErrorDeleteFriendVisible(true)
 		}
 	};
 
 	return (
 		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
+			<ModalStatusMessage isVisible={isErrorVisible} setIsVisible={setErrorVisible} status="Помилка!" message="Щось пішло не так"/>
+			<ModalStatusMessage isVisible={isErrorDeleteFriendVisible} setIsVisible={setErrorDeleteFriendVisible} status="Помилка!" message="Не вдалося видалити друга"/>
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.profile.avatars ? (
+					{user.profile?.avatars ? (
 						<Image
 							// source={{ uri: user.profile.avatars }}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
@@ -122,11 +129,13 @@ export function FrinedProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.text}
-						text={post.title}
-						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.images}
-						user={post.user}
+						title={post.title}
+						content={post.content}
+						tags={post.tags}
+						images={post.images}
+						author={post.author}
+						author_id={post.author.user.id}
+						links={post.links}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
 						onRefresh={fetchPosts}

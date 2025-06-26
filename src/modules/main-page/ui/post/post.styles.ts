@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
 	},
 
 	content: {
-		gap: 8,
+		gap: 8, // отступ большой из-за него
 	},
 
 	text: {

@@ -7,11 +7,14 @@ import { useEffect, useState } from "react";
 import { IMessage } from "./messages.types";
 import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
 import { useAuthContext } from "../../../auth/context";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message"
 
 export function MessagesPage() {
 	const { token } = useAuthContext();
 
 	const [messages, setMessages] = useState<IMessage[] | null>(null);
+
+	const [isErrorMessagesVisible, setErrorMessagesVisible] = useState(false)
 
 	async function getMessages() {
 		const response = await fetch(HTTPS_HOST + "/chat/personal-chats", {
@@ -25,7 +28,7 @@ export function MessagesPage() {
 		if (result.status === "success") {
 			setMessages(result.chats)
 		} else {
-			alert("Помилка завантаження чатів")
+			setErrorMessagesVisible(true)
 		}
 	}
 
@@ -35,6 +38,7 @@ export function MessagesPage() {
 
 	return (
 		<View style={styles.container}>
+			<ModalStatusMessage isVisible={isErrorMessagesVisible} setIsVisible={setErrorMessagesVisible} status="Помилка!" message="Помилка завантаження чатів"/>
 			<FlatList
 				data={messages}
 				keyExtractor={(_, index) => index.toString()}

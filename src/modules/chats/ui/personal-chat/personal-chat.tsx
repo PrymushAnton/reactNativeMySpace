@@ -25,6 +25,7 @@ import { Input } from "../../../../shared/ui/input";
 import { useSocketContext } from "../../context/socket.context";
 import { TypeMessage } from "../../../../shared/ui/input/input";
 import { Controller, useForm } from "react-hook-form";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message";
 
 export function PersonalChatPage() {
 	const params = useLocalSearchParams<{
@@ -45,6 +46,8 @@ export function PersonalChatPage() {
 	const [messages, setMessages] = useState<IMessageData[] | null>(null);
 	const [value, setValue] = useState<string>("");
 
+	const [isErrorGetMessages, setErrorGetMessages] = useState(false)
+
 	async function getMessages() {
 		const response = await fetch(
 			HTTPS_HOST + `/chat/all-messages/${params.chatId}`,
@@ -59,7 +62,7 @@ export function PersonalChatPage() {
 		if (result.status === "success") {
 			setMessages(result.messages);
 		} else {
-			alert("Помилка при отримані повідомлень");
+			setErrorGetMessages(true)
 		}
 	}
 
@@ -91,6 +94,7 @@ export function PersonalChatPage() {
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			keyboardVerticalOffset={insets.top + 56}
 		>
+			<ModalStatusMessage isVisible={isErrorGetMessages} setIsVisible={setErrorGetMessages} status="Помилка!" message="Помилка при отримані повідомлень"/>
 			<View style={styles.container}>
 				<View style={styles.header}>
 					<View

@@ -66,7 +66,8 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 	const shouldAddMarginBottom =
 		images.length >= 4 ||
 		control._formValues.defaultTags?.length > 0 ||
-		control._formValues.customTags?.length > 0;
+		control._formValues.customTags?.length > 0 ||
+		control._formValues.link?.length > 0;
 
 	async function closingModal() {
 		closeCreateModal();

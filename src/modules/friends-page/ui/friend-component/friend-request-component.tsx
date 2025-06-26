@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { FriendCard, FriendRequestType } from "../../types/friend-info";
 import { ICONS } from "../../../../shared/ui/icons";
@@ -6,6 +6,7 @@ import { styles } from "./friend-request-component.styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { HOST, PORT } from "../../../../shared/base-url";
 import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message"
 
 export function FriendRequest(
 	props: FriendRequestType & {
@@ -20,7 +21,7 @@ export function FriendRequest(
 	return (
 		<View style={styles.friendCard}>
 			<View>
-				{props.profile1.avatars[0].image ? (
+				{props.profile1.avatars[0]?.image ? (
 					<Image
 						source={{ uri: HTTPS_HOST + "/media/" + props.profile1.avatars[0]?.image }}
 						style={{ width: 96, height: 96, borderRadius: 50 }}
@@ -94,6 +95,10 @@ export function FriendRequest(
 export function FriendSendRequest(
 	props: FriendCard & { onRefresh: () => void }
 ) {
+
+	const [isRequestVisible, setRequestVisible] = useState(false)
+	const [isNetworkVisible, setNetworkVisible] = useState(false)
+
 	const sendRequest = async () => {
 		const token = await AsyncStorage.getItem("token");
 		try {
@@ -112,14 +117,16 @@ export function FriendSendRequest(
 			if (result.status === "success"){
 				props.onRefresh()
 			}
-			else alert("Request send error");
+			else setRequestVisible(true)
 		} catch {
-			alert("Network error");
+			setNetworkVisible(true)
 		}
 	};
 
 	return (
 		<View style={styles.friendCard}>
+			<ModalStatusMessage isVisible={isRequestVisible} setIsVisible={setRequestVisible} status="Помилка на сервері!" message="Помилка при надсиланні запиту"/>
+			<ModalStatusMessage isVisible={isNetworkVisible} setIsVisible={setNetworkVisible} status="Помилка на сервері!" message="Помилка мережі"/>
 			<View>
 				{props.avatars[0]?.image ? (
 					<Image
@@ -200,6 +207,9 @@ export function FriendSendRequest(
 
 export function FriendItem(props: FriendCard & {onRefresh: () => void}) {
 
+	const [isErrorVisible, setErrorVisible] = useState(false)
+	const [isErrorDeleteFriendVisible, setErrorDeleteFriendVisible] = useState(false)
+
 	const handleDelete = async () => {
 		try {
 			const token = await AsyncStorage.getItem("token");
@@ -223,16 +233,18 @@ export function FriendItem(props: FriendCard & {onRefresh: () => void}) {
 				// alert("Успіх! Друг видалений");
 				props.onRefresh()
 			} else {
-				alert("Помилка! Щось пішло не так");
+				setErrorVisible(true)
 			}
 		} catch (e) {
 			console.error("Error deleting friend", e);
-			alert("Помилка! Не вдалося видалити друга");
+			setErrorDeleteFriendVisible(true)
 		}
 	};
 
 	return (
 		<View style={styles.friendCard}>
+			<ModalStatusMessage isVisible={isErrorVisible} setIsVisible={setErrorVisible} status="Помилка!" message="Щось пішло не так"/>
+			<ModalStatusMessage isVisible={isErrorDeleteFriendVisible} setIsVisible={setErrorDeleteFriendVisible} status="Помилка!" message="Не вдалося видалити друга"/>
 			<View>
 				{props.avatars[0]?.image ? (
 					<Image

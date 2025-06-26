@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuthContext } from "../../../auth/context";
 import { useFetchPosts } from "../../../main-page/hooks/useFetchPosts";
@@ -6,12 +6,17 @@ import { PublicatedPost } from "../../../main-page/ui/post";
 import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./user-profile-page.styles";
 import { HOST, PORT } from "../../../../shared/base-url";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message";
+import { useState } from "react";
 
 export function UserProfilePage() {
 	const { user } = useAuthContext();
 	const { posts, fetchPosts } = useFetchPosts(user?.id);
 
 	if (!user) return null;
+
+	const [isErrorVisible, setErrorVisible] = useState(false)
+	const [isErrorDeleteFriendVisible, setErrorDeleteFriendVisible] = useState(false)
 
 	const handleDeleteFriend = async () => {
 		try {
@@ -30,28 +35,32 @@ export function UserProfilePage() {
 			const data = await res.json();
 
 			if (data.status === "success") {
-				Alert.alert("Успіх", "Друг видалений");
+				// Alert.alert("Успіх", "Друг видалений");
+				return null
 			} else {
-				Alert.alert("Помилка", "Щось пішло не так");
+				setErrorVisible(true);
 			}
 		} catch (e) {
 			console.error("Error deleting friend", e);
-			Alert.alert("Помилка", "Не вдалося видалити друга");
+			setErrorDeleteFriendVisible(true)
 		}
 	};
 
 	return (
 		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
+			<ModalStatusMessage isVisible={isErrorVisible} setIsVisible={setErrorVisible} status="Помилка!" message="Щось пішло не так"/>
+			<ModalStatusMessage isVisible={isErrorDeleteFriendVisible} setIsVisible={setErrorDeleteFriendVisible} status="Помилка!" message="Не вдалося видалити друга"/>
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.images ? (
+					{/* {user.images ? (
 						<Image
 							source={{ uri: user.images }}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
 						/>
 					) : (
 						<ICONS.AnonymousLogoIcon width={96} height={96} />
-					)}
+					)} */}
+					<ICONS.AnonymousLogoIcon width={96} height={96} />
 				</View>
 				<Text style={styles.name}>
 					{user.first_name} {user.last_name}
@@ -93,11 +102,13 @@ export function UserProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.title}
-						text={post.text}
-						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.images}
-						user={post.user}
+						title={post.title}
+						content={post.content}
+						tags={post.tags}
+						images={post.images}
+						links={post.links}
+						author={post.author}
+						author_id={post.author.user.id}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
 						onRefresh={fetchPosts}

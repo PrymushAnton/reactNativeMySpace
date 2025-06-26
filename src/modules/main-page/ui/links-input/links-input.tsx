@@ -4,10 +4,10 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
-	Alert,
 } from "react-native";
 import { styles } from "./links-input.styles";
 import { ICONS } from "../../../../shared/ui/icons";
+import { ModalStatusMessage } from "../../../../shared/ui/modal-status-message";
 
 interface Props {
 	value: string[];
@@ -17,11 +17,13 @@ interface Props {
 export function LinksInput({ value, onChange }: Props) {
 	const [link, setLink] = useState("");
 
+	const [isLimitVisible, setLimitVisible] = useState(false)
+
 	const handleAddLink = () => {
 		if (!link.trim()) return;
 
 		if (value.length >= 10) {
-			Alert.alert("Обмеження", "Можна додати не більше 10 посилань");
+			setLimitVisible(true)
 			return;
 		}
 
@@ -42,6 +44,7 @@ export function LinksInput({ value, onChange }: Props) {
 
 	return (
 		<View>
+			<ModalStatusMessage isVisible={isLimitVisible} setIsVisible={setLimitVisible} status="Обмеження!" message="Можна додати не більше 10 посилань"/>
 			<View style={styles.inputRow}>
 				<TextInput
 					placeholder="Введіть посилання"
