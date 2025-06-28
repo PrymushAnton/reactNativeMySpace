@@ -25,6 +25,7 @@ import { Input } from "../../../../shared/ui/input";
 import { useSocketContext } from "../../context/socket.context";
 import { TypeMessage } from "../../../../shared/ui/input/input";
 import { Controller, useForm } from "react-hook-form";
+import { pickImage } from "../../../../shared/tools";
 
 export function PersonalChatPage() {
 	const params = useLocalSearchParams<{
@@ -43,7 +44,32 @@ export function PersonalChatPage() {
 	const flatListRef = useRef<FlatList<IMessageData>>(null);
 
 	const [messages, setMessages] = useState<IMessageData[] | null>(null);
+
 	const [value, setValue] = useState<string>("");
+	const [attachedImage, setAttachedImage] = useState<string>("");
+
+	function pickImageHandler() {
+		async function pickImageAsync() {
+			try {
+				const image = await pickImage({
+					allowsMultipleSelection: false,
+					base64: true,
+				});
+
+				if (!image || !image[0].base64) return;
+
+				let mimeType = image[0].mimeType;
+				if (mimeType === "image/") {
+					mimeType = "image/jpeg";
+				}
+				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
+				setAttachedImage(base64WithPrefix);
+			} catch (error) {
+				console.log((error as Error).message);
+			}
+		}
+		pickImageAsync();
+	}
 
 	async function getMessages() {
 		const response = await fetch(
@@ -83,6 +109,12 @@ export function PersonalChatPage() {
 		};
 	}, []);
 
+	useEffect(() => {
+		if (!messages || messages.length === 0) return;
+
+		flatListRef.current?.scrollToEnd({ animated: true });
+	}, [messages]);
+
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
@@ -108,16 +140,24 @@ export function PersonalChatPage() {
 								height={15}
 							></ICONS.ReturnIcon>
 						</TouchableOpacity>
-						<Image
-							source={{
-								uri: HTTPS_HOST + "/media/" + params.avatar,
-							}}
-							style={{
-								width: 50,
-								height: 50,
-								borderRadius: 50,
-							}}
-						></Image>
+						{params.avatar ? (
+							<Image
+								source={{
+									uri: HTTPS_HOST + "/media/" + params.avatar,
+								}}
+								style={{
+									width: 50,
+									height: 50,
+									borderRadius: 50,
+								}}
+							></Image>
+						) : (
+							<ICONS.AnonymousLogoIcon
+								width={50}
+								height={50}
+							></ICONS.AnonymousLogoIcon>
+						)}
+
 						<View>
 							<Text
 								style={{
@@ -127,14 +167,14 @@ export function PersonalChatPage() {
 							>
 								{params.first_name} {params.last_name}
 							</Text>
-							<Text
+							{/* <Text
 								style={{
 									fontSize: 14,
 									color: "#81818D",
 								}}
 							>
 								В мережі
-							</Text>
+							</Text> */}
 						</View>
 					</View>
 
@@ -152,6 +192,7 @@ export function PersonalChatPage() {
 					<FlatList
 						overScrollMode="never"
 						ref={flatListRef}
+						contentContainerStyle={{ paddingVertical: 16 }}
 						onContentSizeChange={() =>
 							flatListRef.current?.scrollToEnd({ animated: true })
 						}
@@ -166,15 +207,17 @@ export function PersonalChatPage() {
 									text={item.content}
 									date={item.sent_at}
 									wasWatched={true}
+									attachedImage={item.attached_image}
 								/>
 							) : (
 								<AnotherUserMessage
-									image={item.author.avatars[0].image}
+									image={item.author.avatars[0]?.image}
 									name={item.author.user.first_name}
 									surname={item.author.user.last_name}
 									text={item.content}
 									date={item.sent_at}
 									wasWatched={true}
+									attachedImage={item.attached_image}
 								/>
 							);
 						}}
@@ -183,28 +226,73 @@ export function PersonalChatPage() {
 					<View
 						style={{
 							flexDirection: "row",
-							alignItems: "center",
+							alignItems: "flex-end",
 							justifyContent: "space-between",
 							gap: 24,
 							paddingTop: 16,
 						}}
 					>
-						<TextInput
-							placeholder="Повідомлення"
-							onChangeText={(text) => {
-								setValue(text);
-							}}
-							style={{
-								borderWidth: 1,
-								borderColor: "#CDCED2",
-								borderRadius: 10,
-								flex: 1,
-								flexShrink: 1,
-								padding: 10,
-								paddingLeft: 16,
-							}}
-							value={value}
-						/>
+						<View style={{ flex: 1, gap: 10 }}>
+							{attachedImage ? (
+								<View
+									style={{
+										position: "relative",
+										width: 150,
+										height: 150,
+										borderRadius: 25,
+									}}
+								>
+									<Image
+										source={{
+											uri: attachedImage,
+										}}
+										style={{
+											width: 150,
+											height: 150,
+											borderRadius: 25,
+										}}
+									/>
+									<TouchableOpacity
+										style={{
+											borderRadius: 50,
+											borderWidth: 1,
+											borderColor: "#543C52",
+											padding: 10,
+											position: "absolute",
+											bottom: 10,
+											right: 10,
+											backgroundColor: "white",
+										}}
+										onPress={() => {
+											setAttachedImage("");
+										}}
+									>
+										<ICONS.TrashCanIcon
+											width={21}
+											height={20}
+										/>
+									</TouchableOpacity>
+								</View>
+							) : null}
+
+							<TextInput
+								placeholder="Повідомлення"
+								onChangeText={(text) => {
+									setValue(text);
+								}}
+								style={{
+									borderWidth: 1,
+									borderColor: "#CDCED2",
+									borderRadius: 10,
+									// flex: 1,
+									// flexShrink: 1,
+									height: 42,
+									padding: 10,
+									paddingLeft: 16,
+								}}
+								value={value}
+							/>
+						</View>
 
 						<TouchableOpacity
 							style={{
@@ -213,6 +301,7 @@ export function PersonalChatPage() {
 								padding: 10,
 								borderColor: "#543C52",
 							}}
+							onPress={pickImageHandler}
 						>
 							<ICONS.ImageIcon />
 						</TouchableOpacity>
@@ -230,8 +319,10 @@ export function PersonalChatPage() {
 									socket?.emit("sendMessage", {
 										message: value,
 										chatId: Number(params.chatId),
+										attachedImage: attachedImage,
 									});
 									setValue("");
+									setAttachedImage("");
 									Keyboard.dismiss();
 								}
 							}}

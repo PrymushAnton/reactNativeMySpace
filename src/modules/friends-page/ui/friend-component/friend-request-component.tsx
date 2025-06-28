@@ -20,7 +20,7 @@ export function FriendRequest(
 	return (
 		<View style={styles.friendCard}>
 			<View>
-				{props.profile1.avatars[0].image ? (
+				{props.profile1.avatars[0] ? (
 					<Image
 						source={{ uri: HTTPS_HOST + "/media/" + props.profile1.avatars[0]?.image }}
 						style={{ width: 96, height: 96, borderRadius: 50 }}

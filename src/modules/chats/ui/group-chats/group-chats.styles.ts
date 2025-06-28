@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
 		padding: 16,
 		gap: 24,
 		marginTop: 6,
+		flex: 1
 	},
 	messagesTop: {
 		gap: 8,

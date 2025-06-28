@@ -11,7 +11,7 @@ export interface IUser {
 		avatars: { url: string }[];
 	};
 	username?: string | null;
-	images?: string
+	images?: string;
 }
 
 export interface IUserWithMinimalProfile {
@@ -22,12 +22,13 @@ export interface IUserWithMinimalProfile {
 	username: string;
 	password: string;
 	profile: {
+		id: number;
 		date_of_birth: Date;
 		avatars: {
 			image: string;
 		}[];
 	} | null;
-};
+}
 
 export interface IAuthContext {
 	user: IUserWithMinimalProfile | null;

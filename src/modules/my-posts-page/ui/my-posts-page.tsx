@@ -9,7 +9,7 @@ import { ModalEditPost } from "../../main-page/ui/modal-edit-post";
 export function MyPostsPage() {
 	const { user, token } = useAuthContext();
 	if (!user) {
-		throw new Error("Ви не авторизовані");
+		return null
 	}
 	const { posts, fetchPosts } = useFetchPosts(user.id);
 

@@ -31,7 +31,7 @@ export function Avatar() {
 	);
 
 	if (!user) {
-		throw Error("Ви не авторизовані");
+		return null
 	}
 
 	useEffect(() => {

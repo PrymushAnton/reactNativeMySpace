@@ -29,10 +29,19 @@ export interface IMessage {
 	}[];
 }
 
+// admin_id: bigint;
+// admin: {
+// 	id: bigint;
+// 	date_of_birth: Date;
+// 	signature: string | null;
+// 	user_id: number;
+// };
+
 export interface IGroupChat {
 	id: number;
 	name: string;
 	avatar: string;
+	admin_id: number
 	members: {
 		profile_id: number;
 		profile: {

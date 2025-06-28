@@ -146,24 +146,23 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 
 			if (base64WithMime.length === 0) return;
 
-			setImages(base64WithMime);
-			setValue("images", base64WithMime);
+			setImages([...images, ...base64WithMime]);
+			setValue("images", [...images, ...base64WithMime]);
 		} catch (error) {
 			console.log((error as Error).message);
 		}
 	}
 
+	useEffect(() => {
+		images.forEach((image) => {
+			console.log(image.slice(0, 25))
+		})
+	}, [images])
+
 	function onSubmit(data: IUserPost) {
-		const imagesWithPrefix = data.images.map(
-			(img) => `data:image/jpeg;base64,${img}`
-		);
-		const dataWithPrefixedImages = {
-			...data,
-			images: imagesWithPrefix,
-		};
 
 		async function request() {
-			const response = await createPost(dataWithPrefixedImages);
+			const response = await createPost(data);
 			onRefresh?.();
 			closingModal();
 		}
@@ -314,7 +313,7 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 									<Image
 										source={{
 											uri:
-												"data:image/jpeg;base64," + uri,
+												uri,
 										}}
 										style={{
 											width: 100,
@@ -352,9 +351,9 @@ export function ModalPublicationPost({ onRefresh }: ModalPublicationPostProps) {
 						<TouchableOpacity onPress={onSearch}>
 							<ICONS.ImageWithStylesIcon />
 						</TouchableOpacity>
-						<TouchableOpacity>
+						{/* <TouchableOpacity>
 							<ICONS.EmojiWithStylesIcon />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
 							<View style={styles.sendPostModalButton}>
 								<Text

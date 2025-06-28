@@ -90,9 +90,6 @@ export function RedactingGroupModal({
 		fetchChatInfo();
 	}, []);
 
-	useEffect(() => {
-		console.log(avatar);
-	}, [avatar]);
 
 	useEffect(() => {
 		if (!chatInfo) return;

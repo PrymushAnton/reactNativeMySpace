@@ -27,6 +27,7 @@ import { Card } from "../card/card";
 import { useSocketContext } from "../../context/socket.context";
 import { useForm } from "react-hook-form";
 import { useCreateGroupChatContext } from "../../context/create-group-chat.context";
+import { pickImage } from "../../../../shared/tools";
 
 export function GroupChatPage() {
 	const params = useLocalSearchParams<{
@@ -34,10 +35,10 @@ export function GroupChatPage() {
 		avatar?: string;
 		name: string;
 		membersAmount: string;
+		adminId: string;
 	}>();
 
-	const {getGroups} = useCreateGroupChatContext()
-	
+	const { getGroups } = useCreateGroupChatContext();
 
 	const [chatInfo, setChatInfo] = useState<{
 		name: string;
@@ -57,10 +58,34 @@ export function GroupChatPage() {
 	const flatListRef = useRef<FlatList<IMessageData>>(null);
 
 	const [value, setValue] = useState<string>("");
+	const [attachedImage, setAttachedImage] = useState<string>("");
 
 	const [chatMessages, setChatMessages] = useState<IMessageData[] | null>(
 		null
 	);
+
+	function pickImageHandler() {
+		async function pickImageAsync() {
+			try {
+				const image = await pickImage({
+					allowsMultipleSelection: false,
+					base64: true,
+				});
+
+				if (!image || !image[0].base64) return;
+
+				let mimeType = image[0].mimeType;
+				if (mimeType === "image/") {
+					mimeType = "image/jpeg";
+				}
+				const base64WithPrefix = `data:${mimeType};base64,${image[0].base64}`;
+				setAttachedImage(base64WithPrefix);
+			} catch (error) {
+				console.log((error as Error).message);
+			}
+		}
+		pickImageAsync();
+	}
 
 	async function getChatMessages() {
 		const response = await fetch(
@@ -95,6 +120,12 @@ export function GroupChatPage() {
 			socket?.off("newMessage");
 		};
 	}, []);
+
+	useEffect(() => {
+		if (!chatMessages || chatMessages.length === 0) return;
+
+		flatListRef.current?.scrollToEnd({ animated: true });
+	}, [chatMessages]);
 
 	useEffect(() => {
 		setChatInfo({
@@ -163,22 +194,28 @@ export function GroupChatPage() {
 							</Text>
 						</View>
 					</View>
+					{Number(params.adminId) === user?.profile?.id ? (
+						<>
+							<TouchableOpacity
+								onPress={() => {
+									setIsAdminModalVisible(true);
+								}}
+							>
+								<ICONS.DotsIcon></ICONS.DotsIcon>
+							</TouchableOpacity>
+							<AdminModal
+								visible={isAdminModalVisible}
+								onClose={() => setIsAdminModalVisible(false)}
+								onNext={() => {
+									setIsAdminModalVisible(false);
+									setIsRedactingModalVisible(true);
+								}}
+								id={+params.chatId}
+								onRefresh={getGroups}
+							/>
+						</>
+					) : null}
 
-					<TouchableOpacity
-						onPress={() => setIsAdminModalVisible(true)}
-					>
-						<ICONS.DotsIcon></ICONS.DotsIcon>
-					</TouchableOpacity>
-					<AdminModal
-						visible={isAdminModalVisible}
-						onClose={() => setIsAdminModalVisible(false)}
-						onNext={() => {
-							setIsAdminModalVisible(false);
-							setIsRedactingModalVisible(true);
-						}}
-						id={+params.chatId}
-						onRefresh={getGroups}
-					/>
 					<RedactingGroupModal
 						visible={isRedactingModalVisible}
 						onClose={() => setIsRedactingModalVisible(false)}
@@ -211,13 +248,19 @@ export function GroupChatPage() {
 				>
 					<FlatList
 						overScrollMode="never"
+						snapToAlignment="end"
 						ref={flatListRef}
 						onContentSizeChange={() =>
-							flatListRef.current?.scrollToEnd({ animated: true })
+							flatListRef.current?.scrollToEnd({
+								animated: true,
+							})
 						}
 						onLayout={() =>
-							flatListRef.current?.scrollToEnd({ animated: true })
+							flatListRef.current?.scrollToEnd({
+								animated: true,
+							})
 						}
+						contentContainerStyle={{ paddingVertical: 16 }}
 						data={chatMessages}
 						keyExtractor={(_, index) => index.toString()}
 						renderItem={({ item }) => {
@@ -226,15 +269,17 @@ export function GroupChatPage() {
 									text={item.content}
 									date={item.sent_at}
 									wasWatched={true}
+									attachedImage={item.attached_image}
 								/>
 							) : (
 								<AnotherUserMessage
-									image={item.author.avatars[0].image}
+									image={item.author.avatars[0]?.image}
 									name={item.author.user.first_name}
 									surname={item.author.user.last_name}
 									text={item.content}
 									date={item.sent_at}
 									wasWatched={true}
+									attachedImage={item.attached_image}
 								/>
 							);
 						}}
@@ -242,28 +287,73 @@ export function GroupChatPage() {
 					<View
 						style={{
 							flexDirection: "row",
-							alignItems: "center",
+							alignItems: "flex-end",
 							justifyContent: "space-between",
 							gap: 24,
 							paddingTop: 16,
 						}}
 					>
-						<TextInput
-							placeholder="Повідомлення"
-							onChangeText={(text) => {
-								setValue(text);
-							}}
-							style={{
-								borderWidth: 1,
-								borderColor: "#CDCED2",
-								borderRadius: 10,
-								flex: 1,
-								flexShrink: 1,
-								padding: 10,
-								paddingLeft: 16,
-							}}
-							value={value}
-						/>
+						<View style={{ flex: 1, gap: 10 }}>
+							{attachedImage ? (
+								<View
+									style={{
+										position: "relative",
+										width: 150,
+										height: 150,
+										borderRadius: 25,
+									}}
+								>
+									<Image
+										source={{
+											uri: attachedImage,
+										}}
+										style={{
+											width: 150,
+											height: 150,
+											borderRadius: 25,
+										}}
+									/>
+									<TouchableOpacity
+										style={{
+											borderRadius: 50,
+											borderWidth: 1,
+											borderColor: "#543C52",
+											padding: 10,
+											position: "absolute",
+											bottom: 10,
+											right: 10,
+											backgroundColor: "white",
+										}}
+										onPress={() => {
+											setAttachedImage("");
+										}}
+									>
+										<ICONS.TrashCanIcon
+											width={21}
+											height={20}
+										/>
+									</TouchableOpacity>
+								</View>
+							) : null}
+
+							<TextInput
+								placeholder="Повідомлення"
+								onChangeText={(text) => {
+									setValue(text);
+								}}
+								style={{
+									borderWidth: 1,
+									borderColor: "#CDCED2",
+									borderRadius: 10,
+									// flex: 1,
+									// flexShrink: 1,
+									height: 42,
+									padding: 10,
+									paddingLeft: 16,
+								}}
+								value={value}
+							/>
+						</View>
 
 						<TouchableOpacity
 							style={{
@@ -272,6 +362,7 @@ export function GroupChatPage() {
 								padding: 10,
 								borderColor: "#543C52",
 							}}
+							onPress={pickImageHandler}
 						>
 							<ICONS.ImageIcon />
 						</TouchableOpacity>
@@ -288,8 +379,10 @@ export function GroupChatPage() {
 								socket?.emit("sendMessage", {
 									message: value,
 									chatId: Number(params.chatId),
+									attachedImage: attachedImage,
 								});
 								setValue("");
+								setAttachedImage("");
 								Keyboard.dismiss();
 							}}
 						>

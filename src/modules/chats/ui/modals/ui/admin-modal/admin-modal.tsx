@@ -53,10 +53,10 @@ export function AdminModal({
 				>
 					<ICONS.DotsIcon width={20} height={20} />
 				</TouchableOpacity>
-				<TouchableOpacity style={{ flexDirection: "row", gap: 10 }}>
+				{/* <TouchableOpacity style={{ flexDirection: "row", gap: 10 }}>
 					<ICONS.ImageIcon width={20} height={20}></ICONS.ImageIcon>
 					<Text>Медіа</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 				<TouchableOpacity
 					style={{ flexDirection: "row", gap: 10 }}
 					onPress={onNext}

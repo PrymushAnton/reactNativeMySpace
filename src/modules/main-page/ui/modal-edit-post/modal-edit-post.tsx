@@ -167,12 +167,14 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 
 			if (base64WithMime.length === 0) return;
 
-			setImages(base64WithMime);
-			setValue("images", base64WithMime);
+			setImages([...images, ...base64WithMime]);
+			setValue("images", [...images, ...base64WithMime]);
 		} catch (error) {
 			console.log((error as Error).message);
 		}
 	}
+
+
 
 	async function onSubmit(data: IUserPost) {
 		if (editPostId == null) return;
@@ -356,9 +358,9 @@ export function ModalEditPost({ postId, onRefresh }: Props) {
 						<TouchableOpacity onPress={onSearch}>
 							<ICONS.ImageWithStylesIcon />
 						</TouchableOpacity>
-						<TouchableOpacity>
+						{/* <TouchableOpacity>
 							<ICONS.EmojiWithStylesIcon />
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						<TouchableOpacity onPress={handleSubmit(onSubmit)}>
 							<View style={styles.sendPostModalButton}>
 								<Text

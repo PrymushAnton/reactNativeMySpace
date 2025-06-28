@@ -69,7 +69,7 @@ export function AddingGroupModal({
 							Пошук
 						</Text>
 					</View>
-					<Text style={{ color: "#81818D" }}>Вибрано: {totalSelected}</Text>
+					<Text style={{ color: "#81818D" }}>Вибрано: {tempTotalSelected}</Text>
 					<FlatList
 						data={friends}
 						keyExtractor={(_, index) => index.toString()}

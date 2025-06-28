@@ -11,8 +11,7 @@ import { HOST, PORT } from "../../../../shared/base-url";
 import { useFetchPosts } from "../../hooks/useFetchPosts";
 import { HTTPS_HOST } from "../../../../shared/base-url/base-url";
 
-export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
-
+export function PublicatedPost(props: IPostProps & { onRefresh: () => void }) {
 	const {
 		id,
 		title,
@@ -66,6 +65,7 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 		}
 	}
 
+
 	const [modalPosition, setModalPosition] = useState<{
 		top: number;
 		left: number;
@@ -79,6 +79,7 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 		if (!author.user?.id || !currentUser?.id) return;
 
 		if (author.user.id === currentUser.id) {
+			console.log("user");
 			router.replace("/user-profile");
 		} else {
 			try {
@@ -87,9 +88,18 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 				);
 				const data = await res.json();
 				if (data.isFriend) {
-					router.replace("/friend-profile");
+					console.log("friend");
+
+					router.replace({
+						pathname: "/friend-profile",
+						params: { userId: String(author_id) },
+					});
 				} else {
-					router.replace("/another-user-profile");
+					console.log("another-user");
+					router.replace({
+						pathname: "/another-user-profile",
+						params: { userId: String(author_id) },
+					});
 				}
 			} catch (err) {
 				console.error("Ошибка при проверке дружбы", err);
@@ -118,7 +128,10 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 							<Image
 								style={styles.avatar}
 								source={{
-									uri: HTTPS_HOST + "/media/" + author.user.profile.avatars[0].image,
+									uri:
+										HTTPS_HOST +
+										"/media/" +
+										author.user.profile.avatars[0]?.image,
 								}}
 							/>
 						) : (
@@ -131,22 +144,24 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 								"Анонім"}
 						</Text>
 					</TouchableOpacity>
-					<TouchableOpacity
-						ref={dotsRef}
-						onPress={() => {
-							dotsRef.current?.measureInWindow((x, y) => {
-								setModalPosition({
-									top: y - 20,
-									left: x - 330 + 20,
+					{author.user.id === currentUser?.id && (
+						<TouchableOpacity
+							ref={dotsRef}
+							onPress={() => {
+								dotsRef.current?.measureInWindow((x, y) => {
+									setModalPosition({
+										top: y - 20,
+										left: x - 330 + 20,
+									});
+									setSettingsVisible(true);
 								});
-								setSettingsVisible(true);
-							});
-						}}
-					>
-						<View style={styles.actions}>
-							<ICONS.DotsIcon />
-						</View>
-					</TouchableOpacity>
+							}}
+						>
+							<View style={styles.actions}>
+								<ICONS.DotsIcon />
+							</View>
+						</TouchableOpacity>
+					)}
 				</View>
 
 				<View style={styles.content}>
@@ -236,7 +251,11 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 												<Image
 													key={i}
 													source={{
-														uri: HTTPS_HOST + url.split("3011")[1],
+														uri:
+															HTTPS_HOST +
+															url.split(
+																"3011"
+															)[1],
 													}}
 													style={{
 														width,
@@ -253,7 +272,7 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 						</View>
 					) : null}
 
-					<View style={styles.reactions}>
+					{/* <View style={styles.reactions}>
 						<View style={styles.postActions}>
 							<TouchableOpacity
 								style={styles.reaction}
@@ -278,7 +297,7 @@ export function PublicatedPost(props: IPostProps & {onRefresh: () => void}) {
 								{views} Переглядів
 							</Text>
 						</View>
-					</View>
+					</View> */}
 				</View>
 			</View>
 		</View>

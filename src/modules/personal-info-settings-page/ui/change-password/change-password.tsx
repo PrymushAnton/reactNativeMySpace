@@ -16,7 +16,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 export function ChangePassword() {
 	const [avatar, setAvatar] = useState<string>("");
 
-	const { token, getData, user } = useAuthContext();
+	const { token } = useAuthContext();
 
 	const [passwordIsHidden, setPasswordIsHidden] = useState<boolean>(true);
 	const [repeatPasswordIsHidden, setRepeatPasswordIsHidden] =
@@ -56,9 +56,7 @@ export function ChangePassword() {
 			resolver: yupResolver(schema),
 		});
 
-	if (!user) {
-		throw Error("Ви не авторизовані");
-	}
+
 
 	function onSubmit(data: IChangePasswordForm) {
 		async function func() {

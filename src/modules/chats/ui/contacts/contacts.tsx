@@ -38,7 +38,7 @@ export function ContactsPage() {
 			<FlatList
 				data={friends}
 				keyExtractor={(_, index) => index.toString()}
-				renderItem={({ item }) => <Card.Contact image={item.avatars[0].image} name={item.user.first_name} surname={item.user.last_name}/>}
+				renderItem={({ item }) => <Card.Contact image={item.avatars[0]?.image} name={item.user.first_name} surname={item.user.last_name}/>}
 				ListHeaderComponent={
 					<View>
 						<View style={styles.contactsTop}>

@@ -45,22 +45,6 @@ export function FriendRequestPage() {
 		loadRequests();
 	};
 
-	// const renderItem: ListRenderItem<FriendRequestType> = ({ item }) => {
-	// 	// const user = item.fromUserDetails;
-	// 	// if (!user) return null;
-
-	// 	return (
-	// 		<FriendRequest
-	// 			id={user.id}
-	// 			image={user.image}
-	// 			name={user.name}
-	// 			surname={user.surname}
-	// 			username={user.username}
-	// 			onAccept={() => respondRequest(item.id, true)}
-	// 			onReject={() => respondRequest(item.id, false)}
-	// 		/>
-	// 	);
-	// };
 
 	return (
 		<View style={{ flex: 1 }}>

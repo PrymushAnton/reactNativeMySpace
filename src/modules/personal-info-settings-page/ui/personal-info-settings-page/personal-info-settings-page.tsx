@@ -50,20 +50,18 @@ export function PersonalInfoSettingsPage() {
 		setShow(true);
 	}
 
-	if (!user) {
-		throw Error("Ви не авторизовані!");
-	}
-
 	const { control, handleSubmit, setValue, getValues } =
 		useForm<IPersonalInfoFormData>({
 			defaultValues: {
 				first_name: "",
 				last_name: "",
 				date_of_birth: null,
-				email: ""
+				email: "",
 			},
 		});
-
+	if (!user) {
+		return null;
+	}
 	useEffect(() => {
 		if (user) {
 			setValue("first_name", user.first_name ? user.first_name : "");
@@ -79,7 +77,6 @@ export function PersonalInfoSettingsPage() {
 	}, [user]);
 
 	function onSubmit(data: IPersonalInfoFormData) {
-
 		async function sendRequest() {
 			try {
 				if (!token) {
@@ -240,8 +237,7 @@ export function PersonalInfoSettingsPage() {
 						}}
 					/>
 				</View>
-				<ChangePassword/>
-
+				<ChangePassword />
 			</View>
 		</ScrollView>
 	);

@@ -62,7 +62,7 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 			}
 		}
 		checkIsAuthenticated()
-	}, []);
+	}, [router]);
 
 	// useEffect(() => {
 	// 	console.log(user)
@@ -197,9 +197,9 @@ export function AuthContextProvider(props: IAuthContextProviderProps) {
 
 	async function logout() {
 		await AsyncStorage.removeItem("token");
+		router.replace("/login/");
 		setUser(null);
 		setToken(null);
-		router.replace("/login/");
 	}
 
 	async function getToken() {

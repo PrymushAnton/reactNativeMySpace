@@ -5,6 +5,7 @@ export interface IContactCard {
 	text?: string;
 	date?: string;
 	wasWatched?: boolean;
+	attachedImage?: string
 }
 
 export interface IMyMessage {

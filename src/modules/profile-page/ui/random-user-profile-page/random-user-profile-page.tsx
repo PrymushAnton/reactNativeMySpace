@@ -14,41 +14,54 @@ import { ICONS } from "../../../../shared/ui/icons";
 import { styles } from "./random-user-profile-page.styles";
 import { HOST, PORT } from "../../../../shared/base-url";
 import { FriendCard } from "../../../friends-page/types/friend-info";
+import { useEffect, useState } from "react";
+import { IMeForProfile } from "../../types/types";
+import { useLocalSearchParams } from "expo-router";
 
 export function AnotherUserProfilePage() {
-	const { user } = useAuthContext();
-	const { posts, fetchPosts } = useFetchPosts(user?.id);
+	const params = useLocalSearchParams<{ userId: string }>();
 
-	if (!user) return null;
+	const { token } = useAuthContext();
 
-	const sendRequest = async () => {
-		// const token = await AsyncStorage.getItem("token");
-		// try {
-		// 	const res = await fetch(
-		// 		`http://${HOST}/friend/send-friend-request`,
-		// 		{
-		// 			method: "POST",
-		// 			headers: {
-		// 				"Content-Type": "application/json",
-		// 				Authorization: `Bearer ${token}`,
-		// 			},
-		// 			body: JSON.stringify({ toUser: Number(id) }),
-		// 		}
-		// 	);
-		// 	if (res.ok) alert("Request send");
-		// 	else alert("Request send error");
-		// } catch {
-		// 	alert("Network error");
-		// }
-	};
+
+	const [userProfile, setUserProfile] = useState<IMeForProfile | null>(null);
+	const { posts, fetchPosts } = useFetchPosts(userProfile?.id);
+
+	async function getUserById(userId: string) {
+		const response = await fetch(`http://${HOST}/user/profile/${userId}`, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		const result = await response.json();
+		if (result.status === "success") {
+			setUserProfile(result.data);
+		} else {
+			alert("Помилка при отриманні користувача");
+		}
+	}
+
+	useEffect(() => {
+		getUserById(params.userId);
+	}, [params.userId]);
+
+	useEffect(() => {
+		console.log(userProfile);
+	}, [userProfile]);
 
 	return (
-		<ScrollView contentContainerStyle={styles.container} overScrollMode="never">
+		<ScrollView
+			contentContainerStyle={styles.container}
+			overScrollMode="never"
+		>
 			<View style={styles.header}>
 				<View style={styles.profileImageWrapper}>
-					{user.profile.avatars ? (
+					{userProfile?.profile?.avatars?.[0]?.image ? (
 						<Image
-							// source={{ uri: user.profile.avatars }}
+							source={{
+								uri: userProfile.profile.avatars[0]?.image,
+							}}
 							style={{ width: 96, height: 96, borderRadius: 20 }}
 						/>
 					) : (
@@ -56,21 +69,21 @@ export function AnotherUserProfilePage() {
 					)}
 				</View>
 				<Text style={styles.name}>
-					{user.first_name} {user.last_name}
+					{userProfile?.first_name} {userProfile?.last_name}
 				</Text>
-				<Text style={styles.username}>@{user.username}</Text>
+				<Text style={styles.username}>@{userProfile?.username}</Text>
 
 				<View style={styles.statsContainer}>
 					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>30</Text>
+						<Text style={styles.statNumber}>
+							{userProfile?.postsAmount}
+						</Text>
 						<Text style={styles.statLabel}>Дописи</Text>
 					</View>
 					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>17.7K</Text>
-						<Text style={styles.statLabel}>Читачі</Text>
-					</View>
-					<View style={styles.statBlock}>
-						<Text style={styles.statNumber}>2</Text>
+						<Text style={styles.statNumber}>
+							{userProfile?.friendAmount}
+						</Text>
 						<Text style={styles.statLabel}>Друзі</Text>
 					</View>
 				</View>
@@ -85,12 +98,6 @@ export function AnotherUserProfilePage() {
 						>
 							Додати
 						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.deleteBtn}
-						onPress={sendRequest}
-					>
-						<Text style={styles.actionText}>Видалити</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -114,11 +121,13 @@ export function AnotherUserProfilePage() {
 					<PublicatedPost
 						key={post.id}
 						id={post.id}
-						name={post.title}
-						text={post.text}
-						hashtags={[...post.defaultTags, ...post.customTags]}
-						photo={post.images}
-						user={post.user}
+						content={post.content}
+						title={post.title}
+						tags={post.tags}
+						images={post.images}
+						author={post.author}
+						links={post.links}
+						author_id={post.author_id}
 						likes={post.likes ?? 0}
 						views={post.views ?? 0}
 						onRefresh={fetchPosts}

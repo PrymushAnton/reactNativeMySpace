@@ -25,10 +25,18 @@ function Card({ image, name, surname }: IContactCard) {
 function Contact({ image, name, surname }: IContactCard) {
 	return (
 		<TouchableOpacity style={styles.card1}>
-			<Image
-				source={{ uri: HTTPS_HOST + "/media/" + image }}
-				style={styles.contactImage}
-			></Image>
+			{image ? (
+				<Image
+					source={{ uri: HTTPS_HOST + "/media/" + image }}
+					style={styles.contactImage}
+				></Image>
+			) : (
+				<ICONS.AnonymousLogoIcon
+					width={50}
+					height={50}
+				></ICONS.AnonymousLogoIcon>
+			)}
+
 			<Text style={styles.contactName}>
 				{name} {surname}
 			</Text>
@@ -50,26 +58,34 @@ function Message(props: IMessage) {
 				router.replace({
 					pathname: "/personal-chat/",
 					params: {
-						avatar: props.members[0].profile.avatars[0].image,
+						avatar: props.members[0]?.profile.avatars[0]?.image,
 						chatId: props.id,
-						email: props.members[0].profile.user.email,
-						first_name: props.members[0].profile.user.first_name,
-						last_name: props.members[0].profile.user.last_name,
-						username: props.members[0].profile.user.username,
-						userId: props.members[0].profile.user.id,
+						email: props.members[0]?.profile.user.email,
+						first_name: props.members[0]?.profile.user.first_name,
+						last_name: props.members[0]?.profile.user.last_name,
+						username: props.members[0]?.profile.user.username,
+						userId: props.members[0]?.profile.user.id,
 					},
 				});
 			}}
 		>
-			<Image
-				source={{
-					uri:
-						HTTPS_HOST +
-						"/media/" +
-						props.members[0].profile.avatars[0].image,
-				}}
-				style={styles.contactImage}
-			/>
+			{props.members[0]?.profile.avatars[0]?.image ? (
+				<Image
+					source={{
+						uri:
+							HTTPS_HOST +
+							"/media/" +
+							props.members[0]?.profile.avatars[0]?.image,
+					}}
+					style={styles.contactImage}
+				/>
+			) : (
+				<ICONS.AnonymousLogoIcon
+					width={50}
+					height={50}
+				></ICONS.AnonymousLogoIcon>
+			)}
+
 			<View style={{ flex: 1 }}>
 				<View
 					style={{
@@ -80,14 +96,17 @@ function Message(props: IMessage) {
 					}}
 				>
 					<Text style={styles.contactName}>
-						{props.members[0].profile.user.first_name}{" "}
-						{props.members[0].profile.user.last_name}
+						{props.members[0]?.profile.user.first_name}{" "}
+						{props.members[0]?.profile.user.last_name}
 					</Text>
-					<Text>{date?.toLocaleDateString()}</Text>
+					<Text>{date?.toLocaleDateString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}</Text>
 				</View>
 				<Text>
 					{props.messages[0]
-						? props.messages[0].content
+						? props.messages[0]?.content
 						: "Немає повідомлень"}
 				</Text>
 			</View>
@@ -108,7 +127,8 @@ function Group(props: IGroupChat) {
 						avatar: props.avatar,
 						chatId: props.id,
 						name: props.name,
-						membersAmount: String(props.members.length + 1)
+						membersAmount: String(props.members.length + 1),
+						adminId: props.admin_id
 					},
 				});
 			}}
@@ -133,11 +153,14 @@ function Group(props: IGroupChat) {
 					}}
 				>
 					<Text style={styles.contactName}>{props.name}</Text>
-					<Text>{date?.toLocaleDateString()}</Text>
+					<Text>{date?.toLocaleDateString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}</Text>
 				</View>
 				<Text>
 					{props.messages[0]
-						? props.messages[0].content
+						? props.messages[0]?.content
 						: "Немає повідомлень"}
 				</Text>
 			</View>
@@ -159,15 +182,20 @@ function GroupAdd(props: {
 	return (
 		<View style={styles.card3}>
 			<View style={styles.groupAddInfo}>
-				<Image
-					source={{
-						uri:
-							HTTPS_HOST +
-							"/media/" +
-							props.friend.avatars[0].image,
-					}}
-					style={styles.contactImage}
-				></Image>
+				{props.friend.avatars[0]?.image ? (
+					<Image
+						source={{
+							uri:
+								HTTPS_HOST +
+								"/media/" +
+								props.friend.avatars[0]?.image,
+						}}
+						style={styles.contactImage}
+					></Image>
+				) : (
+					<ICONS.AnonymousLogoIcon width={50} height={50} />
+				)}
+
 				<Text style={styles.contactName}>
 					{props.friend.user.first_name} {props.friend.user.last_name}
 				</Text>
@@ -208,15 +236,19 @@ function GroupDelete(props: {
 	return (
 		<View style={styles.card3}>
 			<View style={styles.groupAddInfo}>
-				<Image
-					source={{
-						uri:
-							HTTPS_HOST +
-							"/media/" +
-							props.friend.avatars[0].image,
-					}}
-					style={styles.contactImage}
-				></Image>
+				{props.friend.avatars[0]?.image ? (
+					<Image
+						source={{
+							uri:
+								HTTPS_HOST +
+								"/media/" +
+								props.friend.avatars[0]?.image,
+						}}
+						style={styles.contactImage}
+					></Image>
+				) : (
+					<ICONS.AnonymousLogoIcon width={50} height={50} />
+				)}
 				<Text style={styles.contactName}>
 					{props.friend.user.first_name} {props.friend.user.last_name}
 				</Text>
