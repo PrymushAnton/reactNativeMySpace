@@ -1,6 +1,6 @@
 # World IT - Соціальна мережа
 
-![alt text](image.png)
+![image.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/image.png)
 
 #### Наш проект був створенний для тих, хто має повагу до себе, та користуется лише гарними продуктами. Цей проект буде корисним не тільки для звичайного користувача, а й для продвинутого юзера.
 
@@ -46,7 +46,7 @@ flowchart TD
   
   **Приклад **Командного рядку** у пошуку**
 
-  ![alt text](photo_2025-06-28_20-19-29-1.jpg)
+  ![photo_2025-06-28_20-19-29-1.jpg](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/photo_2025-06-28_20-19-29-1.jpg)
 
   Після того, як ми відкрили **Командний рядок**, нам потрібно ввести команду `ipconfig`
 
@@ -58,7 +58,7 @@ flowchart TD
 
 - Після того, як ми дізналися наш IP, у [першій папці](#у-першій-папці) потрібно замінити ці значення у файлі `base-url.ts`
   
-  ![alt text](doc_2025-06-28_20-32-48-1.png)
+  ![doc_2025-06-28_20-32-48-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_20-32-48-1.png)
 
 - Після цього, нам потрібно встановити MySQL Workbench, ви можете це зробити за допомогою цієї [відео-інструкції](https://youtu.be/IBEAr_9_Q04?si=r0JkkU8BUB3EbZTy), або за описом нижче
 
@@ -66,23 +66,23 @@ flowchart TD
    
 2. Після цього, вам потрібно натиснути **Download now**
 
-   ![alt text](doc_2025-06-28_20-51-41-1.png)
+   ![doc_2025-06-28_20-51-41-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_20-51-41-1.png)
 
 3. Після того, як ви натиснули на **Download now**, вас перекинє на сайт з великим банером, на який вам потрібно буде натиснути, зверніть увагу на вашу операційну систему, її можна змінити
   
-   ![alt text](doc_2025-06-28_20-53-58-1.png)
+   ![doc_2025-06-28_20-53-58-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_20-53-58-1.png)
 
 4. Тепер вам потрібно завантажити файл-установник, для цього треба натиснути **Download**, зверніть увагу, нам потрібен той файл, котрий більше, за інший
 
-    ![alt text](doc_2025-06-28_20-58-09-1.png)
+    ![doc_2025-06-28_20-58-09-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_20-58-09-1.png)
 
 5. Вас перекинє на сторінку, де вам запропонують зареєструватись, але нам реєструватись непотрібно, тому натискаємо на **No thanks, just start my download.**
    
-   ![alt text](doc_2025-06-28_21-03-54-1.png)
+   ![doc_2025-06-28_21-03-54-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_21-03-54-1.png)
 
 6. Після того, як у нас встановиться та відкриється файл-установник, нам потрібно вибрати **Custom**, та натиснути **Next**
 
-   ![alt text](doc_2025-06-28_21-11-23-1.png)
+   ![doc_2025-06-28_21-11-23-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_21-11-23-1.png)
 
 7. Після цього, в вас відкриєтся вікно, де вам потрібно буде обрати **Сервер** та **Воркбенч**, для цього потрібно:
    - MySQL Servers → MySql Server → MySQL Server LastVersion → MySQL Server LastVersion - Xbit
@@ -92,7 +92,7 @@ flowchart TD
 
     **Як повинно виглядати після того, як ви все зробили правильно**
 
-   ![alt text](image_2025-06-28_21-17-22-1.png)
+   ![image_2025-06-28_21-17-22-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/image_2025-06-28_21-17-22-1.png)
 
 8. Після того, як ви додали Сервер та Воркбенч, треба буде декілька разів натиснути **Next**
 
@@ -100,7 +100,7 @@ flowchart TD
     
     **Як все повинно виглядати, коли ви напишите свій пароль**
 
-   ![alt text](doc_2025-06-28_21-31-22-1.png)
+   ![doc_2025-06-28_21-31-22-1.png](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/doc_2025-06-28_21-31-22-1.png)
 
 10. Після всіх цих пунктів, ви просто натискаєте **Next** або **Execute**, якщо все добре, то помилок не повинно бути
 
@@ -124,7 +124,7 @@ SMTP_PASS=пароль
 
 **Приклад, як це повинно виглядати у фіналі**
 
-![alt text](photo_2025-06-28_21-47-04-1.jpg)
+![photo_2025-06-28_21-47-04-1.jpg](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/photo_2025-06-28_21-47-04-1.jpg)
 
 Після того, як ми додали аккаунт, та шлях до бази даних, потрібно провести міграції, та створити кліента
 
@@ -153,11 +153,11 @@ npm run prisma:migrate
 Щоб запустити додаток, потрібно встановити додаток Expo Go на телефон, та відсканувати QR-код, котрий буде відображатися у терміналі.
 
 **Приклад QR-коду у терміналі.**
-![alt text](photo_2025-06-28_20-05-42-1.jpg)
+![photo_2025-06-28_20-05-42-1.jpg](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/photo_2025-06-28_20-05-42-1.jpg)
 
 Скануємо його у телефоні через додаток
 
-![alt text](photo_2025-06-28_21-55-41-1.jpg)
+![photo_2025-06-28_21-55-41-1.jpg](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/photo_2025-06-28_21-55-41-1.jpg)
 
 ## Основні технології проєкту
 
