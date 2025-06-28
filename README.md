@@ -52,7 +52,7 @@ flowchart TD
 
   **Приклад результату**(числа були змінені)
 
-  ![alt text](photo_2025-06-28_20-22-55-1.jpg)
+  ![photo_2025-06-28_20-22-55-1.jpg](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/photo_2025-06-28_20-22-55-1.jpg)
 
   Нам потрібні значення саме зі строки **IPv4-адреса**
 
@@ -221,7 +221,7 @@ npm run prisma:migrate
 
 ### Відео з роботю проекта
 
-![alt text](0628-1.gif)
+![0628-1.gif](https://github.com/PrymushAnton/reactNativeMySpace/blob/readme/readme-images/0628-1.gif)
 
 ---
 
